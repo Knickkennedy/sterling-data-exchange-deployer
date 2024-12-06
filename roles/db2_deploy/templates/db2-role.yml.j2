@@ -1,0 +1,111 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "{{ db2_service_account }}-role"
+  namespace: "{{ db2_namespace }}"
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+      - pods
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - apps
+    resources:
+      - statefulsets
+      - deployments
+      - replicasets
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - patch
+      - watch
+      - list
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - create
+      - update
+      - watch
+      - patch
+      - delete
+      - list
+  - apiGroups:
+      - db2u.databases.ibm.com
+    resources:
+      - recipes
+    verbs:
+      - watch
+      - get
+      - update
+      - create
+      - patch
+      - list
+      - delete
+  - apiGroups:
+      - db2u.databases.ibm.com
+    resources:
+      - buckets
+    verbs:
+      - patch
+      - delete
+      - list
+  - apiGroups:
+      - db2u.databases.ibm.com
+    resources:
+      - backups
+    verbs:
+      - patch
+      - delete
+      - list
+      - get
+  - apiGroups:
+      - db2u.databases.ibm.com
+    resources:
+      - formations
+      - db2uengines
+    verbs:
+      - use
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - pods/exec
+    verbs:
+      - create
+      - watch
+      - list
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - watch
+      - list
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - watch
+      - list
+      - get

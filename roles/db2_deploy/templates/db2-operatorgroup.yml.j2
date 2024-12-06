@@ -1,0 +1,8 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: db2-operatorgroup
+  namespace: "{{ db2_namespace }}"
+spec:
+  targetNamespaces:
+    - "{{ db2_namespace }}"

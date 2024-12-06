@@ -1,0 +1,12 @@
+---
+- name: Deploy DB2
+  ansible.builtin.include_role:
+    name: db2_deploy
+  when: deploy_db2
+- name: Configure DB2 for Sterling B2B Integrator
+  ansible.builtin.include_role:
+    name: db2_configure_for_b2bi
+  when: deploy_db2
+
+- name: "Deploy B2Bi Helm Chart"
+  ansible.builtin.include_tasks: 01_configure_namespace.yml

@@ -1,0 +1,80 @@
+---
+- name: Template the Service Account for reuse
+  ansible.builtin.template:
+    src: templates/db2-sa.yml.j2
+    dest: ../output/{{ db2_namespace }}-{{ db2_service_account }}.yml
+    mode: '0644'
+
+- name: Create Service Account for DB2
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ db2_namespace }}-{{ db2_service_account }}.yml
+
+- name: Template the DB2 Role for reuse
+  ansible.builtin.template:
+    src: templates/db2-role.yml.j2
+    dest: ../output/{{ db2_namespace }}-{{ db2_service_account }}-role.yml
+    mode: '0644'
+
+- name: Create role for DB2 service account
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ db2_namespace }}-{{ db2_service_account }}-role.yml
+
+- name: Template the DB2 rolebinding for reuse
+  ansible.builtin.template:
+    src: templates/db2-rolebinding.yml.j2
+    dest: ../output/{{ db2_namespace }}-{{ db2_service_account }}-rb.yml
+    mode: '0644'
+
+- name: Add the rolebinding for db2 to Service Account
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ db2_namespace }}-{{ db2_service_account }}-rb.yml
+
+- name: Template the DB2 SCC for reuse
+  ansible.builtin.template:
+    src: templates/db2-scc.yml.j2
+    dest: ../output/db2-scc.yml
+    mode: '0644'
+
+- name: Create DB2 SecurityContextConstraint
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/db2-scc.yml
+
+- name: Create registry secret content "{{ db2_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ registry_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ registry_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template DB2 registry secret for reuse
+  ansible.builtin.template:
+    src: templates/db2-registry-secret.yml.j2
+    dest: ../output/{{ db2_namespace }}-db2-registry-secret.yml
+    mode: '0644'
+
+- name: Generate db2 registry secret "{{ db2_registry_secret }}"
+  no_log: true
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ db2_namespace }}-db2-registry-secret.yml
+
+- name: Template the db2 secret for reuse
+  ansible.builtin.template:
+    src: templates/db2-secret.yml.j2
+    dest: ../output/{{ db2_namespace }}-{{ db2_secret }}.yml
+    mode: '0644'
+
+- name: Generate db2 secret "{{ db2_secret }}"
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ db2_namespace }}-{{ db2_secret }}.yml

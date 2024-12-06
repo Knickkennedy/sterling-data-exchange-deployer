@@ -1,0 +1,79 @@
+---
+- name: Create B2Bi namespace if it does not exist
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ b2bi_namespace }}"
+
+- name: Create registry secret content "{{ b2bi_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ registry_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ registry_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Generate b2bi registry secret "{{ b2bi_registry_secret }}"
+  no_log: true
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      type: kubernetes.io/dockerconfigjson
+      metadata:
+        name: "{{ b2bi_registry_secret }}"
+        namespace: "{{ b2bi_namespace }}"
+      data:
+        .dockerconfigjson: "{{ new_secret | to_json | b64encode }}"
+
+- name: "Generate secret '{{ b2bi_system_passphrase_secret }}'"
+  kubernetes.core.k8s:
+    definition:
+      apiVersion: v1
+      kind: Secret
+      type: Opaque
+      metadata:
+        name: "{{ b2bi_system_passphrase_secret }}"
+        namespace: "{{ b2bi_namespace }}"
+      data:
+        SYSTEM_PASSPHRASE: "{{ b2bi_system_passphrase | b64encode }}"
+
+- name: "Generate secret '{{ b2bi_liberty_keystore_password_secret }}'"
+  kubernetes.core.k8s:
+    definition:
+      apiVersion: v1
+      kind: Secret
+      type: Opaque
+      metadata:
+        name: "{{ b2bi_liberty_keystore_password_secret }}"
+        namespace: "{{ b2bi_namespace }}"
+      data:
+        SYSTEM_PASSPHRASE: "{{ b2bi_liberty_keystore_password | b64encode }}"
+
+- name: Look Up DB2 Information
+  when: deploy_db2
+  block:
+    - name: Collect DB2 networking information
+      kubernetes.core.k8s_info:
+        kind: Service
+        namespace: "{{ db2_namespace }}"
+        name: "c-{{ db2_crd_name }}-db2u-engn-svc"
+      register: db2_service_output
+
+    - name: Register Database Networking Configuration
+      ansible.builtin.set_fact:
+        b2bi_dbvender: "DB2"
+        b2bi_dbhost: "c-{{ db2_crd_name }}-db2u-engn-svc.{{ db2_namespace }}.svc.cluster.local"
+        b2bi_dbport: >-
+          {{ db2_service_output.resources[0].spec.ports
+          | selectattr('name', '==', 'legacy-server')
+          | map(attribute='port') }}

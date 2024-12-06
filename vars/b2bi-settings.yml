@@ -1,0 +1,31 @@
+---
+# B2Bi Settings
+b2bi_namespace: "{{ lookup('env', 'B2BI_NAMESPACE') | default('b2bi', true) }}"
+
+b2bi_registry_secret: "{{ lookup('env', 'REGISTRY') | default('ibm-registry-secret', true) }}"
+b2bi_registry: "{{ lookup('env', 'REGISTRY') | default('cp.icr.io', true) }}"
+b2bi_registry_user: "{{ lookup('env', 'REGISTRY_USER') | default('cp', true) }}"
+b2bi_registry_key: "{{ lookup('env', 'REGISTRY_KEY') }}"
+
+b2bi_system_passphrase_secret: "{{ lookup('env', 'B2BI_SYSTEM_PASSPHRASE_SECRET') | default('b2bi-system-passphrase-secret', true) }}"
+b2bi_system_passphrase: "{{ lookup('env', 'B2BI_SYSTEM_PASSPHRASE') | default('passw0rd', true) }}"
+
+b2bi_liberty_keystore_password_secret: "{{ lookup('env', 'B2BI_LIBERTY_KEYSTORE_PASSWORD_SECRET') | default('b2bi-liberty-secret', true) }}"
+b2bi_liberty_keystore_password: "{{ lookup('env', 'B2BI_LIBERTY_KEYSTORE_PASSWORD') | default('changeit', true) }}"
+
+# DB2 Settings
+deploy_db2: "{{ lookup('env', 'B2BI_DEPLOY_DB2') | default(true, true) }}"
+
+db2_namespace: "{{ lookup('env', 'B2BI_DB2_NAMESPACE') | default('b2bi-db2', true) }}"
+db2_registry_secret: "{{ lookup('env', 'REGISTRY') | default('ibm-registry-secret', true) }}"
+registry: "{{ lookup('env', 'REGISTRY') | default('cp.icr.io', true) }}"
+registry_user: "{{ lookup('env', 'REGISTRY_USER') | default('cp', true) }}"
+registry_key: "{{ lookup('env', 'REGISTRY_KEY') }}"
+db2_secret: "{{ lookup('env', 'B2BI_DB2_SECRET') | default('db2-secret', true) }}"
+db2_service_account: "{{ lookup('env', 'B2BI_DB2_SA') | default('db2-sa', true) }}"
+
+db2_crd_name: "{{ lookup('env', 'B2BI_DB2_CRD_NAME') | default('b2bi-db2', true) }}"
+db2_username: "{{ lookup('env', 'B2BI_DB2_USERNAME') | default('db2inst1', true) }}"
+db2_password: "{{ lookup('env', 'B2BI_DB2_PASSWORD') | default('passw0rd', true) }}"
+db2_dbname: "{{ lookup('env', 'B2BI_DB2_DBNAME') | default('BLUDB', true) }}"
+db2_storage_size: "{{ lookup('env', 'B2BI_DB2_SIZE') | default('100Gi', true) }}"

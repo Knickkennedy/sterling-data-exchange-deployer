@@ -1,0 +1,24 @@
+- name: Template the Db2uInstance for reuse
+  ansible.builtin.template:
+    src: templates/db2uinstance.yml.j2
+    dest: ../output/{{ db2_namespace }}-{{ db2_crd_name }}.yml
+    mode: '0644'
+
+- name: Deploy DB2
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ db2_namespace }}-{{ db2_crd_name }}-cr-instance.yml
+
+- name: Wait for db2uinstance to start
+  ansible.builtin.pause:
+    seconds: 30
+
+- name: Wait for the DB2 deployment to finish before moving on
+  kubernetes.core.k8s_info:
+    kind: Db2uInstance
+    namespace: "{{ db2_namespace }}"
+    name: "{{ db2_crd_name }}"
+  register: result
+  until: result.resources[0].status.state == "Ready"
+  retries: 40
+  delay: 30

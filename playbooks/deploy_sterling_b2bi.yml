@@ -1,0 +1,10 @@
+- name: Deploy IBM Sterling B2B Integrator on Red Hat Openshift
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/storage.yml
+    - ../vars/b2bi-settings.yml
+  roles:
+    - define_k8s_storage
+    - b2bi_deploy

@@ -1,0 +1,53 @@
+kind: SecurityContextConstraints
+metadata:
+  name: db2-scc
+allowHostDirVolumePlugin: true
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: true
+allowedCapabilities:
+  - CHOWN
+  - DAC_OVERRIDE
+  - SETGID
+  - SETUID
+  - FOWNER
+  - SYS_RESOURCE
+  - IPC_OWNER
+  - SYS_NICE
+  - FSETID
+  - SETFCAP
+  - SETPCAP
+  - SYS_CHROOT
+  - KILL
+  - AUDIT_WRITE
+apiVersion: security.openshift.io/v1
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
+seccompProfiles:
+  - unconfined
+  - runtime/default
+priority: null
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+  - ALL
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+users:
+  - "system:serviceaccount:{{ db2_namespace }}:{{ db2_service_account }}"
+volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - hostPath
+  - persistentVolumeClaim
+  - projected
+  - secret
