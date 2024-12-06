@@ -1,13 +1,13 @@
 - name: Template the Db2uInstance for reuse
   ansible.builtin.template:
     src: templates/db2uinstance.yml.j2
-    dest: ../output/{{ db2_namespace }}-{{ db2_crd_name }}.yml
+    dest: ../output/{{ db2_namespace }}/{{ db2_namespace }}-{{ db2_crd_name }}-cr-instance.yml
     mode: '0644'
 
 - name: Deploy DB2
   kubernetes.core.k8s:
     state: present
-    src: ../output/{{ db2_namespace }}-{{ db2_crd_name }}-cr-instance.yml
+    src: ../output/{{ db2_namespace }}/{{ db2_namespace }}-{{ db2_crd_name }}-cr-instance.yml
 
 - name: Wait for db2uinstance to start
   ansible.builtin.pause:

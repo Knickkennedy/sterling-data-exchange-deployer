@@ -2,35 +2,35 @@
 - name: Template the DB2 Namespace for reuse
   ansible.builtin.template:
     src: templates/db2-namespace.yml.j2
-    dest: ../output/{{ db2_namespace }}-namespace.yml
+    dest: ../output/{{ db2_namespace }}/{{ db2_namespace }}-namespace.yml
     mode: '0644'
 
 - name: Create DB2 namespace
   kubernetes.core.k8s:
     state: present
-    src: ../output/{{ db2_namespace }}-namespace.yml
+    src: ../output/{{ db2_namespace }}/{{ db2_namespace }}-namespace.yml
 
 - name: Tempalte DB2 operator group for reuse
   ansible.builtin.template:
     src: templates/db2-operatorgroup.yml.j2
-    dest: ../output/{{ db2_namespace }}-operatorgroup.yml
+    dest: ../output/{{ db2_namespace }}/{{ db2_namespace }}-operatorgroup.yml
     mode: '0644'
 
 - name: Create DB2 operator group
   kubernetes.core.k8s:
     state: present
-    src: ../output/{{ db2_namespace }}-operatorgroup.yml
+    src: ../output/{{ db2_namespace }}/{{ db2_namespace }}-operatorgroup.yml
 
 - name: Template DB2 Operator Subscription for reuse
   ansible.builtin.template:
     src: templates/db2-operator-subscription.yml.j2
-    dest: ../output/{{ db2_namespace }}-operator-subscription.yml
+    dest: ../output/{{ db2_namespace }}/{{ db2_namespace }}-operator-subscription.yml
     mode: '0644'
 
 - name: Create DB2 Operator
   kubernetes.core.k8s:
     state: present
-    src: ../output/{{ db2_namespace }}-operator-subscription.yml
+    src: ../output/{{ db2_namespace }}/{{ db2_namespace }}-operator-subscription.yml
 
 - name: Wait for DB2 Operator to be Ready
   kubernetes.core.k8s_info:
