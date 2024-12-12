@@ -1,3 +1,5 @@
+db2_version: "{{ lookup('env', 'DB2_VERSION') | default('s11.5.9.0-cn3', true) }}.yml"
+
 db2_namespace: "{{ lookup('env', 'DB2_NAMESPACE') | default('db2', true) }}"
 
 db2_registry_secret: "{{ lookup('env', 'REGISTRY') | default('ibm-registry-secret', true) }}"

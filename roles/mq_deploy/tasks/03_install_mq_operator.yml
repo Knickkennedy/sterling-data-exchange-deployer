@@ -1,0 +1,45 @@
+---
+- name: Template the MQ Namespace for reuse
+  ansible.builtin.template:
+    src: templates/mq-namespace.yml.j2
+    dest: ../output/{{ mq_namespace }}/{{ mq_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create MQ namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ mq_namespace }}/{{ mq_namespace }}-namespace.yml
+
+- name: Tempalte MQ operator group for reuse
+  ansible.builtin.template:
+    src: templates/mq-operatorgroup.yml.j2
+    dest: ../output/{{ mq_namespace }}/{{ mq_namespace }}-operatorgroup.yml
+    mode: '0644'
+
+- name: Create MQ operator group
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ mq_namespace }}/{{ mq_namespace }}-operatorgroup.yml
+
+- name: Template MQ Operator Subscription for reuse
+  ansible.builtin.template:
+    src: templates/mq-operator-subscription.yml.j2
+    dest: ../output/{{ mq_namespace }}/{{ mq_namespace }}-operator-subscription.yml
+    mode: '0644'
+
+- name: Create MQ Operator
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ mq_namespace }}/{{ mq_namespace }}-operator-subscription.yml
+
+- name: Wait for MQ Operator to be Ready
+  kubernetes.core.k8s_info:
+    kind: Pod
+    namespace: "{{ mq_namespace }}"
+    label_selectors:
+      - control-plane=controller-manager
+      - name=ibm-mq
+    wait: true
+    wait_condition:
+      type: Ready
+      status: "True"

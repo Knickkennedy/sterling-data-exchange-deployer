@@ -1,0 +1,32 @@
+---
+- name: Create the MQ subfolder based on the namespace
+  ansible.builtin.file:
+    path: ../output/{{ mq_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Template the CatalogSource for reuse
+  ansible.builtin.template:
+    src: templates/catalogsource.yml.j2
+    dest: ../output/{{ mq_namespace }}/ibm-catalog-source.yml
+    mode: '0644'
+
+- name: Install Catalog Source for IBM operators
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ mq_namespace }}/ibm-catalog-source.yml
+
+- name: Wait 30 seconds for IBM Catalog Source pod to appear
+  ansible.builtin.pause:
+    seconds: 30
+
+- name: Wait for IBM Operator Catalog to be Ready
+  kubernetes.core.k8s_info:
+    kind: Pod
+    namespace: "openshift-marketplace"
+    label_selectors:
+      - olm.catalogSource=ibm-operator-catalog
+    wait: true
+    wait_condition:
+      type: Ready
+      status: "True"

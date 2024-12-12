@@ -1,4 +1,9 @@
 ---
+- name: Deploy MQ
+  ansible.builtin.include_role:
+    name: mq_deploy
+  when: deploy_mq
+
 - name: Deploy DB2
   ansible.builtin.include_role:
     name: db2_deploy

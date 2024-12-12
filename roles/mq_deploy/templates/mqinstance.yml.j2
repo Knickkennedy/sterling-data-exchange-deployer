@@ -1,0 +1,23 @@
+apiVersion: mq.ibm.com/v1beta1
+kind: QueueManager
+metadata:
+  name: "{{ mq_crd_name }}"
+  namespace: "{{ mq_namespace }}"
+spec:
+  license:
+    accept: true
+    license: L-DRNQ-NGCA76
+    use: NonProduction
+  queueManager:
+    availability:
+      type: SingleInstance
+    storage:
+      defaultClass: "{{ file_storage_class }}"
+      queueManager:
+        class: "{{ file_storage_class }}"
+        deleteClaim: true
+        size: "{{ mq_storage_size }}"
+        type: persistent-claim
+  version: "{{ version }}"
+  web:
+    enabled: true

@@ -15,6 +15,7 @@
 
 - name: Wait for the DB2 deployment to finish before moving on
   kubernetes.core.k8s_info:
+    api_version: db2u.databases.ibm.com/v1
     kind: Db2uInstance
     namespace: "{{ db2_namespace }}"
     name: "{{ db2_crd_name }}"

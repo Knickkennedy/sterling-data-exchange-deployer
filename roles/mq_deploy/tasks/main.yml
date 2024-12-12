@@ -1,6 +1,6 @@
 ---
-- name: Collect DB2 Version
-  ansible.builtin.include_vars: "{{ db2_version }}"
+- name: Collect MQ Version
+  ansible.builtin.include_vars: "{{ mq_version }}"
 
 - name: Check for required environment variables
   ansible.builtin.include_tasks: 01_check_vars.yml
@@ -8,11 +8,11 @@
 - name: Install IBM Operator Catalog Source
   ansible.builtin.include_tasks: 02_install_catalog_source.yml
 
-- name: Install DB2 Operator
-  ansible.builtin.include_tasks: 03_install_db2_operator.yml
+- name: Install MQ Operator
+  ansible.builtin.include_tasks: 03_install_mq_operator.yml
 
-- name: Configure the DB2 Namespace
+- name: Configure the MQ Namespace
   ansible.builtin.include_tasks: 04_configure_namespace.yml
 
-- name: Deploy DB2
-  ansible.builtin.include_tasks: 05_deploy_db2.yml
+- name: Deploy MQ
+  ansible.builtin.include_tasks: 05_deploy_mq.yml

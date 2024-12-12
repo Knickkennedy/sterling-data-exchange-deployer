@@ -1,0 +1,6 @@
+---
+- name: Check for required environment variables
+  ansible.builtin.assert:
+    that:
+      - registry_key != ""
+    fail_msg: "Registry key or password is required in order to authenticate against the provided registry"
