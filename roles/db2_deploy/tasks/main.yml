@@ -5,14 +5,11 @@
 - name: Check for required environment variables
   ansible.builtin.include_tasks: 01_check_vars.yml
 
-- name: Install IBM Operator Catalog Source
-  ansible.builtin.include_tasks: 02_install_catalog_source.yml
-
 - name: Install DB2 Operator
-  ansible.builtin.include_tasks: 03_install_db2_operator.yml
+  ansible.builtin.include_tasks: 02_install_db2_operator.yml
 
 - name: Configure the DB2 Namespace
-  ansible.builtin.include_tasks: 04_configure_namespace.yml
+  ansible.builtin.include_tasks: 03_configure_namespace.yml
 
 - name: Deploy DB2
-  ansible.builtin.include_tasks: 05_deploy_db2.yml
+  ansible.builtin.include_tasks: 04_deploy_db2.yml
