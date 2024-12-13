@@ -7,9 +7,7 @@ registry: "{{ lookup('env', 'REGISTRY') | default('cp.icr.io', true) }}"
 registry_user: "{{ lookup('env', 'REGISTRY_USER') | default('cp', true) }}"
 registry_key: "{{ lookup('env', 'REGISTRY_KEY') }}"
 
-mq_secret: "{{ lookup('env', 'MQ_SECRET') | default('mq-secret', true) }}"
 mq_admin_password: "{{ lookup('env', 'MQ_ADMIN_PASSWORD') | default('Passw0rd!', true) }}"
-mq_app_password: "{{ lookup('env', 'MQ_APP_PASSWORD') | default('AppPassw0rd!', true) }}"
 
 mq_crd_name: "{{ lookup('env', 'MQ_CRD_NAME') | default('mq', true) }}"
 

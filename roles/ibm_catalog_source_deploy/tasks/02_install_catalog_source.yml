@@ -1,4 +1,10 @@
 ---
+- name: Create global output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/global
+    state: directory
+    mode: '0755'
+
 - name: Template the CatalogSource for reuse
   ansible.builtin.template:
     src: templates/catalogsource.yml.j2
