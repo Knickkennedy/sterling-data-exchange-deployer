@@ -1,0 +1,30 @@
+---
+- name: Look Up MQ Information
+  when: deploy_mq
+  block:
+    - name: Collect MQ networking information
+      kubernetes.core.k8s_info:
+        kind: Service
+        namespace: "{{ mq_namespace }}"
+        name: "c-{{ mq_crd_name }}-ibm-mq"
+      register: mq_service_output
+
+    - name: Register Database Networking Configuration
+      ansible.builtin.set_fact:
+        jms_password: "{{ mq_admin_password }}"
+        jms_host: "{{ mq_crd_name }}-ibm-mq.{{ mq_namespace }}.svc.cluster.local"
+        jms_port: >-
+          {{ mq_service_output.resources[0].spec.ports
+          | selectattr('name', '==', 'qmgr')
+          | map(attribute='port') }}
+
+    - name: Template the jms secret for reuse
+      ansible.builtin.template:
+        src: templates/jms-queue-secret.yml.j2
+        dest: ../output/{{ b2bi_namespace }}/{{ jms_secret }}.yml
+        mode: '0644'
+
+    - name: Create the JMS secret
+      kubernetes.core.k8s:
+        state: present
+        src: ../output/{{ b2bi_namespace }}/{{ jms_secret }}.yml

@@ -1,0 +1,9 @@
+---
+jms_secret: "{{ lookup('env', 'JMS_SECRET') | default('jms-queue', true) }}"
+
+jms_user: "admin"
+jms_vendor: "IBMMQ"
+jms_connection_factory: "com.ibm.mq.jms.MQQueueConnectionFactory"
+jms_queue_name: "DEV.QUEUE.1"
+jms_channel: "DEV.APP.SVRCONN"
+jms_enable_ssl: "false"

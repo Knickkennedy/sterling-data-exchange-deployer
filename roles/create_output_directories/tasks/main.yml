@@ -1,0 +1,3 @@
+---
+- name: Check for required environment variables
+  ansible.builtin.include_tasks: 01_create_output_directories.yml

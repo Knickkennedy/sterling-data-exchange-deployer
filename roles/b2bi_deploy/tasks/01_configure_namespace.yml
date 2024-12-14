@@ -1,12 +1,20 @@
 ---
-- name: Create B2Bi namespace if it does not exist
+- name: Create global output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ b2bi_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Template the DB2 Namespace for reuse
+  ansible.builtin.template:
+    src: templates/b2bi-namespace.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/{{ b2bi_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create B2Bi namespace
   kubernetes.core.k8s:
     state: present
-    definition:
-      apiVersion: v1
-      kind: Namespace
-      metadata:
-        name: "{{ b2bi_namespace }}"
+    src: ../output/{{ b2bi_namespace }}/{{ b2bi_namespace }}-namespace.yml
 
 - name: Create registry secret content "{{ b2bi_registry_secret }}"
   no_log: true
@@ -58,22 +66,3 @@
         namespace: "{{ b2bi_namespace }}"
       data:
         SYSTEM_PASSPHRASE: "{{ b2bi_liberty_keystore_password | b64encode }}"
-
-- name: Look Up DB2 Information
-  when: deploy_db2
-  block:
-    - name: Collect DB2 networking information
-      kubernetes.core.k8s_info:
-        kind: Service
-        namespace: "{{ db2_namespace }}"
-        name: "c-{{ db2_crd_name }}-db2u-engn-svc"
-      register: db2_service_output
-
-    - name: Register Database Networking Configuration
-      ansible.builtin.set_fact:
-        b2bi_dbvender: "DB2"
-        b2bi_dbhost: "c-{{ db2_crd_name }}-db2u-engn-svc.{{ db2_namespace }}.svc.cluster.local"
-        b2bi_dbport: >-
-          {{ db2_service_output.resources[0].spec.ports
-          | selectattr('name', '==', 'legacy-server')
-          | map(attribute='port') }}
