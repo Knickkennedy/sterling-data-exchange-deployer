@@ -1,5 +1,13 @@
 ---
+b2bi_helm_release_name: "{{ lookup('env', 'B2BI_RELEASE_NAME') | default('auto-b2bi', true) }}"
+b2bi_version: "{{ lookup('env', 'B2BI_VERSION') | default('6.2.0.2', true) }}"
+
 jms_secret: "{{ lookup('env', 'JMS_SECRET') | default('jms-queue', true) }}"
+jms_keystore_path: "{{ lookup('env', 'JMS_KEYSTORE_PATH') | default('', true) }}"
+jms_keystore_secret: "{{ lookup('env', 'JMS_KEYSTORE_SECRET') | default('', true) }}"
+jms_truststore_path: "{{ lookup('env', 'JMS_TRUSTSTORE_PATH') | default('', true) }}"
+jms_truststore_secret: "{{ lookup('env', 'JMS_TRUSTSTORE_SECRET') | default('', true) }}"
+jms_protocol: "{{ lookup('env', 'JMS_PROTOCOL') | default('TLSv1.2', true) }}"
 
 jms_user: "admin"
 jms_vendor: "IBMMQ"
@@ -7,3 +15,53 @@ jms_connection_factory: "com.ibm.mq.jms.MQQueueConnectionFactory"
 jms_queue_name: "DEV.QUEUE.1"
 jms_channel: "DEV.APP.SVRCONN"
 jms_enable_ssl: "false"
+
+b2bi_app_logs_size: "{{ lookup('env', 'B2BI_APPLOG_SIZE') | default('1Gi', true) }}"
+
+b2bi_app_documents_enabled: "{{ lookup('env', 'B2BI_APPDOC_ENABLED') | default(false, true) }}"
+b2bi_app_documents_size: "{{ lookup('env', 'B2BI_APPDOC_SIZE') | default('1Gi', true) }}"
+
+b2bi_data_setup_enabled: "{{ lookup('env', 'B2BI_DATASETUP_ENABLED') | default(true, true) }}"
+b2bi_data_setup_upgrade: "{{ lookup('env', 'B2BI_DATASETUP_UPGRADE') | default(false, true) }}"
+
+b2bi_seas_enabled: "{{ lookup('env', 'B2BI_SEAS_ENABLED') | default(false, true) }}"
+b2bi_itx_enabled: "{{ lookup('env', 'B2BI_ITX_ENABLED') | default(false, true) }}"
+b2bi_itxa_enabled: "{{ lookup('env', 'B2BI_ITXA_ENABLED') | default(false, true) }}"
+b2bi_sfg_enabled: "{{ lookup('env', 'B2BI_SFG_ENABLED') | default(false, true) }}"
+b2bi_ebics_enabled: "{{ lookup('env', 'B2BI_EBICS_ENABLED') | default(false, true) }}"
+b2bi_financial_services_enabled: "{{ lookup('env', 'B2BI_FINANCIAL_SERVICES_ENABLED') | default(false, true) }}"
+b2bi_file_operation_enabled: "{{ lookup('env', 'B2BI_FILE_OPERATION_ENABLED') | default(false, true) }}"
+b2bi_fips_enabled: "{{ lookup('env', 'B2BI_FIPS_ENABLED') | default(false, true) }}"
+
+b2bi_db_vendor: "{{ lookup('env', 'B2BI_DB_VENDOR') | default('DB2', true) }}"
+b2bi_db_drivers: "{{ lookup('env', 'B2BI_DBDRIVERS') | default('db2jcc4.jar', true) }}"
+b2bi_db_create_schema: "{{ lookup('env', 'B2BI_CREATE_SCHEMA') | default(true, true) }}"
+b2bi_use_oracle_service_name: "{{ lookup('env', 'B2BI_USE_ORACLE_SERVICE_NAME') | default(false, true) }}"
+b2bi_cfg_use_ssl: "{{ lookup('env', 'B2BI_CFG_USE_SSL') | default(false, true) }}"
+b2bi_db_secret: "{{ lookup('env', 'B2BI_DB_SECRET') | default('b2bi-db-secret', true) }}"
+b2bi_db_truststore: "{{ lookup('env', 'B2BI_DB_TRUSTSTORE') | default('', true) }}"
+b2bi_db_truststore_secret: "{{ lookup('env', 'B2BI_DB_TRUSTSTORE_SECRET') | default('', true) }}"
+b2bi_db_keystore: "{{ lookup('env', 'B2BI_DB_KEYSTORE') | default('', true) }}"
+b2bi_db_keystore_secret: "{{ lookup('env', 'B2BI_DB_KEYSTORE_SECRET') | default('', true) }}"
+b2bi_admin_email: "{{ lookup('env', 'B2BI_ADMIN_EMAIL') | default('admin@temp.net', true) }}"
+b2bi_smtp_host: "{{ lookup('env', 'B2BI_SMTP_HOST') | default('localhost', true) }}"
+b2bi_document_service_enabled: "{{ lookup('env', 'B2BI_DOCUMENT_SERVICE_ENABLED') | default(false, true) }}"
+
+# accepts 'on' or 'off'
+b2bi_nist_enabled: "{{ lookup('env', 'B2BI_NIST_ENABLED') | default('off', true) }}"
+
+versions:
+  6.2.0.2:
+    helm_chart_version: "3.0.4"
+    ocp_min_version: "4.14"
+    k8s_min_version: "1.27"
+    k8s_max_version: "1.29"
+    resourcesInit_version: "6.2.0.2"
+    dataSetup_version: "6.2.0.2"
+    seas_version: "1.0"
+    itx_version: "10.1.2.0.20231130"
+    itxa_version: "10.0.1.9-x86_64"
+    itxa_resourcesInit_version: "10.0.1.9-x86_64"
+    test_version: "1.1.65"
+    purge_version: "6.2.0.2"
+    documentService_version: "1.0.0.2"

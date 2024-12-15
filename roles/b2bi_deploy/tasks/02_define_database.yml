@@ -16,4 +16,8 @@
         b2bi_dbport: >-
           {{ db2_service_output.resources[0].spec.ports
           | selectattr('name', '==', 'legacy-server')
-          | map(attribute='port') }}
+          | map(attribute='port') | first }}
+
+    - name: Debug
+      ansible.builtin.debug:
+        msg: "{{ b2bi_dbport }}"

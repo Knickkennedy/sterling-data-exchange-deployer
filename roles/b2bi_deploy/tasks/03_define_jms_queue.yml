@@ -6,7 +6,7 @@
       kubernetes.core.k8s_info:
         kind: Service
         namespace: "{{ mq_namespace }}"
-        name: "c-{{ mq_crd_name }}-ibm-mq"
+        name: "{{ mq_crd_name }}-ibm-mq"
       register: mq_service_output
 
     - name: Register Database Networking Configuration
@@ -16,7 +16,7 @@
         jms_port: >-
           {{ mq_service_output.resources[0].spec.ports
           | selectattr('name', '==', 'qmgr')
-          | map(attribute='port') }}
+          | map(attribute='port') | first }}
 
     - name: Template the jms secret for reuse
       ansible.builtin.template:

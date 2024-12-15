@@ -8,10 +8,20 @@
   ansible.builtin.include_role:
     name: db2_deploy
   when: deploy_db2
+
 - name: Configure DB2 for Sterling B2B Integrator
   ansible.builtin.include_role:
     name: db2_configure_for_b2bi
   when: deploy_db2
 
-- name: "Deploy B2Bi Helm Chart"
+- name: "Configure B2Bi namespace"
   ansible.builtin.include_tasks: 01_configure_namespace.yml
+
+- name: "Define database configuration for B2Bi"
+  ansible.builtin.include_tasks: 02_define_database.yml
+
+- name: "Define the JMS queue for B2Bi"
+  ansible.builtin.include_tasks: 03_define_jms_queue.yml
+
+- name: "Deploy B2Bi helm chart and configuration"
+  ansible.builtin.include_tasks: 04_deploy_b2bi.yml

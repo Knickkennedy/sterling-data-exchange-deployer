@@ -1,5 +1,5 @@
 ---
-- name: Create global output directory if it does not exist
+- name: Create b2bi namespace scoped output directory if it does not exist
   ansible.builtin.file:
     path: ../output/{{ b2bi_namespace }}
     state: directory
@@ -66,3 +66,25 @@
         namespace: "{{ b2bi_namespace }}"
       data:
         SYSTEM_PASSPHRASE: "{{ b2bi_liberty_keystore_password | b64encode }}"
+
+- name: Template the b2bi service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/b2bi-sa-role-and-binding.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/b2bi-sa-role-and-binding.yml
+    mode: '0644'
+
+- name: Create the b2bi service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ b2bi_namespace }}/b2bi-sa-role-and-binding.yml
+
+- name: Template the b2bi database secret
+  ansible.builtin.template:
+    src: templates/b2bi-db-secret.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/{{ b2bi_db_secret }}.yml
+    mode: '0644'
+
+- name: Create the b2bi database secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ b2bi_namespace }}/{{ b2bi_db_secret }}.yml

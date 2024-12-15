@@ -1,0 +1,641 @@
+global:
+  license: true
+  licenseType: "{{ b2bi_license_type }}"
+  image:
+    repository: "cp.icr.io/cp/ibm-b2bi/b2bi"
+    tag: "{{ b2bi_version }}"
+    pullPolicy: IfNotPresent
+    pullSecret: "{{ b2bi_registry_secret }}"
+  networkPolicies:
+    ingress:
+      enabled: true
+      customPolicies:
+    egress:
+      enabled: true
+      customPolicies:
+arch:
+  amd64: "2 - No Preference"
+  ppc64le: "2 - No Preference"
+  s390x: "2 - No Preference"
+serviceAccount:
+  name: "{{ b2bi_serviceaccount }}"
+resourcesInit:
+  enabled: true
+  image:
+    repository: "cp.icr.io/cp/ibm-b2bi/b2bi-resources"
+    tag: "{{ versions[b2bi_version].resourcesInit_version | default('') }}"
+    pullPolicy: "IfNotPresent"
+  command:
+persistence:
+  enabled: true
+  useDynamicProvisioning: true
+appResourcesPVC:
+  enabled: false
+  storageClassName: ""
+  selector:
+    label: "intent"
+    value: "resources"
+  accessMode: ReadOnlyMany
+  size: 100Mi
+  preDefinedResourcePVCName: 
+appLogsPVC:
+  storageClassName: "{{ file_storage_class }}"
+  selector:
+    label: "intent"
+    value: "logs"
+  accessMode: ReadWriteMany
+  size: "{{ b2bi_app_logs_size }}"
+  preDefinedLogsPVCName: 
+appDocumentsPVC:
+  enabled: {{ b2bi_app_documents_enabled }}
+  storageClassName: "{{ file_storage_class }}"
+  selector:
+    label: "intent"
+    value: "documents"
+  accessMode: ReadWriteMany
+  size: "{{ b2bi_app_documents_size }}"
+  enableVolumeClaimPerPod: false
+  preDefinedDocumentPVCName: 
+extraPVCs: []
+security:
+  supplementalGroups: [65534]
+  fsGroup:
+  fsGroupChangePolicy: "OnRootMismatch"
+  runAsUser:
+  runAsGroup: 
+ingress:
+  enabled: true
+  controller: "nginx"
+  annotations: {}
+  port:
+dataSetup:
+  enabled: {{ b2bi_data_setup_enabled }}
+  upgrade: {{ b2bi_data_setup_upgrade }}
+  image:
+    repository: "cp.icr.io/cp/ibm-b2bi/b2bi-dbsetup"
+    tag: "{{ versions[b2bi_version].dataSetup_version | default('') }}"
+    pullPolicy: IfNotPresent
+    pullSecret: "{{ b2bi_registry_secret }}"
+    extraLabels: {}
+env:
+  tz: "UTC"
+  upgradeCompatibilityVerified: false
+  debugMode: false
+  extraEnvs: []
+logs:
+  enableAppLogOnConsole: true
+applyPolicyToKubeSystem: false
+integrations:
+  seasIntegration:
+    isEnabled: {{ b2bi_seas_enabled }}
+    seasVersion: "{{ versions[b2bi_version].seas_version | default('') }}"
+  itxIntegration:
+    enabled: {{ b2bi_itx_enabled }}
+    dataSetup:
+      enabled: true
+    image:
+      repository: "cp.icr.io/cp/ibm-itx-rs"
+      tag: "{{ versions[b2bi_version].itx_version | default('') }}"
+      pullPolicy: IfNotPresent
+      pullSecret: "{{ b2bi_registry_secret }}"
+    dataPVC:
+      name: itxdata
+      useDynamicProvisioning: true  
+      storageClassName: "{{ file_storage_class }}"
+      selector:
+        label: "intent"
+        value: "itxdata"
+      accessMode: ReadWriteMany
+      size: 100Mi
+      preDefinedDataPVCName:
+    logsPVC:
+      name: itxlogs
+      useDynamicProvisioning: true
+      storageClassName: "{{ file_storage_class }}"
+      selector:
+        label: "intent"
+        value: "itxlogs"
+      accessMode: ReadWriteMany
+      size: 100Mi
+      preDefinedLogsPVCName:
+    log:
+      includeHostInLogNames: true
+      jniLog:
+        level: "none"
+      cmgrLog:
+        level: "none"
+  itxaIntegration:
+    enabled: {{ b2bi_itxa_enabled }}
+    dataSetup:
+      enabled: true
+    image:
+      repository: "cp.icr.io/cp/ibm-itxa/itxa-runtime"
+      tag: "{{ versions[b2bi_version].itxa_version | default('') }}"
+      pullPolicy: IfNotPresent
+      pullSecret: "{{ b2bi_registry_secret }}"
+    appSecret: "itxa-oracle-secrets"
+    secureDBConnection:
+      enabled: false
+      dbservercertsecretname: ""
+    persistence:
+      claims:
+        name: itxa-logs-pvc
+    sso:
+      host: "speui.apps.openshift.in.dev"
+      port: 443
+      ssl:
+        enabled: true
+    resourcesInit:
+      enabled: true
+      image:
+        repository: "cp.icr.io/cp/ibm-itxa/itxa-resources"
+        tag: "{{ versions[b2bi_version].itxa_resourcesInit_version | default('') }}"
+        pullPolicy: "IfNotPresent"
+setupCfg:
+  upgrade: false
+  basePort: 50000
+  licenseAcceptEnableSfg: {{ b2bi_sfg_enabled }}
+  licenseAcceptEnableEbics: {{ b2bi_ebics_enabled }}
+  licenseAcceptEnableFinancialServices: {{ b2bi_financial_services_enabled }}
+  licenseAcceptEnableFileOperation: {{ b2bi_file_operation_enabled }}
+  systemPassphraseSecret: "{{ b2bi_system_passphrase_secret }}"
+  enableFipsMode: {{ b2bi_fips_enabled }}
+  nistComplianceMode: "{{ b2bi_nist_enabled }}"
+  dbVendor: "{{ b2bi_db_vendor }}"
+  dbHost: "{{ b2bi_dbhost }}"
+  dbPort: {{ b2bi_dbport }}
+  dbData: "{{ db2_dbname }}"
+  dbDrivers: "{{ b2bi_db_drivers }}"
+  dbCreateSchema: {{ b2bi_db_create_schema }}
+  oracleUseServiceName: {{ b2bi_use_oracle_service_name }}
+  usessl: {{ b2bi_cfg_use_ssl }}
+  dbSecret: "{{ b2bi_db_secret }}"
+  dbTruststore: "{{ b2bi_db_truststore }}"
+  dbTruststoreSecret: "{{ b2bi_db_truststore_secret }}"
+  dbKeystore: "{{ b2bi_db_keystore }}"
+  dbKeystoreSecret: "{{ b2bi_db_keystore_secret }}"
+  connectionpoolFailoverEnable: false
+  adminEmailAddress: "{{ b2bi_admin_email }}"
+  smtpHost: "{{ b2bi_smtp_host }}"
+  terminationGracePeriod: 30
+  jmsVendor: "{{ jms_vendor }}"
+  jmsConnectionFactory: "{{ jms_connection_factory }}"
+  jmsConnectionFactoryInstantiator:
+  jmsQueueName: "{{ jms_queue_name }}"
+  jmsHost: "{{ jms_host }}"
+  jmsPort: {{ jms_port }}
+  jmsConnectionNameList:
+  jmsChannel: "{{ jms_channel }}"
+  jmsEnableSsl: {{ jms_enable_ssl }}
+  jmsSecret: "{{ jms_secret }}"
+  jmsKeystorePath: "{{ jms_keystore_path }}"
+  jmsKeystoreSecret: "{{ jms_keystore_secret }}"
+  jmsTruststorePath: "{{ jms_truststore_path }}"
+  jmsTruststoreSecret: "{{ jms_truststore_secret }}"
+  jmsCiphersuite:
+  jmsProtocol: "{{ jms_protocol }}"
+  libertyKeystoreLocation:
+  libertyKeystoreSecret: 
+  libertyProtocol: TLSv1.2
+  libertySecret: "{{ b2bi_liberty_keystore_password_secret }}"
+  libertyJvmOptions:
+  defaultDocumentStorageType: DB
+  restartCluster: false
+  useSslForRmi: true
+  rmiTlsSecretName:
+  sapSncSecretName:
+  sapSncLibVendorName:
+  sapSncLibVersion:
+  sapSncLibName:  
+  launchClaServer: false
+asi:
+  replicaCount: 1
+  env:
+    jvmOptions:
+    extraEnvs: []
+  frontendService:
+    type: ClusterIP
+    sessionAffinityConfig:
+      timeoutSeconds: 10800
+    externalTrafficPolicy: Cluster
+    ports:
+      http: 
+        name: http
+        port: 35000
+        targetPort: http
+        nodePort: 30000
+        protocol: TCP
+      https: 
+        name: https
+        port: 35001
+        targetPort: https
+        nodePort: 30001
+        protocol: TCP
+      soa: 
+        name: soa
+        port: 35002
+        targetPort: soa
+        nodePort: 30002
+        protocol: TCP
+      soassl: 
+        name: soassl
+        port: 35003
+        targetPort: soassl
+        nodePort: 30003
+        protocol: TCP
+      restHttpAdapter: 
+        name: rest-adapter
+        port: 35007
+        targetPort: rest-adapter
+        nodePort: 30007
+        protocol: TCP
+      ops: 
+        name: ops
+        port: 35008
+        targetPort: ops
+        nodePort: 30008
+        protocol: TCP
+    extraPorts: []
+    loadBalancerIP:  
+    loadBalancerSourceRanges: []
+    annotations: {}  
+  backendService:
+    type: LoadBalancer
+    sessionAffinity: None
+    sessionAffinityConfig:
+      timeoutSeconds: 10800
+    externalTrafficPolicy: Cluster
+    ports: []
+    portRanges:
+      - name: adapters
+        portRange: 30351-30353
+        targetPortRange: 30351-30353
+        nodePortRange: 30351-30353
+        protocol: TCP
+    loadBalancerIP:  
+    loadBalancerSourceRanges: []
+    annotations: {}
+  livenessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 30
+    periodSeconds: 60
+  readinessProbe:
+    initialDelaySeconds: 30
+    timeoutSeconds: 5
+    periodSeconds: 60
+    command:
+    arg: []
+  startupProbe:
+    initialDelaySeconds: 300
+    timeoutSeconds: 30
+    periodSeconds: 60
+    failureThreshold: 6
+  internalAccess:
+    enableHttps: true
+    httpsPort:   
+    tlsSecretName:  
+  externalAccess:
+    protocol: http
+    address: 
+    port:
+  ingress:
+    internal:
+      host: "asi.{{ b2bi_namespace }}.{{ openshift_host }}"
+      tls:
+        enabled: true
+        secretName: ""
+      extraPaths: []
+    external:
+      host: ""
+      tls:
+        enabled: true
+        secretName: ""
+      extraPaths: []
+  extraPVCs: []
+  extraInitContainers: []
+  resources: 
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+      ephemeral-storage: "4Gi"
+    requests:
+      cpu: 2000m
+      memory: 4Gi
+      ephemeral-storage: "2Gi"
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 60
+  defaultPodDisruptionBudget:
+    enabled: false
+    minAvailable: 1
+  extraLabels: {}
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  topologySpreadConstraints: []
+  tolerations: [] 
+  extraSecrets: []
+  extraConfigMaps: []
+  myFgAccess:
+    myFgPort:
+    myFgProtocol:
+  hostAliases: []
+  performanceTuning:
+    allocateMemToBI: false
+    allocateMemToSAP: false
+    allocateMemToCLA: false
+    threadsPerCore: 4
+    override: []
+  networkPolicies:
+    ingress:
+      customPolicies:
+    egress:
+      customPolicies:
+ac:
+  replicaCount: 1
+  env:
+    jvmOptions:
+    extraEnvs: []
+  frontendService:
+    type: ClusterIP
+    sessionAffinityConfig:
+      timeoutSeconds: 10800
+    externalTrafficPolicy: Cluster
+    ports:
+      http: 
+        name: http
+        port: 35004
+        targetPort: http
+        nodePort: 30004
+        protocol: TCP
+    extraPorts: []
+    loadBalancerIP:  
+    loadBalancerSourceRanges: []
+    annotations: {}  
+  backendService:
+    type: LoadBalancer
+    sessionAffinity: None
+    sessionAffinityConfig:
+      timeoutSeconds: 10800
+    externalTrafficPolicy: Cluster
+    ports: []
+    portRanges:
+      - name: adapters
+        portRange: 30501-30600
+        targetPortRange: 30501-30600
+        nodePortRange: 30501-30600
+        protocol: TCP
+    loadBalancerIP:  
+    loadBalancerSourceRanges: []
+    annotations: {} 
+  livenessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 5
+    periodSeconds: 60
+  readinessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 5
+    periodSeconds: 60
+    command:
+    arg: []
+  internalAccess:
+    enableHttps: true
+    tlsSecretName:
+  ingress:
+    internal:
+      host: "ac.{{ b2bi_namespace }}.{{ openshift_host }}"
+      tls:
+        enabled: true
+        secretName: ""
+      extraPaths: []
+    external:
+      host: ""
+      tls:
+        enabled: true
+        secretName: ""
+      extraPaths: []
+  extraPVCs: []
+  extraInitContainers: []
+  resources: 
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+      ephemeral-storage: "4Gi"
+    requests:
+      cpu: 2000m
+      memory: 4Gi
+      ephemeral-storage: "2Gi"
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 60
+  defaultPodDisruptionBudget:
+    enabled: false
+    minAvailable: 1
+  extraLabels: {}
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  topologySpreadConstraints: []
+  tolerations: [] 
+  extraSecrets: []
+  extraConfigMaps: []
+  myFgAccess:
+    myFgPort:
+    myFgProtocol:
+  hostAliases: []
+  performanceTuning:
+    allocateMemToSAP: false
+  networkPolicies:
+    ingress:
+      customPolicies:
+    egress:
+      customPolicies:
+api:
+  replicaCount: 1
+  env:
+    jvmOptions:
+    extraEnvs: []
+  frontendService:
+    type: ClusterIP
+    sessionAffinityConfig:
+      timeoutSeconds: 10800
+    externalTrafficPolicy: Cluster
+    ports:
+      http:
+        name: http
+        port: 35005
+        targetPort: http
+        nodePort: 30005
+        protocol: TCP
+      https:
+        name: https
+        port: 35006
+        targetPort: https
+        nodePort: 30006
+        protocol: TCP
+    extraPorts: []
+    loadBalancerIP:  
+    loadBalancerSourceRanges: []
+    annotations: {}  
+  livenessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 5
+    periodSeconds: 60
+  readinessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 5
+    periodSeconds: 60
+    command:
+    arg: []
+  internalAccess:
+    enableHttps: true
+    tlsSecretName:
+  externalAccess:
+    protocol: http
+    address: 
+    port: 
+  ingress:
+    internal:
+      host: "api.{{ b2bi_namespace }}.{{ openshift_host }}"
+      tls:
+        enabled: true
+        secretName: ""
+  extraPVCs: []
+  extraInitContainers: []
+  resources: 
+    limits:
+      cpu: 4000m
+      memory: 4Gi
+      ephemeral-storage: "4Gi"
+    requests:
+      cpu: 2000m
+      memory: 2Gi
+      ephemeral-storage: "2Gi"
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 60
+  defaultPodDisruptionBudget:
+    enabled: false
+    minAvailable: 1
+  extraLabels: {}
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  topologySpreadConstraints: []
+  tolerations: [] 
+  extraSecrets: []
+  extraConfigMaps: []
+  hostAliases: []
+  networkPolicies:
+    ingress:
+      customPolicies:
+    egress:
+      customPolicies:
+nameOverride: ""
+fullnameOverride: ""
+test:
+  image:
+    repository: 'cp.icr.io/cp/opencontent-common-utils'
+    tag: "{{ versions[b2bi_version].test_version | default('') }}"
+    pullPolicy: 'IfNotPresent'
+purge:
+  enabled: true
+  image:
+    repository: "cp.icr.io/cp/ibm-b2bi/b2bi-purge"
+    tag: "{{ versions[b2bi_version].purge_version | default('') }}"
+    pullPolicy: IfNotPresent
+    pullSecret: "{{ b2bi_registry_secret }}"
+    extraLabels: {}
+  schedule: "0 0 * * *"
+  startingDeadlineSeconds: 60
+  activeDeadlineSeconds: 3600
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  env:
+    jvmOptions:
+    extraEnvs: []
+  internalAccess:
+    enableHttps: true
+    tlsSecretName: 
+  resources: 
+    limits:
+      cpu: 500m
+      memory: 1Gi
+      ephemeral-storage: "1Gi"
+    requests:
+      cpu: 100m
+      memory: 500Mi 
+      ephemeral-storage: "500Mi"
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+documentService:
+  enabled: {{ b2bi_document_service_enabled }}
+  sslEnabled: true
+  useGrpc: true
+  readBufferSize: 32768
+  grpcPoolSize: 150
+  keepAliveGrpc: 300
+  license: false
+  replicaCount: 1
+  image:
+    repository: cp.icr.io/cp/ibm-b2bi/b2bi-documentservice
+    pullPolicy: IfNotPresent
+    tag: "{{ versions[b2bi_version].documentService_version | default('') }}"
+    digest:
+    pullSecret: "{{ b2bi_registry_secret }}"
+  serviceAccount:
+    name: "{{ b2bi_serviceaccount }}"
+  application:
+    server:
+      ssl:
+        enabled: true
+        tlsSecretName:
+        trustStoreSecretName:
+        clientAuth: want
+    logging:
+      level: ERROR
+  objectstore:
+    name:
+    endpoint:
+    namespace:
+    region:
+    secretName:
+    useKeysFromSecrets: false
+  connectionPoolConfig:
+    maxTotalConnections: 250
+    maxConnectionsPerRoute: 100
+    connectTimeout: 10000
+    readTimeout: 60000
+    idleTimeout: 60000
+    idleMonitorThread: true
+    waitTimeout: 30000
+    keepAlive: 300000
+    retryCount: 2
+    disableContentCompression: true

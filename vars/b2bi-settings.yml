@@ -1,6 +1,15 @@
 ---
 # B2Bi Settings
+b2bi_version: "{{ lookup('env', 'B2BI_VERSION') | default('6.2.0.2', true) }}"
+b2bi_license_type: "{{ lookup('env', 'B2BI_LICENSE_TYPE') | default('non-prod', true) }}"
+
+b2bi_app_logs_size: "{{ lookup('env', 'B2BI_APPLOG_SIZE') | default('1Gi', true) }}"
+
+b2bi_app_documents_enabled: "{{ lookup('env', 'B2BI_APPDOC_ENABLED') | default('false', true) }}"
+b2bi_app_documents_size: "{{ lookup('env', 'B2BI_APPDOC_SIZE') | default('1Gi', true) }}"
+
 b2bi_namespace: "{{ lookup('env', 'B2BI_NAMESPACE') | default('b2bi', true) }}"
+b2bi_serviceaccount: "{{ lookup('env', 'B2BI_SA') | default('b2bi-sa', true) }}"
 
 b2bi_registry_secret: "{{ lookup('env', 'REGISTRY') | default('ibm-registry-secret', true) }}"
 b2bi_registry: "{{ lookup('env', 'REGISTRY') | default('cp.icr.io', true) }}"
@@ -46,7 +55,7 @@ mq_registry_secret: "{{ lookup('env', 'REGISTRY') | default('ibm-registry-secret
 mq_secret: "{{ lookup('env', 'MQ_SECRET') | default('b2bi-mq-secret', true) }}"
 mq_admin_password: "{{ lookup('env', 'MQ_ADMIN_PASSWORD') | default('Passw0rd!', true) }}"
 
-mq_crd_name: "{{ lookup('env', 'MQ_CRD_NAME') | default('b2bi-mq-tests', true) }}"
+mq_crd_name: "{{ lookup('env', 'MQ_CRD_NAME') | default('b2bi-mq', true) }}"
 
 mq_storage_size: "{{ lookup('env', 'MQ_SIZE') | default('20Gi', true) }}"
 
