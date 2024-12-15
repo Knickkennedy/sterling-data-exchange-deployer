@@ -31,3 +31,4 @@
     timeout: "4h"
     values_files:
       - ../output/{{ b2bi_namespace }}/values.yml
+    atomic: true
