@@ -1,3 +1,0 @@
----
-- name: Define Storage Classes
-  ansible.builtin.include_tasks: 01_define_storage.yml

@@ -1,6 +1,15 @@
 ---
 b2bi_helm_release_name: "{{ lookup('env', 'B2BI_RELEASE_NAME') | default('auto-b2bi', true) }}"
 b2bi_version: "{{ lookup('env', 'B2BI_VERSION') | default('6.2.0.2', true) }}"
+b2bi_license_type: "{{ lookup('env', 'B2BI_LICENSE_TYPE') | default('non-prod', true) }}"
+
+b2bi_namespace: "{{ lookup('env', 'B2BI_NAMESPACE') | default('b2bi', true) }}"
+b2bi_serviceaccount: "{{ lookup('env', 'B2BI_SA') | default('b2bi-sa', true) }}"
+
+b2bi_registry_secret: "{{ lookup('env', 'REGISTRY') | default('ibm-registry-secret', true) }}"
+b2bi_registry: "{{ lookup('env', 'REGISTRY') | default('cp.icr.io', true) }}"
+b2bi_registry_user: "{{ lookup('env', 'REGISTRY_USER') | default('cp', true) }}"
+b2bi_registry_key: "{{ lookup('env', 'REGISTRY_KEY') }}"
 
 jms_secret: "{{ lookup('env', 'JMS_SECRET') | default('jms-queue', true) }}"
 jms_keystore_path: "{{ lookup('env', 'JMS_KEYSTORE_PATH') | default('', true) }}"
@@ -9,11 +18,11 @@ jms_truststore_path: "{{ lookup('env', 'JMS_TRUSTSTORE_PATH') | default('', true
 jms_truststore_secret: "{{ lookup('env', 'JMS_TRUSTSTORE_SECRET') | default('', true) }}"
 jms_protocol: "{{ lookup('env', 'JMS_PROTOCOL') | default('TLSv1.2', true) }}"
 
-jms_user: "admin"
+jms_user: "appuser"
 jms_vendor: "IBMMQ"
 jms_connection_factory: "com.ibm.mq.jms.MQQueueConnectionFactory"
 jms_queue_name: "DEV.QUEUE.1"
-jms_channel: "DEV.APP.SVRCONN"
+jms_channel: "DEV.CHANNEL.SVRCONN"
 jms_enable_ssl: "false"
 
 b2bi_app_logs_size: "{{ lookup('env', 'B2BI_APPLOG_SIZE') | default('1Gi', true) }}"
@@ -46,6 +55,12 @@ b2bi_db_keystore_secret: "{{ lookup('env', 'B2BI_DB_KEYSTORE_SECRET') | default(
 b2bi_admin_email: "{{ lookup('env', 'B2BI_ADMIN_EMAIL') | default('admin@temp.net', true) }}"
 b2bi_smtp_host: "{{ lookup('env', 'B2BI_SMTP_HOST') | default('localhost', true) }}"
 b2bi_document_service_enabled: "{{ lookup('env', 'B2BI_DOCUMENT_SERVICE_ENABLED') | default(false, true) }}"
+
+b2bi_system_passphrase_secret: "{{ lookup('env', 'B2BI_SYSTEM_PASSPHRASE_SECRET') | default('b2bi-system-passphrase-secret', true) }}"
+b2bi_system_passphrase: "{{ lookup('env', 'B2BI_SYSTEM_PASSPHRASE') | default('passw0rd', true) }}"
+
+b2bi_liberty_keystore_password_secret: "{{ lookup('env', 'B2BI_LIBERTY_KEYSTORE_PASSWORD_SECRET') | default('b2bi-liberty-secret', true) }}"
+b2bi_liberty_keystore_password: "{{ lookup('env', 'B2BI_LIBERTY_KEYSTORE_PASSWORD') | default('changeit', true) }}"
 
 # accepts 'on' or 'off'
 b2bi_nist_enabled: "{{ lookup('env', 'B2BI_NIST_ENABLED') | default('off', true) }}"

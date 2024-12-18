@@ -1,0 +1,3 @@
+---
+- name: Check global variables
+  ansible.builtin.include_tasks: check_globals.yml

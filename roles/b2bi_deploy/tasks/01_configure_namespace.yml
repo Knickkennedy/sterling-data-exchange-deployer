@@ -5,7 +5,7 @@
     state: directory
     mode: '0755'
 
-- name: Template the DB2 Namespace for reuse
+- name: Template the B2Bi Namespace for reuse
   ansible.builtin.template:
     src: templates/b2bi-namespace.yml.j2
     dest: ../output/{{ b2bi_namespace }}/{{ b2bi_namespace }}-namespace.yml
@@ -16,7 +16,7 @@
     state: present
     src: ../output/{{ b2bi_namespace }}/{{ b2bi_namespace }}-namespace.yml
 
-- name: Create registry secret content "{{ b2bi_registry_secret }}"
+- name: Build registry secret content "{{ b2bi_registry_secret }}"
   no_log: true
   vars:
     auth: "{{ registry_user }}:{{ registry_key }}"
@@ -29,43 +29,38 @@
   ansible.builtin.set_fact:
     new_secret: "{{ content | join('') }}"
 
-- name: Generate b2bi registry secret "{{ b2bi_registry_secret }}"
-  no_log: true
+- name: Template the B2Bi registry secret
+  ansible.builtin.template:
+    src: templates/b2bi-registry-secret.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/b2bi-registry-secret.yml
+    mode: '0644'
+
+- name: Create B2Bi registry secret
   kubernetes.core.k8s:
     state: present
-    definition:
-      apiVersion: v1
-      kind: Secret
-      type: kubernetes.io/dockerconfigjson
-      metadata:
-        name: "{{ b2bi_registry_secret }}"
-        namespace: "{{ b2bi_namespace }}"
-      data:
-        .dockerconfigjson: "{{ new_secret | to_json | b64encode }}"
+    src: ../output/{{ b2bi_namespace }}/b2bi-registry-secret.yml
 
-- name: "Generate secret '{{ b2bi_system_passphrase_secret }}'"
-  kubernetes.core.k8s:
-    definition:
-      apiVersion: v1
-      kind: Secret
-      type: Opaque
-      metadata:
-        name: "{{ b2bi_system_passphrase_secret }}"
-        namespace: "{{ b2bi_namespace }}"
-      data:
-        SYSTEM_PASSPHRASE: "{{ b2bi_system_passphrase | b64encode }}"
+- name: Template the B2Bi system passphrase secret
+  ansible.builtin.template:
+    src: templates/b2bi-system-passphrase-secret.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/b2bi-system-passphrase-secret.yml
+    mode: '0644'
 
-- name: "Generate secret '{{ b2bi_liberty_keystore_password_secret }}'"
+- name: Create B2Bi system passphrase secret
   kubernetes.core.k8s:
-    definition:
-      apiVersion: v1
-      kind: Secret
-      type: Opaque
-      metadata:
-        name: "{{ b2bi_liberty_keystore_password_secret }}"
-        namespace: "{{ b2bi_namespace }}"
-      data:
-        SYSTEM_PASSPHRASE: "{{ b2bi_liberty_keystore_password | b64encode }}"
+    state: present
+    src: ../output/{{ b2bi_namespace }}/../output/{{ b2bi_namespace }}/b2bi-system-passphrase-secret.yml
+
+- name: Template the B2Bi liberty passphrase secret
+  ansible.builtin.template:
+    src: templates/b2bi-liberty-keystore-password-secret.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/b2bi-liberty-keystore-password-secret.yml
+    mode: '0644'
+
+- name: Create B2Bi liberty passphrase secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ b2bi_namespace }}/b2bi-liberty-keystore-password-secret.yml
 
 - name: Template the b2bi service account, role, and rolebinding
   ansible.builtin.template:

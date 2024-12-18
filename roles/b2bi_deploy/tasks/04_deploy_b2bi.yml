@@ -28,7 +28,6 @@
     name: "{{ b2bi_helm_release_name }}"
     chart_ref: ../output/{{ b2bi_namespace }}/ibm-b2bi-prod-{{ versions[b2bi_version].helm_chart_version }}.tgz
     release_namespace: "{{ b2bi_namespace }}"
-    timeout: "4h"
+    timeout: "6h"
     values_files:
       - ../output/{{ b2bi_namespace }}/values.yml
-    atomic: true

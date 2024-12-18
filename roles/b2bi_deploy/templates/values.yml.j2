@@ -23,7 +23,7 @@ resourcesInit:
   enabled: true
   image:
     repository: "cp.icr.io/cp/ibm-b2bi/b2bi-resources"
-    tag: "{{ versions[b2bi_version].resourcesInit_version | default('') }}"
+    tag: "{{ versions[b2bi_version].resourcesInit_version }}"
     pullPolicy: "IfNotPresent"
   command:
 persistence:
@@ -73,7 +73,7 @@ dataSetup:
   upgrade: {{ b2bi_data_setup_upgrade }}
   image:
     repository: "cp.icr.io/cp/ibm-b2bi/b2bi-dbsetup"
-    tag: "{{ versions[b2bi_version].dataSetup_version | default('') }}"
+    tag: "{{ versions[b2bi_version].dataSetup_version }}"
     pullPolicy: IfNotPresent
     pullSecret: "{{ b2bi_registry_secret }}"
     extraLabels: {}
@@ -88,14 +88,14 @@ applyPolicyToKubeSystem: false
 integrations:
   seasIntegration:
     isEnabled: {{ b2bi_seas_enabled }}
-    seasVersion: "{{ versions[b2bi_version].seas_version | default('') }}"
+    seasVersion: "{{ versions[b2bi_version].seas_version }}"
   itxIntegration:
     enabled: {{ b2bi_itx_enabled }}
     dataSetup:
       enabled: true
     image:
       repository: "cp.icr.io/cp/ibm-itx-rs"
-      tag: "{{ versions[b2bi_version].itx_version | default('') }}"
+      tag: "{{ versions[b2bi_version].itx_version }}"
       pullPolicy: IfNotPresent
       pullSecret: "{{ b2bi_registry_secret }}"
     dataPVC:
@@ -130,7 +130,7 @@ integrations:
       enabled: true
     image:
       repository: "cp.icr.io/cp/ibm-itxa/itxa-runtime"
-      tag: "{{ versions[b2bi_version].itxa_version | default('') }}"
+      tag: "{{ versions[b2bi_version].itxa_version }}"
       pullPolicy: IfNotPresent
       pullSecret: "{{ b2bi_registry_secret }}"
     appSecret: "itxa-oracle-secrets"
@@ -149,7 +149,7 @@ integrations:
       enabled: true
       image:
         repository: "cp.icr.io/cp/ibm-itxa/itxa-resources"
-        tag: "{{ versions[b2bi_version].itxa_resourcesInit_version | default('') }}"
+        tag: "{{ versions[b2bi_version].itxa_resourcesInit_version }}"
         pullPolicy: "IfNotPresent"
 setupCfg:
   upgrade: false
@@ -184,7 +184,7 @@ setupCfg:
   jmsQueueName: "{{ jms_queue_name }}"
   jmsHost: "{{ jms_host }}"
   jmsPort: {{ jms_port }}
-  jmsConnectionNameList:
+  jmsConnectionNameList: "{{ jms_connection_name_list }}"
   jmsChannel: "{{ jms_channel }}"
   jmsEnableSsl: {{ jms_enable_ssl }}
   jmsSecret: "{{ jms_secret }}"
@@ -560,13 +560,13 @@ fullnameOverride: ""
 test:
   image:
     repository: 'cp.icr.io/cp/opencontent-common-utils'
-    tag: "{{ versions[b2bi_version].test_version | default('') }}"
+    tag: "{{ versions[b2bi_version].test_version }}"
     pullPolicy: 'IfNotPresent'
 purge:
   enabled: true
   image:
     repository: "cp.icr.io/cp/ibm-b2bi/b2bi-purge"
-    tag: "{{ versions[b2bi_version].purge_version | default('') }}"
+    tag: "{{ versions[b2bi_version].purge_version }}"
     pullPolicy: IfNotPresent
     pullSecret: "{{ b2bi_registry_secret }}"
     extraLabels: {}
@@ -607,7 +607,7 @@ documentService:
   image:
     repository: cp.icr.io/cp/ibm-b2bi/b2bi-documentservice
     pullPolicy: IfNotPresent
-    tag: "{{ versions[b2bi_version].documentService_version | default('') }}"
+    tag: "{{ versions[b2bi_version].documentService_version }}"
     digest:
     pullSecret: "{{ b2bi_registry_secret }}"
   serviceAccount:

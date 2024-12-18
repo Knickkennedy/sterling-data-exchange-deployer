@@ -18,6 +18,10 @@
           | selectattr('name', '==', 'qmgr')
           | map(attribute='port') | first }}
 
+    - name: Add jms connection name list
+      ansible.builtin.set_fact:
+        jms_connection_name_list: "{{ jms_host }}({{ jms_port }})"
+
     - name: Template the jms secret for reuse
       ansible.builtin.template:
         src: templates/jms-queue-secret.yml.j2

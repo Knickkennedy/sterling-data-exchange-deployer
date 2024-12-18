@@ -9,6 +9,17 @@ spec:
     license: L-DRNQ-NGCA76
     use: NonProduction
   queueManager:
+    mqsc:
+    - configMap:
+        name: mqsc-ini-example
+        items:
+        - example1.mqsc
+        - example2.mqsc
+    ini:
+    - configMap:
+        name: mqsc-ini-example
+        items:
+        - example.ini
     availability:
       type: SingleInstance
     storage:

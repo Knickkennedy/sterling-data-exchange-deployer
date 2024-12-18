@@ -34,3 +34,14 @@
   kubernetes.core.k8s:
     state: present
     src: ../output/{{ mq_namespace }}/mq-auth-configmap.yml
+
+- name: Template the mq mqsc configmap for reuse
+  ansible.builtin.template:
+    src: templates/mq-mqsc-configmap.yml.j2
+    dest: ../output/{{ mq_namespace }}/mq-mqsc-configmap.yml
+    mode: '0644'
+
+- name: Generate mq mqsc configmap
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ mq_namespace }}/mq-mqsc-configmap.yml

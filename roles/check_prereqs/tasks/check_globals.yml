@@ -1,8 +1,10 @@
 ---
-# Provide intelligent storage class selection to minimize required user knowledge
+- name: Check registry key exists
+  ansible.builtin.assert:
+    that:
+      - registry_key != ""
+    fail_msg: "Registry key or password is required in order to authenticate against the provided registry."
 
-# 1. Lookup storage class availabiity
-# -----------------------------------------------------------------------------
 - name: Lookup Storage classes
   kubernetes.core.k8s_info:
     #    api_version: storage.k8s.io/v1

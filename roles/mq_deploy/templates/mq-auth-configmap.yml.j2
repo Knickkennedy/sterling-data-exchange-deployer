@@ -7,22 +7,203 @@ data:
   mqwebuser.xml: |
     <?xml version="1.0" encoding="UTF-8"?>
     <server>
-      <featureManager>
-        <feature>appSecurity-2.0</feature>
-        <feature>basicAuthenticationMQ-1.0</feature>
-      </featureManager>
-      <enterpriseApplication id="com.ibm.mq.console">
-        <application-bnd>
-          <security-role name="MQWebAdmin">
-            <group name="MQWebAdminGroup" realm="defaultRealm"/>
-          </security-role>
-        </application-bnd>
-      </enterpriseApplication>
-      <basicRegistry id="basic" realm="defaultRealm">
-        <user name="admin" password="{{ mq_admin_password }}"/>
-        <group name="MQWebAdminGroup">
-          <member name="admin"/>
-        </group>
-      </basicRegistry>           
-      <sslDefault sslRef="mqDefaultSSLConfig"/>
+    	<!-- ****************************************************************** -->
+    	<!--                                                                    -->
+    	<!--  IBM MQ security configuration for MQ Console and REST API.        -->
+    	<!--                                                                    -->
+    	<!--  Name: basic_registry.xml                                          -->
+    	<!--                                                                    -->
+    	<!--  Description:  Basic XML based registry                            -->
+    	<!--                                                                    -->
+    	<!-- ****************************************************************** -->
+    	<!-- <copyright                                                         -->
+    	<!--     notice='lm-source-program'                                     -->
+    	<!--     pids='5724-H72'                                                -->
+    	<!--     years='2016,2021'                                              -->
+    	<!--     crc='0' >                                                      -->
+    	<!--                                                                    -->
+    	<!--     Licensed Materials - Property of IBM                           -->
+    	<!--                                                                    -->
+    	<!--     5724-H72                                                       -->
+    	<!--                                                                    -->
+    	<!--     (C) Copyright IBM Corp. 2016, 2021 All Rights Reserved.        -->
+    	<!--                                                                    -->
+    	<!--     US Government Users Restricted Rights - Use, duplication or    -->
+    	<!--     disclosure restricted by GSA ADP Schedule Contract with        -->
+    	<!--     IBM Corp.                                                      -->
+    	<!-- </copyright>                                                       -->
+
+    	<!--
+    	This sample grants the following role mappings:
+
+    	1) MQWebAdmin role access to the 'MQWebAdminGroup' group. When a user is a 
+    	member of this group, all MQ commands issued by the MQ Console or 
+    	REST API use the security context of the operating system user running
+    	the application server.
+
+    	2) MQWebAdminRO role access to the 'mqreader' user. The 'mqreader' user
+    	uses the security context of the operating system user running the 
+    	application server for all read-only MQ commands, such as DISPLAY 
+    	CHANNEL, QUEUE, etc, issued by the MQ Console or REST API.
+
+    	3) MQWebUser role access to all authenticated users. This role is used 
+    	by authenticated users where no other role is applicable, for example 
+    	the 'mqreader' user attempting to define a new queue. All MQ commands 
+    	issued by the MQ Console or REST API uses the security context of the 
+    	principal and so the user must be known to the queue manager and authorized 
+    	to issue the command.
+
+    	4) MFTWebAdmin role access to the 'mftadmin' user. The 'mftadmin' user
+    	uses the security context of the operating system user running the 
+    	application server for all Managed File Transfer commands, 
+    	such as list agent, list transfer etc, issued by the REST API.
+
+    	5) MFTWebAdminRO role access to the 'mftreader' user. The 'mftreader' user
+    	uses the security context of the operating system user running the 
+    	application server for all read-only Managed File Transfer commands, 
+    	such as list agent, list transfer etc, issued by the REST API.
+
+    	In addition the sample enables HTTP Basic Authentication.
+    	-->
+        <!-- 
+        Enable features 
+        -->
+        <featureManager>
+            <feature>appSecurity-2.0</feature>
+            <feature>basicAuthenticationMQ-1.0</feature>
+        </featureManager>
+
+        <!-- 
+        Roles for the MQ Console 
+        -->
+        <enterpriseApplication id="com.ibm.mq.console">
+            <application-bnd>
+                <security-role name="MQWebAdmin">
+                    <group name="MQWebAdminGroup" realm="defaultRealm"/>
+                </security-role>
+                <security-role name="MQWebAdminRO">
+                    <user name="mqreader" realm="defaultRealm"/>
+                </security-role>
+                <security-role name="MQWebUser">
+                    <special-subject type="ALL_AUTHENTICATED_USERS"/>
+                </security-role>
+                <security-role name="MFTWebAdmin">
+                    <user name="mftadmin" realm="defaultRealm"/>
+                </security-role>
+                <security-role name="MFTWebAdminRO">
+                    <user name="mftreader" realm="defaultRealm"/>
+                </security-role>			
+            </application-bnd>
+        </enterpriseApplication>
+
+        <!-- 
+        Roles for the MQ REST API 
+        -->
+        <enterpriseApplication id="com.ibm.mq.rest">
+            <application-bnd>
+                <security-role name="MQWebAdmin">
+                    <group name="MQWebAdminGroup" realm="defaultRealm"/>
+                </security-role>
+                <security-role name="MQWebAdminRO">
+                    <user name="mqreader" realm="defaultRealm"/>
+                </security-role>
+                <security-role name="MQWebUser">
+                    <special-subject type="ALL_AUTHENTICATED_USERS"/>
+                </security-role>
+                <security-role name="MFTWebAdmin">
+                    <user name="mftadmin" realm="defaultRealm"/>
+                </security-role>
+                <security-role name="MFTWebAdminRO">
+                    <user name="mftreader" realm="defaultRealm"/>
+                </security-role>			
+            </application-bnd>
+        </enterpriseApplication>
+
+        <!-- 
+        Sample Basic Registry 
+        -->
+        <basicRegistry id="basic" realm="defaultRealm">
+            <!-- 
+            This sample defines two users with unencoded passwords
+            and a group, these are used by the role mappings above.
+            -->
+            <user name="mqadmin" password="mqadmin"/>
+            <user name="mqreader" password="mqreader"/>
+            <user name="appuser" password="Passw0rd"/>
+            <user name="mftadmin" password="mftadmin"/>
+            <user name="mftreader" password="mftreader"/>		
+            <group name="MQWebAdminGroup">
+               <member name="mqadmin"/>
+            </group>
+            <group name="MQWebUser">
+              <member name="appuser"/>
+            </group>
+        </basicRegistry>
+
+        <!-- 
+        Enable HTTPS on a specific port by uncommenting the line below and providing the required port number.
+        -->
+        <!--
+        <variable name="httpsPort" value="9443"/>
+        -->
+
+        <!-- 
+        By default the server listens for HTTP/HTTPS requests on localhost only. To 
+        listen on all available network interfaces uncomment the line below. To listen
+        on a specific IP address or hostname replace the * with an appropriate value.
+        -->
+        <!--
+        <variable name="httpHost" value="*"/>
+        -->    
+
+        <!--
+        Uncomment the following variable, and modify the list of hostAlias, to specify the 
+        allowed hostname and port combinations that can access the application server.
+        -->
+        <!--
+        <virtualHost allowFromEndpointRef="defaultHttpEndpoint" id="default_host">
+            <hostAlias>localhost:9080</hostAlias>
+        </virtualHost>
+        -->
+
+        <!--       
+        Default MQ SSL configuration allows TLS v1.2 ONLY, refer to 
+        IBM Documentation on "IBM MQ Console and REST API security" 
+        for details of how to configure security.
+        -->             
+        <sslDefault sslRef="mqDefaultSSLConfig"/>
+
+        <!-- 
+        Enable client certificate authentication by uncommenting the
+        block below and creating a trust.jks store. Basic registry
+        maps the common name (CN=) issued by a trusted CA to
+        users names in the registry. For example a certificate with 
+        a distinguished name of 'CN=mqadmin,O=IBM,C=GB' will be granted 
+        a MQWebAdmin role under the 'mqadmin' user.
+
+        The default, auto-generated certificate held in key.jks is
+        intended for developer convenience only, it is not intended for
+        production use.
+
+        Passwords for both defaultKeyStore and defaultTrustStore should
+        be changed and encoded using the securityUtility tool, refer
+        to the following developerWorks article for further information;
+
+        https://developer.ibm.com/wasdev/docs/configuring-ssl-liberty/
+        -->
+        <!--
+        <keyStore id="defaultKeyStore" location="key.jks" type="JKS" password="password"/>
+        <keyStore id="defaultTrustStore" location="trust.jks" type="JKS" password="password"/>
+        <ssl id="thisSSLConfig" clientAuthenticationSupported="true" keyStoreRef="defaultKeyStore" serverKeyAlias="default" trustStoreRef="defaultTrustStore" sslProtocol="TLSv1.2"/>
+        <sslDefault sslRef="thisSSLConfig"/>    
+        -->    
+
+        <!--
+        Uncomment the following two variables, and adjust them, to change 
+        the default CORS settings.
+        -->
+        <!--
+        <variable name="mqRestCorsAllowedOrigins" value="https://localhost:9883"/>
+        <variable name="mqRestCorsMaxAgeInSeconds" value="120"/>
+        -->
     </server>

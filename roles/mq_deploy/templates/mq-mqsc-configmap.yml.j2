@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mqsc-ini-example
+  namespace: "{{ mq_namespace }}"
+data:
+  example1.mqsc: |
+    DEFINE QLOCAL('DEV.QUEUE.1') REPLACE
+    DEFINE QLOCAL('DEV.QUEUE.2') REPLACE
+    DEFINE CHANNEL('DEV.CHANNEL.SVRCONN') CHLTYPE(SVRCONN) SSLCIPH('')
+  example2.mqsc: |
+    DEFINE QLOCAL('DEV.DEAD.LETTER.QUEUE') REPLACE
+  example.ini: |
+    Channels:
+       MQIBindType=FASTPATH

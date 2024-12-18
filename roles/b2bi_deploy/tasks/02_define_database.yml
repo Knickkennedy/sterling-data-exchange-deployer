@@ -6,16 +6,16 @@
       kubernetes.core.k8s_info:
         kind: Service
         namespace: "{{ db2_namespace }}"
-        name: "c-{{ db2_crd_name }}-db2u-engn-svc"
+        name: "c-{{ db2_crd_name }}-db2u"
       register: db2_service_output
 
     - name: Register Database Networking Configuration
       ansible.builtin.set_fact:
         b2bi_dbvender: "DB2"
-        b2bi_dbhost: "c-{{ db2_crd_name }}-db2u-engn-svc.{{ db2_namespace }}.svc.cluster.local"
+        b2bi_dbhost: "c-{{ db2_crd_name }}-db2u.{{ db2_namespace }}.svc.cluster.local"
         b2bi_dbport: >-
           {{ db2_service_output.resources[0].spec.ports
-          | selectattr('name', '==', 'legacy-server')
+          | selectattr('name', '==', 'db2-server')
           | map(attribute='port') | first }}
 
     - name: Debug

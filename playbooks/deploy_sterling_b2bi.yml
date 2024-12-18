@@ -6,7 +6,7 @@
     - ../vars/storage.yml
     - ../vars/b2bi-settings.yml
   roles:
-    - define_k8s_storage
+    - check_prereqs
     - create_output_directories
     - ibm_catalog_source_deploy
     - b2bi_deploy
