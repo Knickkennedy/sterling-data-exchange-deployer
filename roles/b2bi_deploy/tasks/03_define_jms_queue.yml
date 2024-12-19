@@ -22,13 +22,13 @@
       ansible.builtin.set_fact:
         jms_connection_name_list: "{{ jms_host }}({{ jms_port }})"
 
-    - name: Template the jms secret for reuse
-      ansible.builtin.template:
-        src: templates/jms-queue-secret.yml.j2
-        dest: ../output/{{ b2bi_namespace }}/{{ jms_secret }}.yml
-        mode: '0644'
+- name: Template the jms secret for reuse
+  ansible.builtin.template:
+    src: templates/jms-queue-secret.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/{{ jms_secret }}.yml
+    mode: '0644'
 
-    - name: Create the JMS secret
-      kubernetes.core.k8s:
-        state: present
-        src: ../output/{{ b2bi_namespace }}/{{ jms_secret }}.yml
+- name: Create the JMS secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ b2bi_namespace }}/{{ jms_secret }}.yml
