@@ -1,6 +1,6 @@
 ---
 b2bi_helm_release_name: "{{ lookup('env', 'B2BI_RELEASE_NAME') | default('auto-b2bi', true) }}"
-b2bi_version: "{{ lookup('env', 'B2BI_VERSION') | default('6.2.0.2', true) }}"
+b2bi_version: "{{ lookup('env', 'B2BI_VERSION') | default('6.2.0.3', true) }}"
 b2bi_license_type: "{{ lookup('env', 'B2BI_LICENSE_TYPE') | default('non-prod', true) }}"
 
 b2bi_namespace: "{{ lookup('env', 'B2BI_NAMESPACE') | default('b2bi', true) }}"
@@ -66,6 +66,20 @@ b2bi_liberty_keystore_password: "{{ lookup('env', 'B2BI_LIBERTY_KEYSTORE_PASSWOR
 b2bi_nist_enabled: "{{ lookup('env', 'B2BI_NIST_ENABLED') | default('off', true) }}"
 
 versions:
+  6.2.0.3:
+    helm_chart_version: "3.0.5"
+    ocp_min_version: "4.14"
+    k8s_min_version: "1.27"
+    k8s_max_version: "1.29"
+    resourcesInit_version: "6.2.0.3"
+    dataSetup_version: "6.2.0.3"
+    seas_version: "1.0"
+    itx_version: "10.1.2.0.20231130"
+    itxa_version: "10.0.1.9-x86_64"
+    itxa_resourcesInit_version: "10.0.1.9-x86_64"
+    test_version: "1.1.66"
+    purge_version: "6.2.0.3"
+    documentService_version: "1.0.0.3"
   6.2.0.2:
     helm_chart_version: "3.0.4"
     ocp_min_version: "4.14"

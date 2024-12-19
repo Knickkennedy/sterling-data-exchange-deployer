@@ -49,7 +49,7 @@
 - name: Create B2Bi system passphrase secret
   kubernetes.core.k8s:
     state: present
-    src: ../output/{{ b2bi_namespace }}/../output/{{ b2bi_namespace }}/b2bi-system-passphrase-secret.yml
+    src: ../output/{{ b2bi_namespace }}/b2bi-system-passphrase-secret.yml
 
 - name: Template the B2Bi liberty passphrase secret
   ansible.builtin.template:
