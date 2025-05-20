@@ -1,14 +1,9 @@
-mq_version: "{{ lookup('env', 'MQ_VERSION') | default('v3.4', true) }}.yml"
-
-mq_namespace: "{{ lookup('env', 'MQ_NAMESPACE') | default('mq', true) }}"
-
-mq_registry_secret: "{{ lookup('env', 'REGISTRY') | default('ibm-registry-secret', true) }}"
-registry: "{{ lookup('env', 'REGISTRY') | default('cp.icr.io', true) }}"
-registry_user: "{{ lookup('env', 'REGISTRY_USER') | default('cp', true) }}"
-registry_key: "{{ lookup('env', 'REGISTRY_KEY') }}"
-
-mq_admin_password: "{{ lookup('env', 'MQ_ADMIN_PASSWORD') | default('Passw0rd!', true) }}"
-
-mq_crd_name: "{{ lookup('env', 'MQ_CRD_NAME') | default('mq', true) }}"
-
-mq_storage_size: "{{ lookup('env', 'MQ_SIZE') | default('20Gi', true) }}"
+---
+mq_version: v3.4
+mq_namespace: mq
+mq_registry_secret: ibm-registry-secret
+registry: cp.icr.io
+registry_user: cp
+mq_admin_password: Passw0rd!
+mq_crd_name: mq
+mq_storage_size: 20Gi

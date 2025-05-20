@@ -1,0 +1,6 @@
+---
+- name: Load config from yaml files in config directory
+  ansible.builtin.include_vars:
+    dir: "{{ config_dir }}"
+    files_matching: '.*\.yml$'
+    depth: 1

@@ -1,2 +1,0 @@
-file_storage_class: "{{ lookup('env', 'FILE_STORAGE_CLASS') | default('ocs-storagecluster-cephfs', true) }}"
-block_storage_class: "{{ lookup('env', 'BLOCK_STORAGE_CLASS') | default('ocs-storagecluster-ceph-rbd', true) }}"

@@ -1,12 +1,23 @@
+---
 - name: Deploy IBM Sterling B2B Integrator on Red Hat Openshift
   hosts: localhost
   connection: local
   gather_facts: false
-  vars_files:
-    - ../vars/storage.yml
-    - ../vars/b2bi-settings.yml
-  roles:
-    - check_prereqs
-    - create_output_directories
-    - ibm_catalog_source_deploy
-    - b2bi_deploy
+  tasks:
+    - name: Load configuration of installation
+      ansible.builtin.include_role:
+        name: load_config
+    - name: Check prerequisites of installation
+      ansible.builtin.include_role:
+        name: check_prereqs
+    - name: Create output directories for reuse and debugging
+      ansible.builtin.include_role:
+        name: create_output_directories
+    - name: Deploy IBM Catalog Source
+      ansible.builtin.include_role:
+        name: ibm_catalog_source_deploy
+      when: deploy_ibm_catalog_source | bool
+    - name: Deploy Sterling Data Exchange B2Bi
+      ansible.builtin.include_role:
+        name: b2bi_deploy
+      when: deploy_b2bi | bool

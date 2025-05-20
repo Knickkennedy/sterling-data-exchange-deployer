@@ -1,0 +1,22 @@
+---
+deploy_db2: true
+db2_version: s11.5.9.0-cn3
+db2_namespace: b2bi-db2
+db2_registry_secret: ibm-registry-secret
+db2_secret: db2-secret
+db2_service_account: db2-sa
+db2_crd_name: b2bi-db2
+db2_username: db2inst1
+db2_password: passw0rd
+db2_dbname: BLUDB
+db2_storage_size: 100Gi
+
+# MQ Settings
+deploy_mq: true
+mq_version: v3.4
+mq_namespace: b2bi-mq
+mq_registry_secret: ibm-registry-secret
+mq_secret: b2bi-mq-secret
+mq_admin_password: Passw0rd
+mq_crd_name: b2bimq
+mq_storage_size: 20Gi

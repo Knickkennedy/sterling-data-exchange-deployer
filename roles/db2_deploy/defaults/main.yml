@@ -1,17 +1,16 @@
-db2_version: "{{ lookup('env', 'DB2_VERSION') | default('s11.5.9.0-cn3', true) }}.yml"
+db2_version: s11.5.9.0-cn3
 
-db2_namespace: "{{ lookup('env', 'DB2_NAMESPACE') | default('db2', true) }}"
+db2_namespace: db2
 
-db2_registry_secret: "{{ lookup('env', 'REGISTRY') | default('ibm-registry-secret', true) }}"
-registry: "{{ lookup('env', 'REGISTRY') | default('cp.icr.io', true) }}"
-registry_user: "{{ lookup('env', 'REGISTRY_USER') | default('cp', true) }}"
-registry_key: "{{ lookup('env', 'REGISTRY_KEY') }}"
+db2_registry_secret: ibm-registry-secret
+registry: cp.icr.io
+registry_user: cp
 
-db2_secret: "{{ lookup('env', 'DB2_SECRET') | default('db2-secret', true) }}"
-db2_service_account: "{{ lookup('env', 'DB2_SA') | default('db2-sa', true) }}"
+db2_secret: db2-secret
+db2_service_account: db2-sa
 
-db2_crd_name: "{{ lookup('env', 'DB2_CRD_NAME') | default('db2', true) }}"
-db2_username: "{{ lookup('env', 'DB2_USERNAME') | default('db2inst1', true) }}"
-db2_password: "{{ lookup('env', 'DB2_PASSWORD') | default('passw0rd', true) }}"
-db2_dbname: "{{ lookup('env', 'DB2_DBNAME') | default('BLUDB', true) }}"
-db2_storage_size: "{{ lookup('env', 'DB2_SIZE') | default('100Gi', true) }}"
+db2_crd_name: db2
+db2_username: db2inst1
+db2_password: passw0rd
+db2_dbname: BLUDB
+db2_storage_size: 100Gi
