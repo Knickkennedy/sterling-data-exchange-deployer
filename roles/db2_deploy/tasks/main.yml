@@ -1,7 +1,4 @@
 ---
-- name: Collect DB2 Version
-  ansible.builtin.include_vars: "{{ db2_version }}.yml"
-
 - name: Check for required environment variables
   ansible.builtin.include_tasks: 01_check_vars.yml
 

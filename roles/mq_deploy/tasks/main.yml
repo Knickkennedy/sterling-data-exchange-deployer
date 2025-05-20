@@ -1,7 +1,4 @@
 ---
-- name: Collect MQ Version
-  ansible.builtin.include_vars: "{{ mq_version }}.yml"
-
 - name: Check for required environment variables
   ansible.builtin.include_tasks: 01_check_vars.yml
 

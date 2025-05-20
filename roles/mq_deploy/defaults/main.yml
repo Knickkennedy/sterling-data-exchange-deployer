@@ -1,5 +1,7 @@
 ---
 mq_version: v3.4
+mq_operator_version: 9.4.1.0-r2
+mq_channel: v3.4
 mq_namespace: mq
 mq_registry_secret: ibm-registry-secret
 registry: cp.icr.io

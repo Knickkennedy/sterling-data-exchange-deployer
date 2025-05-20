@@ -29,7 +29,7 @@ spec:
         deleteClaim: true
         size: "{{ mq_storage_size }}"
         type: persistent-claim
-  version: "{{ version }}"
+  version: "{{ mq_operator_version }}"
   web:
     enabled: true
     console:

@@ -1,4 +1,5 @@
 db2_version: s11.5.9.0-cn3
+db2_channel: v110509.0
 
 db2_namespace: db2
 

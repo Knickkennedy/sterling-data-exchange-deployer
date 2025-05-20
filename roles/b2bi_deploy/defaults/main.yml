@@ -1,5 +1,5 @@
 ---
-b2bi_helm_release_name: auto-b2bi
+b2bi_helm_release_name: auto
 b2bi_version: 6.2.0.3
 b2bi_license_type: non-prod
 
@@ -12,10 +12,10 @@ b2bi_registry_user: cp
 b2bi_registry_key:
 
 jms_secret: jms-queue
-jms_keystore_path: 
-jms_keystore_secret: 
-jms_truststore_path: 
-jms_truststore_secret: 
+jms_keystore_path: ""
+jms_keystore_secret: ""
+jms_truststore_path: ""
+jms_truststore_secret: ""
 jms_protocol: TLSv1.2
 
 jms_user: appuser
@@ -48,10 +48,10 @@ b2bi_db_create_schema: true
 b2bi_use_oracle_service_name: false
 b2bi_cfg_use_ssl: false
 b2bi_db_secret: b2bi-db-secret
-b2bi_db_truststore: 
-b2bi_db_truststore_secret: 
-b2bi_db_keystore: 
-b2bi_db_keystore_secret: 
+b2bi_db_truststore: ""
+b2bi_db_truststore_secret: ""
+b2bi_db_keystore: ""
+b2bi_db_keystore_secret: ""
 b2bi_admin_email: admin@temp.net
 b2bi_smtp_host: localhost
 b2bi_document_service_enabled: false
@@ -80,17 +80,3 @@ versions:
     test_version: 1.1.66
     purge_version: 6.2.0.3
     documentService_version: 1.0.0.3
-  6.2.0.2:
-    helm_chart_version: 3.0.4
-    ocp_min_version: 4.14
-    k8s_min_version: 1.27
-    k8s_max_version: 1.29
-    resourcesInit_version: 6.2.0.2
-    dataSetup_version: 6.2.0.2
-    seas_version: 1.0
-    itx_version: 10.1.2.0.20231130
-    itxa_version: 10.0.1.9-x86_64
-    itxa_resourcesInit_version: 10.0.1.9-x86_64
-    test_version: 1.1.65
-    purge_version: 6.2.0.2
-    documentService_version: 1.0.0.2
