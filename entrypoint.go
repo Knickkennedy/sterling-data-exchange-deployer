@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -27,13 +26,15 @@ func main() {
 
 	command := exec.Command("ansible-playbook", argsSlice...)
 
-	fmt.Println(command)
-
-	fmt.Println(os.Args)
-
 	command.Stdout = os.Stdout
 	command.Stderr = os.Stderr
 
 	command.Run()
+	// output, err := command.CombinedOutput()
+	// if err != nil {
+	// 	log.Fatal("Error:", err)
+	// }
+
+	// fmt.Println(string(output))
 
 }
