@@ -1,10 +1,9 @@
 ---
-deploy_ibm_catalog_source: true
-deploy_b2bi: true
+deploy_ibm_catalog_source: false
+deploy_b2bi: false
 
 registry: cp.icr.io
 registry_user: cp
-registry_key: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJJQk0gTWFya2V0cGxhY2UiLCJpYXQiOjE3NDY2MzA1NjksImp0aSI6ImIxMTNiMTcyYjgzZjRhODE4NzVkMTNjNTU4OWQ2Nzg2In0.nR5QIgyPBgHB7-fAxge2-3temhgQPlpJx93CQfeykZU"
 
 file_storage_class: ocs-external-storagecluster-cephfs
 block_storage_class: ocs-external-storagecluster-ceph-rbd

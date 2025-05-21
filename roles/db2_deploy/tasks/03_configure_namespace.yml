@@ -46,10 +46,10 @@
 - name: Create registry secret content "{{ db2_registry_secret }}"
   no_log: true
   vars:
-    auth: "{{ registry_user }}:{{ registry_key }}"
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
     auth_b64: "{{ auth | b64encode }}"
     content:
-      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ registry_key }}",'
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
       - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
       - "}"
       - "}"

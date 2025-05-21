@@ -2,7 +2,7 @@
 - name: Check registry key exists
   ansible.builtin.assert:
     that:
-      - registry_key != ""
+      - entitlement_key != ""
     fail_msg: "Registry key or password is required in order to authenticate against the provided registry."
 
 - name: Lookup Storage classes

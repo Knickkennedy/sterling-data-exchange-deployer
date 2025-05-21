@@ -1,6 +1,6 @@
 ---
 - name: Look Up DB2 Information
-  when: deploy_db2
+  when: deploy_db2_for_b2bi
   block:
     - name: Collect DB2 networking information
       kubernetes.core.k8s_info:

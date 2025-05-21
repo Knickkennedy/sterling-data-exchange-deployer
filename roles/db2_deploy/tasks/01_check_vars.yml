@@ -2,7 +2,7 @@
 - name: Check for required environment variables
   ansible.builtin.assert:
     that:
-      - registry_key != ""
+      - entitlement_key != ""
     fail_msg: "Registry key or password is required in order to authenticate against the provided registry"
 
 - name: Verify that db2_dbname is not over 8 characters

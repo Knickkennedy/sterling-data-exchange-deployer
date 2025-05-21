@@ -1,5 +1,5 @@
 ---
-deploy_db2: true
+deploy_db2_for_b2bi: true
 db2_version: s11.5.9.0-cn3
 db2_namespace: b2bi-db2
 db2_registry_secret: ibm-registry-secret
