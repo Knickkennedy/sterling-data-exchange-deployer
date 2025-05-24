@@ -21,3 +21,11 @@
       ansible.builtin.include_role:
         name: b2bi_deploy
       when: deploy_b2bi | bool
+    - name: Deploy Sterling Secure Proxy Configuration Manager
+      ansible.builtin.include_role:
+        name: ssp_cm_deploy
+      when: deploy_ssp_cm | bool
+    - name: Deploy Sterling Secure Proxy Engine
+      ansible.builtin.include_role:
+        name: ssp_engine_deploy
+      when: deploy_ssp_engine | bool

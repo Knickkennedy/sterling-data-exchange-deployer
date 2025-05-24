@@ -1,0 +1,85 @@
+---
+- name: Create SSP CM namespace scoped output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ ssp_cm_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Template the SSP CM scc for reuse
+  ansible.builtin.template:
+    src: templates/ssp-cm-scc.yml.j2
+    dest: ../output/{{ ssp_cm_namespace }}/ssp-cm-scc.yml
+    mode: '0644'
+
+- name: Create the SSP CM scc
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_cm_namespace }}/ssp-cm-scc.yml
+
+- name: Build registry secret content "{{ ssp_cm_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template the SSP CM registry secret
+  ansible.builtin.template:
+    src: templates/ssp-cm-registry-secret.yml.j2
+    dest: ../output/{{ ssp_cm_namespace }}/ssp-cm-registry-secret.yml
+    mode: '0644'
+
+- name: Template the SSP CM Namespace for reuse
+  ansible.builtin.template:
+    src: templates/ssp-cm-namespace.yml.j2
+    dest: ../output/{{ ssp_cm_namespace }}/{{ ssp_cm_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create SSP CM namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_cm_namespace }}/{{ ssp_cm_namespace }}-namespace.yml
+
+- name: Template PVC
+  ansible.builtin.template:
+    src: templates/ssp-cm-pvc.yml.j2
+    dest: ../output/{{ ssp_cm_namespace }}/ssp-cm-pvc.yml
+    mode: '0644'
+
+- name: Create PVC
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_cm_namespace }}/ssp-cm-pvc.yml
+
+- name: Create SSP CM registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_cm_namespace }}/ssp-cm-registry-secret.yml
+
+- name: Template the SSP CM secret
+  ansible.builtin.template:
+    src: templates/ssp-cm-secret.yml.j2
+    dest: ../output/{{ ssp_cm_namespace }}/ssp-cm-secret.yml
+    mode: '0644'
+
+- name: Create the SSP CM secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_cm_namespace }}/ssp-cm-secret.yml
+
+- name: Template the SSP CM service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/ssp-cm-sa-role-rolebinding-scc.yml.j2
+    dest: ../output/{{ ssp_cm_namespace }}/ssp-cm-sa-role-rolebinding-scc.yml
+    mode: '0644'
+
+- name: Create the SSP CM service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_cm_namespace }}/ssp-cm-sa-role-rolebinding-scc.yml

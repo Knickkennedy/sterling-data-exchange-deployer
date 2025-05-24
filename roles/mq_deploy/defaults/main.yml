@@ -6,6 +6,6 @@ mq_namespace: mq
 mq_registry_secret: ibm-registry-secret
 registry: cp.icr.io
 registry_user: cp
-mq_admin_password: Passw0rd!
+mq_admin_password: "mqadmin"
 mq_crd_name: mq
 mq_storage_size: 20Gi

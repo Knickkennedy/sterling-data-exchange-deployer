@@ -22,9 +22,10 @@ serviceAccount:
 resourcesInit:
   enabled: true
   image:
-    repository: "cp.icr.io/cp/ibm-b2bi/b2bi-resources"
-    tag: "{{ versions[b2bi_version].resourcesInit_version }}"
-    pullPolicy: "IfNotPresent"
+    repository: "docker.io/knickkennedy/sterling-b2bi-resources-init"
+    tag: v1.0
+    pullPolicy: "Always"
+    digest:
   command:
 persistence:
   enabled: true
@@ -268,9 +269,9 @@ asi:
     ports: []
     portRanges:
       - name: adapters
-        portRange: 30351-30353
-        targetPortRange: 30351-30353
-        nodePortRange: 30351-30353
+        portRange: "{{ asi_backend_nodeport_range }}"
+        targetPortRange: "{{ asi_backend_nodeport_range }}"
+        nodePortRange: "{{ asi_backend_nodeport_range }}"
         protocol: TCP
     loadBalancerIP:  
     loadBalancerSourceRanges: []

@@ -12,7 +12,7 @@ func main() {
 		log.Fatal("CONFIG_DIR not set correctly.")
 	}
 
-	argsSlice := []string{"playbooks/deploy_sterling_b2bi.yml"}
+	argsSlice := []string{"playbooks/deploy_sterling_data_exchange.yml"}
 	argsSlice = append(argsSlice, "-e")
 	argsSlice = append(argsSlice, "config_dir="+configDir)
 

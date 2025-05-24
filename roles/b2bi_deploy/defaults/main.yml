@@ -1,6 +1,6 @@
 ---
 b2bi_helm_release_name: auto
-b2bi_version: 6.2.0.3
+b2bi_version: 6.2.1.0
 b2bi_license_type: non-prod
 
 b2bi_namespace: b2bi
@@ -11,14 +11,21 @@ b2bi_registry: cp.icr.io
 b2bi_registry_user: cp
 b2bi_registry_key:
 
-jms_secret: jms-queue
+jms_secret: b2bi-jms-queue
 jms_keystore_path: ""
 jms_keystore_secret: ""
 jms_truststore_path: ""
 jms_truststore_secret: ""
 jms_protocol: TLSv1.2
 
-jms_user: appuser
+# jms_user: ""
+# jms_vendor: ""
+# jms_connection_factory: ""
+# jms_queue_name: ""
+# jms_channel: ""
+# jms_enable_ssl: false
+
+jms_user: root
 jms_vendor: IBMMQ
 jms_connection_factory: com.ibm.mq.jms.MQQueueConnectionFactory
 jms_queue_name: DEV.QUEUE.1
@@ -57,7 +64,7 @@ b2bi_smtp_host: localhost
 b2bi_document_service_enabled: false
 
 b2bi_system_passphrase_secret: b2bi-system-passphrase-secret
-b2bi_system_passphrase: passw0rd
+b2bi_system_passphrase: password
 
 b2bi_liberty_keystore_password_secret: b2bi-liberty-secret
 b2bi_liberty_keystore_password: changeit
@@ -65,18 +72,20 @@ b2bi_liberty_keystore_password: changeit
 # accepts on or off
 b2bi_nist_enabled: "off"
 
+asi_backend_nodeport_range: 30351-30353
+
 versions:
-  6.2.0.3:
-    helm_chart_version: 3.0.5
+  6.2.1.0:
+    helm_chart_version: 3.1.0
     ocp_min_version: 4.14
     k8s_min_version: 1.27
     k8s_max_version: 1.29
-    resourcesInit_version: 6.2.0.3
-    dataSetup_version: 6.2.0.3
+    resourcesInit_version: 6.2.1.0
+    dataSetup_version: 6.2.1.0
     seas_version: 1.0
-    itx_version: 10.1.2.0.20231130
-    itxa_version: 10.0.1.9-x86_64
-    itxa_resourcesInit_version: 10.0.1.9-x86_64
-    test_version: 1.1.66
-    purge_version: 6.2.0.3
-    documentService_version: 1.0.0.3
+    itx_version: 10.1.2.1.20241122
+    itxa_version: 10.0.1.10-x86_64
+    itxa_resourcesInit_version: 10.0.1.10-x86_64
+    test_version: 1.1.68
+    purge_version: 6.2.1.0
+    documentService_version: 6.2.1.0

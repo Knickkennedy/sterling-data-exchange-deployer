@@ -1,0 +1,85 @@
+---
+- name: Create SSP ENGINE namespace scoped output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ ssp_engine_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Build registry secret content "{{ ssp_engine_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template the SSP Engine scc for reuse
+  ansible.builtin.template:
+    src: templates/ssp-engine-scc.yml.j2
+    dest: ../output/{{ ssp_engine_namespace }}/ssp-engine-scc.yml
+    mode: '0644'
+
+- name: Create the SSP Engine scc
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_engine_namespace }}/ssp-engine-scc.yml
+
+- name: Template the SSP engine registry secret
+  ansible.builtin.template:
+    src: templates/ssp-engine-registry-secret.yml.j2
+    dest: ../output/{{ ssp_engine_namespace }}/ssp-engine-registry-secret.yml
+    mode: '0644'
+
+- name: Template the SSP ENGINE Namespace for reuse
+  ansible.builtin.template:
+    src: templates/ssp-engine-namespace.yml.j2
+    dest: ../output/{{ ssp_engine_namespace }}/{{ ssp_engine_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create SSP ENGINE namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_engine_namespace }}/{{ ssp_engine_namespace }}-namespace.yml
+
+- name: Template PVC
+  ansible.builtin.template:
+    src: templates/ssp-engine-pvc.yml.j2
+    dest: ../output/{{ ssp_engine_namespace }}/ssp-engine-pvc.yml
+    mode: '0644'
+
+- name: Create PVC
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_engine_namespace }}/ssp-engine-pvc.yml
+
+- name: Create SSP Engine registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_engine_namespace }}/ssp-engine-registry-secret.yml
+
+- name: Template the SSP ENGINE secret
+  ansible.builtin.template:
+    src: templates/ssp-engine-secret.yml.j2
+    dest: ../output/{{ ssp_engine_namespace }}/ssp-engine-secret.yml
+    mode: '0644'
+
+- name: Create the SSP ENGINE secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_engine_namespace }}/ssp-engine-secret.yml
+
+- name: Template the SSP ENGINE service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/ssp-engine-sa-role-rolebinding-scc.yml.j2
+    dest: ../output/{{ ssp_engine_namespace }}/ssp-engine-sa-role-rolebinding-scc.yml
+    mode: '0644'
+
+- name: Create the SSP ENGINE service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_engine_namespace }}/ssp-engine-sa-role-rolebinding-scc.yml

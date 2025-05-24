@@ -1,0 +1,157 @@
+license: true
+licenseType: "{{ ssp_cm_license_type }}"
+nameOverride: ""
+arch: "amd64"
+timezone: "UTC"
+image:
+  repository: "cp.icr.io/cp/ibm-ssp-cm/ssp-cm-docker-image"
+  tag: "{{ ssp_cm_version }}"
+  imageSecrets: "{{ ssp_cm_registry_secret }}"
+  digest:
+    enabled: false
+    value: sha256:0a9f0c942e1c37a927abec0c139d36ecdc80f5e6f8ba23a5966f567369e8d418
+  pullPolicy: IfNotPresent
+cmArgs:
+{% if (ssp_cm_generate_certificates) %}
+  keyCertExport: true
+{% else %}
+  keyCertExport: false
+{% endif %}
+  keyCertAliasName: "keycert"
+  maxHeapSize: "2048m"
+  hostNameVerification: false
+  hostNames: ""
+  osaNodeEnable: false
+persistentVolume:
+  enabled: true
+  useDynamicProvisioning: false
+  existingClaimName: "{{ ssp_cm_pvc }}"
+  labelName: ""
+  labelValue: ""
+  storageClassName: "{{ file_storage_class }}"
+  size: 2Gi
+  accessMode: "ReadWriteOnce"
+storageSecurity:
+  fsGroup: 65534
+  supplementalGroups: [65534]
+  rootSquashCheck: true
+  rootSquash:
+    enabled: false
+    runAsUser: 65534
+service:
+  type: "LoadBalancer"
+  loadBalancerIP: ""
+  externalIP: ""
+  annotations: {}
+  externalTrafficPolicy: ""
+  sessionAffinity: "ClientIP"
+  jetty:
+    servicePort: 8443
+    containerPort: 8443
+  cm:
+    servicePort: 62366
+    containerPort: 62366
+secret:
+  secretName: "{{ ssp_cm_secret }}"
+{% if (ssp_cm_generate_certificates ) %}
+  keyCertSecretName: ""
+{% else %}
+  keyCertSecretName: "{{ ssp_cm_keycert_secret }}"
+{% endif %}
+serviceAccount:
+  create: false
+  name: "{{ ssp_cm_serviceaccount }}"
+resources:
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+    ephemeral-storage: "5Gi"
+  requests:
+    cpu: 1000m
+    memory: 2Gi
+    ephemeral-storage: "3Gi"
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: {}
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+livenessProbe:
+  initialDelaySeconds: 175
+  timeoutSeconds: 30
+  periodSeconds: 60
+  failureThreshold: 10
+readinessProbe:
+  initialDelaySeconds: 170
+  timeoutSeconds: 5
+  periodSeconds: 60
+  failureThreshold: 10
+route:
+  enabled: true
+dashboard:
+  enabled: false
+customProperties: []
+vmArguments: []
+customCertificate:
+  commonCert:
+    enabled: false
+    secretName: ""
+    alias: ""
+    exportFileName: "exportCommonCert.txt"
+  cmCert:
+    enabled: false
+    secretName: ""
+    alias: ""
+  cmServerCert:
+    enabled: false
+    secretName: ""
+    alias: ""
+  engCert:
+    enabled: false
+    secretName: ""
+    alias: ""
+    exportFileName: "exportEngineCert.txt"
+  cmClientCert:
+    enabled: false
+    secretName: ""
+    alias: ""
+    exportFileName: "exportCMClientCert.txt"
+  webCert:
+    enabled: false
+    secretName: ""
+    alias: ""
+  clientAuth:
+    enabled: false
+    disabled: false
+    trustedCertSecretName: ""
+    certCAAlias: ""
+  cmSSL:
+    enabled: false
+    protocol: "TLSv1.2"
+    ciphers: "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384;TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256;TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384;TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256;TLS_RSA_WITH_AES_256_GCM_SHA384;TLS_RSA_WITH_AES_128_GCM_SHA256"
+    exportFileName: "exportCMSSLCert.txt"
+  webSSL:
+    enabled: false
+    protocol: "TLSv1.2"
+    ciphers: "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384;TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256;TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384;TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256;TLS_RSA_WITH_AES_256_GCM_SHA384;TLS_RSA_WITH_AES_128_GCM_SHA256"
+customFiles: []
+networkPolicy:
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    ports:
+    - protocol: TCP
+      port: 8443
+    - protocol: TCP
+      port: 62366
+  egress:
+  - to:
+    ports:
+    - protocol: TCP
+      port: 63366

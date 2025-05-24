@@ -1,6 +1,8 @@
 ---
 deploy_ibm_catalog_source: false
 deploy_b2bi: false
+deploy_ssp_cm: true
+deploy_ssp_engine: true
 
 registry: cp.icr.io
 registry_user: cp

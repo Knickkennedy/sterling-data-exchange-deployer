@@ -1,0 +1,33 @@
+---
+ssp_cm_release_name: auto
+ssp_cm_version: 6.2.0.1.02
+ssp_cm_license_type: non-prod
+
+ssp_cm_namespace: ssp
+ssp_engine_namespace: ssp
+
+ssp_cm_generate_certificates: true
+ssp_cm_registry_secret: ibm-entitlement-key
+ssp_cm_secret: ibm-ssp-cm-secret
+ssp_cm_registry: cp.icr.io
+ssp_cm_registry_user: cp
+ssp_cm_registry_key:
+ssp_cm_serviceaccount: ssp-cm-sa
+ssp_cm_pvc: ibm-ssp-cm-pvc
+
+ssp_cm_sys_passphrase: Passw0rd@123
+ssp_cm_admin_passphrase: Passw0rd@123
+ssp_cm_keycert_store_passphrase: password
+ssp_cm_keycert_encrypt_passphrase: password
+ssp_cm_common_cert_passphrase: password
+ssp_cm_eng_cert_password: password
+ssp_cm_client_cert_password: password
+ssp_cm_cert_password: password
+ssp_cm_server_cert_password: password
+ssp_cm_web_cert_password: password
+ssp_cm_export_cert_password: password
+ssp_cm_keycert_secret: "engine-keycert"
+
+versions:
+  6.2.0.1.02:
+    helm_chart_version: 1.5.4

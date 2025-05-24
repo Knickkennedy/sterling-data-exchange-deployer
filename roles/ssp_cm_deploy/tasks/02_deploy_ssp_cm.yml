@@ -1,0 +1,55 @@
+---
+- name: Template the Sterling Secure Proxy Configuration Manager instance for reuse
+  ansible.builtin.template:
+    src: templates/values.yml.j2
+    dest: ../output/{{ ssp_cm_namespace }}/ssp-cm-values.yml
+    mode: '0644'
+
+- name: Set local cert file
+  ansible.builtin.set_fact:
+    certfile: /tmp/defkeyCert.txt
+  when: not ssp_cm_generate_certificates
+
+- name: Copy defkeyCert.txt from pod to local
+  kubernetes.core.k8s_cp:
+    namespace: "{{ ssp_engine_namespace }}"
+    pod: "{{ ssp_engine_release_name }}-ibm-ssp-engine-0"
+    remote_path: /spinstall/IBM/SPcm/defkeyCert.txt
+    local_path: /tmp/defkeyCert.txt
+    state: from_pod
+  register: cout_k8s_cp
+  retries: 10
+  delay: 30
+  when: not ssp_cm_generate_certificates
+
+- name: Create certificates secret
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: "{{ ssp_cm_keycert_secret }}"
+        namespace: "{{ ssp_cm_namespace }}"
+      data:
+        keycert: "{{ lookup('file', '/tmp/defkeyCert.txt') | b64encode }}"
+  when: not ssp_cm_generate_certificates
+
+- name: Download Helm Chart tarball
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/IBM/charts/master/repo/ibm-helm/ibm-ssp-cm-{{ versions[ssp_cm_version].helm_chart_version }}.tgz"
+    dest: ../output/{{ ssp_cm_namespace }}/ibm-ssp-cm-{{ versions[ssp_cm_version].helm_chart_version }}.tgz
+    mode: "0666"
+
+# - name: Deploy Sterling Secure Proxy Configuration Manager
+#   ansible.builtin.command:
+#     cmd: "helm install --timeout 10m0s -f ../output/{{ ssp_cm_namespace }}/ssp-cm-values.yml -n {{ ssp_cm_namespace }} {{ ssp_cm_release_name }} ../output/{{ ssp_cm_namespace }}/ibm-ssp-cm-{{ versions[ssp_cm_version].helm_chart_version }}.tgz"
+
+- name: Deploy Sterling Secure Proxy Configuration Manager
+  kubernetes.core.helm:
+    name: "{{ ssp_cm_release_name }}"
+    chart_ref: ../output/{{ ssp_cm_namespace }}/ibm-ssp-cm-{{ versions[ssp_cm_version].helm_chart_version }}.tgz
+    release_namespace: "{{ ssp_cm_namespace }}"
+    timeout: "1h"
+    values_files:
+      - ../output/{{ ssp_cm_namespace }}/ssp-cm-values.yml

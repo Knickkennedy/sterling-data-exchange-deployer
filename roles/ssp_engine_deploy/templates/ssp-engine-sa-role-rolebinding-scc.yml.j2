@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "{{ ssp_engine_serviceaccount }}"
+  namespace: "{{ ssp_engine_namespace }}"
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ibm-ssp-engine-scc
+  labels:
+    app.kubernetes.io/name: ibm-ssp-engine-scc
+    app.kubernetes.io/instance: ibm-ssp-engine-scc
+    app.kubernetes.io/managed-by: IBM
+rules:
+  - apiGroups:
+    - security.openshift.io
+    resourceNames:
+    - ibm-ssp-engine-scc
+    resources:
+    - securitycontextconstraints
+    verbs:
+    - use
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "ibm-ssp-engine-scc"
+  namespace: "{{ ssp_engine_namespace }}"
+  labels:
+    app: "ibm-ssp-engine-scc"
+roleRef:
+  kind: ClusterRole
+  name: "ibm-ssp-engine-scc"
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: "{{ ssp_engine_serviceaccount }}"
+    namespace: {{ ssp_engine_namespace }}
