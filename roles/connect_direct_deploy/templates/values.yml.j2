@@ -1,0 +1,150 @@
+license: true
+licenseType: "{{ cd_license_type }}"
+env:
+  timezone: "UTC"
+  extraEnvs: []
+extraLabels: {}
+replicaCount: 1
+image:
+  repository: "cp.icr.io/cp/ibm-connectdirect/cdu6.4_certified_container_6.4.0.1"
+  tag: "{{ cd_version }}"
+  imageSecrets: "{{ cd_deploy_registry_secret }}"
+  digest:
+    enabled: false
+    value: "sha256:39954ca5701af44e27c2f5512c0b4458685bc14ce6bdfeedee4ade94f4ca6f57"
+  pullPolicy: Always
+nameOverride: ""
+upgradeCompCheck: false
+extraVolumeMounts: []
+extraVolume: []
+arch: "amd64"
+cdArgs:
+  nodeName: "{{ cd_nodename }}"
+  crtName: "cdcert.pem"
+  localCertLabel: "Client-API"
+  cport: 1363
+  sport: 1364
+  configDir: "CDFILES"
+  saclConfig: "n"
+  userNetmapConfigmap: ""
+  trustedAddr: []
+  keys:
+    server: |
+      *           MRLN      SIMP   Cd4Unix/Cd4Unix
+    client: |
+      *           MRLN      SIMP   Cd4Unix/Cd4Unix
+sum:
+  enabled: "{{ 'y' if (cd_deploy_sum_enabled == 1) else 'n' }}"
+storageSecurity:
+  fsGroup: 45678
+  supplementalGroups: [65534]
+  runAsUser: 45678
+  runAsGroup: 45678
+persistence:
+  enabled: true
+  useDynamicProvisioning: false
+pvClaim:
+  existingClaimName: "{{ cd_pvc }}"
+  storageClassName: "{{ file_storage_class }}"
+  accessMode: "ReadWriteOnce"
+  selector:
+    label: ""
+    value: ""
+  size: 100Mi
+service:
+  type: "LoadBalancer"
+  apiport:
+    name: "api"
+    port:
+    protocol: "TCP"
+  ftport:
+    name: "ft"
+    port:
+    protocol: "TCP"
+  externalIP: []
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  annotations: {}
+  externalTrafficPolicy: ""
+  sessionAffinity: "ClientIP"
+networkPolicyIngress:
+  enabled: false
+  from: 
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: "connectdirect"
+networkPolicyEgress:
+  enabled: true
+  acceptNetPolChange: true
+  to: []
+secret:
+  secretName: "{{ cd_deploy_secret }}"
+  certSecretName: "{{ cd_deploy_cert_secret }}"
+serviceAccount:
+  create: false
+  name: "{{ cd_serviceaccount }}"
+resources:
+  limits:
+    cpu: 1500m
+    memory: 3000Mi
+    ephemeral-storage: "5Gi"
+  requests:
+    cpu: 500m
+    memory: 2000Mi
+    ephemeral-storage: "3Gi"
+dashboard:
+  enabled: {{ cd_dashboard_enabled }}
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: {}
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+startupProbe:
+  initialDelaySeconds: 0
+  timeoutSeconds: 5
+  periodSeconds: 5
+livenessProbe:
+  initialDelaySeconds: 10
+  timeoutSeconds: 5
+  periodSeconds: 10
+readinessProbe:
+  initialDelaySeconds: 5
+  timeoutSeconds: 5
+  periodSeconds: 10
+route:
+  enabled: true
+ldap:
+  enabled: {{ cd_ldap_enabled }}
+{% if cd_ldap_enabled == "true" %}
+  host: "{{ cd_ldap_host }}"
+  port: "{{ cd_ldap_port }}"
+  domain: "{{ cd_ldap_domain }}"
+  tls: "{{ cd_ldap_tls }}"
+  startTls: "{{ cd_ldap_start_tls }}"
+  caCert: "{{ cd_ldap_ca_cert }}"
+  tlsReqcert: "{{ cd_ldap_tls_req_cert }}"
+  defaultBindDn: "{{ cd_ldap_default_bind_dn }}"
+  defaultAuthtokType: "{{ cd_ldap_default_auth_token_type }}"
+  defaultAuthtok: "{{ cd_ldap_default_auth_token }}"
+  clientValidation: "{{ cd_ldap_client_validation }}"
+  clientCert: "{{ cd_ldap_client_cert }}"
+  clientKey: "{{ cd_ldap_client_key }}"
+{% endif %}
+cdfa:
+  fileAgentEnable: "n"
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  averageCpuUtilization: 60
+  averageMemoryUtilization: 60
+  stabilizationWindowSeconds: 180
+  periodSeconds: 15
+pdb:
+  enabled: true
+  minAvailable: 1

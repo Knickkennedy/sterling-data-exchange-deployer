@@ -1,6 +1,5 @@
 ---
 ssp_engine_release_name: auto-eng
-ssp_cm_release_name: auto
 ssp_engine_version: 6.2.0.1.02
 ssp_engine_license_type: non-prod
 

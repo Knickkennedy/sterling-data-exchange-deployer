@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "{{ cd_serviceaccount }}"
+  namespace: "{{ cd_namespace }}"
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "ibm-connect-direct-scc"
+  labels:
+    app.kubernetes.io/name: ibm-connect-direct-scc
+    app.kubernetes.io/instance: ibm-connect-direct-scc
+    app.kubernetes.io/managed-by: IBM
+rules:
+  - apiGroups:
+    - security.openshift.io
+    resourceNames:
+    - ibm-connect-direct-scc
+    resources:
+    - securitycontextconstraints
+    verbs:
+    - use
+---
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "ibm-connect-direct-scc"
+  namespace: "{{ cd_namespace }}"
+  labels:
+    app: "ibm-connect-direct-scc"
+roleRef:
+  kind: ClusterRole
+  name: ibm-connect-direct-scc
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: {{ cd_serviceaccount }}
+    namespace: {{ cd_namespace }}

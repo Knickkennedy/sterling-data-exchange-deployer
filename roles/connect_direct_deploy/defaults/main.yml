@@ -1,0 +1,42 @@
+---
+cd_release_name: auto-cd
+cd_version: 6.4.0.1_iFix029
+cd_license_type: non-prod
+
+cd_namespace: connect-direct
+cd_admin_password: passw0rd
+cd_appuser_password: passw0rd
+cd_local_cert_phrase: changeit
+cd_keystore_password: changeit
+cd_serviceaccount: cd-sa
+cd_dashboard_enabled: true
+
+cd_ldap_enabled: false
+cd_ldap_host: ""
+cd_ldap_port: ""
+cd_ldap_domain: ""
+cd_ldap_tls: ""
+cd_ldap_start_tls: ""
+cd_ldap_ca_cert: ""
+cd_ldap_tls_req_cert: ""
+cd_ldap_default_bind_dn: ""
+cd_ldap_default_auth_token_type: ""
+cd_ldap_default_auth_token: ""
+cd_ldap_client_validation: ""
+cd_ldap_client_cert: ""
+cd_ldap_client_key: ""
+
+cd_pvc: cd-pvc
+
+cd_nodename: CDNODE01
+cd_deploy_sum_enabled: 1
+cd_deploy_registry_secret: ibm-entitlement-key
+cd_deploy_secret: cd-secret
+cd_deploy_cert_secret: cd-cert-secret
+cd_cert_crt: /tmp/cdcert.crt
+cd_cert_key: /tmp/cdkey.pem
+cd_cert_pem: /tmp/cdcert.pem
+
+versions:
+  6.4.0.1_iFix029:
+    helm_chart_version: 1.4.4

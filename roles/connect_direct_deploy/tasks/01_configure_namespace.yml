@@ -1,0 +1,113 @@
+---
+- name: Create Connect Direct output directory
+  ansible.builtin.file:
+    path: ../output/{{ cd_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Template Connect Direct namespace
+  ansible.builtin.template:
+    src: templates/cd-namespace.yml.j2
+    dest: ../output/{{ cd_namespace }}/{{ cd_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create Connect Direct namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_namespace }}/{{ cd_namespace }}-namespace.yml
+
+- name: Template the CD scc for reuse
+  ansible.builtin.template:
+    src: templates/cd-scc.yml.j2
+    dest: ../output/{{ cd_namespace }}/cd-scc.yml
+    mode: '0644'
+
+- name: Create the CD scc
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_namespace }}/cd-scc.yml
+
+- name: Build registry secret content "{{ cd_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template the CD registry secret
+  ansible.builtin.template:
+    src: templates/cd-registry-secret.yml.j2
+    dest: ../output/{{ cd_namespace }}/cd-registry-secret.yml
+    mode: '0644'
+
+- name: Create CD registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_namespace }}/cd-registry-secret.yml
+
+- name: Template PVC
+  ansible.builtin.template:
+    src: templates/cd-pvc.yml.j2
+    dest: ../output/{{ cd_namespace }}/cd-pvc.yml
+    mode: '0644'
+
+- name: Create PVC
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_namespace }}/cd-pvc.yml
+
+- name: Create CD registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_namespace }}/cd-registry-secret.yml
+
+- name: Template CD secret
+  ansible.builtin.template:
+    src: templates/cd-secret.yml.j2
+    dest: ../output/{{ cd_namespace }}/cd-secret.yml
+    mode: '0644'
+
+- name: Create CD secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_namespace }}/cd-secret.yml
+
+- name: Template the CD service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/cd-sa.yml.j2
+    dest: ../output/{{ cd_namespace }}/cd-sa.yml
+    mode: '0644'
+
+- name: Create the CD service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_namespace }}/cd-sa.yml
+
+- name: Creating openssl certificate
+  ansible.builtin.command:
+    cmd: "openssl req -x509 -sha512 -days 3650 -newkey rsa:2048 -new -nodes -keyout {{ cd_cert_key }} -out {{ cd_cert_crt }} -subj '/CN={{ cd_nodename }}'"
+  register: cout
+  changed_when: false
+
+- name: Join CD certificates
+  ansible.builtin.shell:
+    cmd: "cat {{ cd_cert_key }} {{ cd_cert_crt }} > {{ cd_cert_pem }}"
+  changed_when: false
+  when: cout.rc == 0
+
+- name: Template the CD certificates
+  ansible.builtin.template:
+    src: templates/cd-cert-secret.yml.j2
+    dest: ../output/{{ cd_namespace }}/cd-cert-secret.yml
+    mode: '0644'
+
+- name: Create CD certificate secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_namespace }}/cd-cert-secret.yml

@@ -1,0 +1,21 @@
+---
+- name: Template the CD instance
+  ansible.builtin.template:
+    src: templates/values.yml.j2
+    dest: ../output/{{ cd_namespace }}/cd-values.yml
+    mode: '0644'
+
+- name: Download Helm Chart tarball
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/IBM/charts/master/repo/ibm-helm/ibm-connect-direct-{{ versions[cd_version].helm_chart_version }}.tgz"
+    dest: ../output/{{ cd_namespace }}/ibm-connect-direct-{{ versions[cd_version].helm_chart_version }}.tgz
+    mode: '0666'
+
+- name: Deploy Sterling Connect:Direct
+  kubernetes.core.helm:
+    name: "{{ cd_release_name }}"
+    chart_ref: ../output/{{ cd_namespace }}/ibm-connect-direct-{{ versions[cd_version].helm_chart_version }}.tgz
+    release_namespace: "{{ cd_namespace }}"
+    timeout: "1h"
+    values_files:
+      - ../output/{{ cd_namespace }}/cd-values.yml

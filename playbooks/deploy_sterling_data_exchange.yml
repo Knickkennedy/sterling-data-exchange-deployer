@@ -29,3 +29,7 @@
       ansible.builtin.include_role:
         name: ssp_engine_deploy
       when: deploy_ssp_engine | bool
+    - name: Deploy Sterling Connect Direct
+      ansible.builtin.include_role:
+        name: connect_direct_deploy
+      when: deploy_connect_direct | bool
