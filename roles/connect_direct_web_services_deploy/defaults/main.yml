@@ -1,0 +1,27 @@
+---
+cd_ws_release_name: auto-cd-ws
+cd_ws_version: 6.4.0.2_ifix001
+cd_ws_license_type: non-prod
+
+cd_ws_namespace: connect-direct-web-services
+
+cd_ws_keystore_password: Change1t@
+cd_ws_truststore_password: Change1t@
+cd_ws_cacert_password: Change1t@
+cd_ws_serviceaccount: cd-ws-sa
+cd_ws_dashboard_enabled: true
+
+cd_ws_pvc: cd-ws-pvc
+
+cd_ws_nodename: localhost
+cd_ws_deploy_sum_enabled: 1
+cd_ws_deploy_registry_secret: ibm-entitlement-key
+cd_ws_deploy_secret: cd-ws-secret
+cd_ws_deploy_cert_secret: cd-ws-cert-secret
+cd_ws_cert_crt: /tmp/cdwscert.crt
+cd_ws_cert_key: /tmp/cdwskey.pem
+cd_ws_cert_pem: /tmp/cdwscert.pem
+
+versions:
+  6.4.0.2_ifix001:
+    helm_chart_version: 1.1.6

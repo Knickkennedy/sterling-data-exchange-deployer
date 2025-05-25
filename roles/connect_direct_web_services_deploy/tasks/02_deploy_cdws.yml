@@ -1,0 +1,21 @@
+---
+- name: Template the CDWS instance
+  ansible.builtin.template:
+    src: templates/values.yml.j2
+    dest: ../output/{{ cd_ws_namespace }}/cdws-values.yml
+    mode: '0644'
+
+- name: Download Helm Chart tarball
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/IBM/charts/master/repo/ibm-helm/ibm-cdws-{{ versions[cd_ws_version].helm_chart_version }}.tgz"
+    dest: ../output/{{ cd_ws_namespace }}/ibm-cdws-{{ versions[cd_ws_version].helm_chart_version }}.tgz
+    mode: '0666'
+
+- name: Deploy Sterling Connect:Direct Web Services
+  kubernetes.core.helm:
+    name: "{{ cd_ws_release_name }}"
+    chart_ref: ../output/{{ cd_ws_namespace }}/ibm-cdws-{{ versions[cd_ws_version].helm_chart_version }}.tgz
+    release_namespace: "{{ cd_ws_namespace }}"
+    timeout: "1h"
+    values_files:
+      - ../output/{{ cd_ws_namespace }}/cdws-values.yml

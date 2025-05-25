@@ -1,0 +1,108 @@
+---
+- name: Create Connect Direct Web Services output directory
+  ansible.builtin.file:
+    path: ../output/{{ cd_ws_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Template Connect Direct Web Services namespace
+  ansible.builtin.template:
+    src: templates/cdws-namespace.yml.j2
+    dest: ../output/{{ cd_ws_namespace }}/{{ cd_ws_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create Connect Direct Web Services namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_ws_namespace }}/{{ cd_ws_namespace }}-namespace.yml
+
+- name: Template the CDWS scc for reuse
+  ansible.builtin.template:
+    src: templates/cdws-scc.yml.j2
+    dest: ../output/{{ cd_ws_namespace }}/cdws-scc.yml
+    mode: '0644'
+
+- name: Create the CDWS scc
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_ws_namespace }}/cdws-scc.yml
+
+- name: Build registry secret content "{{ cd_ws_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template the CDWS registry secret
+  ansible.builtin.template:
+    src: templates/cdws-registry-secret.yml.j2
+    dest: ../output/{{ cd_ws_namespace }}/cdws-registry-secret.yml
+    mode: '0644'
+
+- name: Create CDWS registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_ws_namespace }}/cdws-registry-secret.yml
+
+- name: Template PVC
+  ansible.builtin.template:
+    src: templates/cdws-pvc.yml.j2
+    dest: ../output/{{ cd_ws_namespace }}/cdws-pvc.yml
+    mode: '0644'
+
+- name: Create PVC
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_ws_namespace }}/cdws-pvc.yml
+
+- name: Template CDWS secret
+  ansible.builtin.template:
+    src: templates/cdws-secret.yml.j2
+    dest: ../output/{{ cd_ws_namespace }}/cdws-secret.yml
+    mode: '0644'
+
+- name: Create CDWS secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_ws_namespace }}/cdws-secret.yml
+
+- name: Template the CDWS service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/cdws-sa.yml.j2
+    dest: ../output/{{ cd_ws_namespace }}/cdws-sa.yml
+    mode: '0644'
+
+- name: Create the CDWS service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_ws_namespace }}/cdws-sa.yml
+
+- name: Creating openssl certificate
+  ansible.builtin.command:
+    cmd: "openssl req -x509 -sha512 -days 3650 -newkey rsa:2048 -new -nodes -keyout {{ cd_ws_cert_key }} -out {{ cd_ws_cert_crt }} -subj '/CN={{ cd_ws_nodename }}'"
+  register: cout
+  changed_when: false
+
+- name: Join CDWS certificates
+  ansible.builtin.shell:
+    cmd: "cat {{ cd_ws_cert_key }} {{ cd_ws_cert_crt }} > {{ cd_ws_cert_pem }}"
+  changed_when: false
+  when: cout.rc == 0
+
+- name: Template the CDWS certificates
+  ansible.builtin.template:
+    src: templates/cdws-cert-secret.yml.j2
+    dest: ../output/{{ cd_ws_namespace }}/cdws-cert-secret.yml
+    mode: '0644'
+
+- name: Create CDWS certificate secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ cd_ws_namespace }}/cdws-cert-secret.yml

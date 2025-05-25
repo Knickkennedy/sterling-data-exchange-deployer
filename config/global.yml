@@ -4,6 +4,7 @@ deploy_b2bi: false
 deploy_ssp_cm: false
 deploy_ssp_engine: false
 deploy_connect_direct: true
+deploy_connect_direct_web_services: true
 
 registry: cp.icr.io
 registry_user: cp

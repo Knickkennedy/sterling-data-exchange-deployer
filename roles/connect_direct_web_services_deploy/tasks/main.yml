@@ -1,0 +1,6 @@
+---
+- name: Configure Sterling CD WS Namespace
+  ansible.builtin.include_tasks: 01_configure_namespace.yml
+
+- name: Deploy Sterling CD WS Helm Chart
+  ansible.builtin.include_tasks: 02_deploy_cdws.yml

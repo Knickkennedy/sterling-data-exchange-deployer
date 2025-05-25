@@ -62,11 +62,6 @@
     state: present
     src: ../output/{{ cd_namespace }}/cd-pvc.yml
 
-- name: Create CD registry secret
-  kubernetes.core.k8s:
-    state: present
-    src: ../output/{{ cd_namespace }}/cd-registry-secret.yml
-
 - name: Template CD secret
   ansible.builtin.template:
     src: templates/cd-secret.yml.j2

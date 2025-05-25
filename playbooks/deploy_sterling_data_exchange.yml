@@ -33,3 +33,7 @@
       ansible.builtin.include_role:
         name: connect_direct_deploy
       when: deploy_connect_direct | bool
+    - name: Deploy Sterling Connect Direct Web Services
+      ansible.builtin.include_role:
+        name: connect_direct_web_services_deploy
+      when: deploy_connect_direct_web_services

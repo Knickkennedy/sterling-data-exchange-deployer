@@ -1,0 +1,143 @@
+replicaCount: 1
+image:
+  repository: cp.icr.io/cp/ibm-cdws/cdws6.4_certified_container_6.4.0.2
+  pullPolicy: Always
+  imageSecrets: "{{ cd_ws_deploy_registry_secret }}"
+  digest:
+    enabled: false
+    value: "sha256:15b8039fccbc76c7d2e1724f4512f03e3c9d6d1142a32079f177b00c62e9963a"
+  tag: "{{ cd_ws_version }}"
+nameOverride: ""
+serviceAccount:
+  create: false
+  name: "{{ cd_ws_serviceaccount }}"
+service:
+  type: LoadBalancer
+  loadBalancerIP: ""
+  sessionAffinity: "ClientIP"
+  loadBalancerSourceRanges: []
+  port: 9443
+  webConsoleName: "cdws-web-console"
+  protocol: TCP
+  externalIP: ""
+  externalTrafficPolicy: ""
+  allowIngressTraffic: true
+  annotations: {}
+cdwsParams:
+  certificateLabel: "mftwebservices"
+  certificateExpiryTime: 365
+  commonName: "localhost"
+  organization: "OrganizationName"
+  locality: "Irving"
+  state: "Texas"
+  country: "US"
+  emailId: "noreply@noreply.com"
+  dnsName: "localhost"
+  ipAddress: "127.0.0.1"
+  restOnly: "no"
+networkPolicy:
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - {}
+  egress:
+    - {}
+ingress:
+  enabled: false
+  host: ""
+  controller: "nginx"
+  annotations: {}
+  tls:
+    enabled: false
+    secretName: ""
+defaultPodDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+resources:
+  limits:
+    cpu: 3000m
+    memory: 2Gi
+    ephemeral-storage: "3Gi"
+  requests:
+    cpu: 1500m
+    memory: 1Gi
+    ephemeral-storage: "2Gi"
+initResources:
+  limits:
+    cpu: 500m
+    memory: 2Gi
+  requests:
+    cpu: 250m
+    memory: 1Gi
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: {}
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+storageSecurity:
+  fsGroup:
+  supplementalGroups: [65534]
+  runAsUser: 1010
+  runAsGroup:
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
+persistence:
+  enabled: true
+  useDynamicProvisioning: false
+pvClaim:
+  existingClaimName: "{{ cd_ws_pvc }}"
+  storageClassName: "{{ file_storage_class }}"
+  accessMode: "ReadWriteOnce"
+  selector:
+    label: ""
+    value: ""
+  size: 500Mi
+persistentVolumeExtra:
+  enabled: false
+  claimName: ""
+  storageClassName: "manual"
+  size: 100Mi
+  accessMode: "ReadWriteOnce"
+  selector:
+    label: ""
+    value: ""
+startupProbe:
+  initialDelaySeconds: 50
+  timeoutSeconds: 15
+  periodSeconds: 15
+livenessProbe:
+  initialDelaySeconds: 15
+  timeoutSeconds: 10
+  periodSeconds: 15
+readinessProbe:
+  initialDelaySeconds: 15
+  timeoutSeconds: 10
+  periodSeconds: 15
+dashboard:
+  enabled: true
+route:
+  enabled: true
+arch: "amd64"
+license: true
+licenseType: "{{ cd_ws_license_type }}"
+secret:
+  secretName:  "{{ cd_ws_deploy_secret }}"
+  caCertSecretName: ""
+  trustCertSecretName: ""
+secComp:
+  type: RuntimeDefault
+  profile: ""
+timeZone: "Asia/Calcutta"
+hostAliases:
+  enabled: false
+  hostEntries: []
