@@ -41,3 +41,7 @@
       ansible.builtin.include_role:
         name: seas_deploy
       when: deploy_seas
+    - name: Deploy Sterling Transformation Extender
+      ansible.builtin.include_role:
+        name: itx_rs_deploy
+      when: deploy_itx_rs

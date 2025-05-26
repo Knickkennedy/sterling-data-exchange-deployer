@@ -5,7 +5,6 @@ seas_license_type: non-prod
 
 seas_namespace: seas
 
-seas_generate_certificates: false
 seas_registry_secret: ibm-entitlement-key
 seas_registry: cp.icr.io
 seas_registry_user: cp

@@ -1,0 +1,21 @@
+---
+- name: Template the ITX RS instance for reuse
+  ansible.builtin.template:
+    src: templates/values.yml.j2
+    dest: ../output/{{ itxrs_namespace }}/itxrs-values.yml
+    mode: '0644'
+
+- name: Download Helm Chart tarball
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/IBM/charts/master/repo/ibm-helm/ibm-itx-rs-prod-{{ versions[itxrs_version].helm_chart_version }}.tgz"
+    dest: ../output/{{ itxrs_namespace }}/ibm-itx-rs-prod-{{ versions[itxrs_version].helm_chart_version }}.tgz
+    mode: "0666"
+
+- name: Deploy ITX RS
+  kubernetes.core.helm:
+    name: "{{ itxrs_release_name }}"
+    chart_ref: ../output/{{ itxrs_namespace }}/ibm-itx-rs-prod-{{ versions[itxrs_version].helm_chart_version }}.tgz
+    release_namespace: "{{ itxrs_namespace }}"
+    timeout: "1h"
+    values_files:
+      - ../output/{{ itxrs_namespace }}/itxrs-values.yml

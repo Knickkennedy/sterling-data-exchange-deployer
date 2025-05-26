@@ -1,0 +1,6 @@
+---
+- name: "Configure Sterling External Authentication Server Namespace"
+  ansible.builtin.include_tasks: 01_configure_namespace.yml
+
+- name: "Deploy the SEAS helm chart configuration"
+  ansible.builtin.include_tasks: 02_deploy_itxrs.yml

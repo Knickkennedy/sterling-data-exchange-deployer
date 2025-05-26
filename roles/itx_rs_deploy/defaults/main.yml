@@ -1,0 +1,16 @@
+---
+itxrs_release_name: auto-itxrs
+itxrs_version: 11.0.1.1.20250425
+itxrs_license_type: non-prod
+
+itxrs_namespace: itxrs
+
+itxrs_registry_secret: ibm-entitlement-key
+itxrs_registry: cp.icr.io/cp
+itxrs_registry_user: cp
+itxrs_registry_key:
+itxrs_serviceaccount: itxrs-sa
+
+versions:
+  11.0.1.1.20250425:
+    helm_chart_version: 3.0.1

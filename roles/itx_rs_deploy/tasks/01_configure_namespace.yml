@@ -1,0 +1,63 @@
+---
+- name: Create ITXRS namespace scoped output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ itxrs_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Build registry secret content "{{ itxrs_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template the ITXRS scc for reuse
+  ansible.builtin.template:
+    src: templates/itxrs-scc.yml.j2
+    dest: ../output/{{ itxrs_namespace }}/itxrs-scc.yml
+    mode: '0644'
+
+- name: Create the ITXRS scc
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ itxrs_namespace }}/itxrs-scc.yml
+
+- name: Template the ITXRS Namespace for reuse
+  ansible.builtin.template:
+    src: templates/itxrs-namespace.yml.j2
+    dest: ../output/{{ itxrs_namespace }}/{{ itxrs_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create ITXRS namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ itxrs_namespace }}/{{ itxrs_namespace }}-namespace.yml
+
+- name: Template the ITXRS registry secret
+  ansible.builtin.template:
+    src: templates/itxrs-registry-secret.yml.j2
+    dest: ../output/{{ itxrs_namespace }}/itxrs-registry-secret.yml
+    mode: '0644'
+
+- name: Create ITXRS registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ itxrs_namespace }}/itxrs-registry-secret.yml
+
+- name: Template the ITXRS service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/itxrs-sa-role-rolebinding-scc.yml.j2
+    dest: ../output/{{ itxrs_namespace }}/itxrs-sa-role-rolebinding-scc.yml
+    mode: '0644'
+
+- name: Create the ITXRS service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ itxrs_namespace }}/itxrs-sa-role-rolebinding-scc.yml

@@ -1,0 +1,341 @@
+license: true
+global:
+  itxImageRegistry: "{{ itxrs_registry }}"
+  itxImagePullSecret: "ibm-entitlement-key"
+displayName: "IBM Sterling Transformation Extender for Red Hat OpenShift"
+nameOverride: ""
+fullnameOverride: ""
+itxImageRegistry: "{{ itxrs_registry }}"
+itxImagePullSecret: "{{ itxrs_registry_secret }}"
+image:
+  repository: "{{ itxrs_registry }}/ibm-itx-rs"
+  tag: "{{ itxrs_version }}"
+  digest: ""
+  pullPolicy: IfNotPresent
+  secret: "{{ itxrs_registry_secret }}"
+rest:
+  deploy: false
+  image:
+    repository: "{{ itxrs_registry }}/ibm-itx-rs"
+    tag: "{{ itxrs_version }}"
+    digest: ""
+    pullPolicy: IfNotPresent
+    pullPolicyOverride: false
+  mapFileExtension: "mmc"
+  redisStem: "tx-rest"
+  cacheType: "external"
+  persistence:
+    data:
+      enabled: true
+      existingClaim: ""
+      useDynamicProvisioning: true
+      storageClass: "{{ file_storage_class }}"
+      accessMode: ReadWriteOnce
+      size: 20Gi
+      annotations: {}
+    logs:
+      enabled: true
+      existingClaim: ""
+      useDynamicProvisioning: true
+      storageClass: "{{ file_storage_class }}"
+      accessMode: ReadWriteOnce
+      size: 100Mi
+      annotations: {}
+  inbound:
+    http:
+      enabled: true
+    https:
+      enabled: false
+      secret: ""
+      clientAuth: false
+      serviceServingCertificates: false
+  serviceAccount:
+    create: false
+    annotations: {}
+    existingName: ""
+  service:
+    type: ClusterIP
+    port:
+      http: 8080
+      https: 8443
+  synchronousTimeout: 300
+  groupId: "1"
+  extraEnvConfigMap: ""
+  extraEnvSecret: ""
+  probes:
+    liveness:
+      enabled: true
+      initialDelaySeconds: 35
+      periodSeconds: 20
+      successThreshold: 1
+      failureThreshold: 3
+    readiness:
+      enabled: true
+      initialDelaySeconds: 35
+      periodSeconds: 20
+      successThreshold: 1
+      failureThreshold: 3
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "700Mi"
+    limits:
+      cpu: "4000m"
+      memory: "8Gi"
+  deployPackages:
+    enabled: true
+    directory: "/data/maps"
+    archiveDir: "/data/packages"
+    secret:
+      keyName: ""
+      crtName: ""
+  nodeSelector: {}
+  tolerations: []
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: "kubernetes.io/arch"
+                operator: In
+                values:
+                  - amd64
+restV1:
+  deploy: true
+  runMode: "unfenced"
+  redisStem: "tx-rest-v1"
+  cacheType: "internal"
+  replicas: 1
+  inbound:
+    http:
+      enabled: true
+    https:
+      enabled: false
+      secret: ""
+      clientAuth: false
+      serviceServingCertificates: false
+  serviceAccount:
+    create: false
+    annotations: {}
+    existingName: "{{ itxrs_serviceaccount }}"
+  service:
+    type: ClusterIP
+    port:
+      http: 8080
+      https: 8443
+  synchronousTimeout: 300
+  extraEnvConfigMap: ""
+  extraEnvSecret: ""
+  probes:
+    liveness:
+      enabled: true
+      initialDelaySeconds: 35
+      periodSeconds: 20
+      successThreshold: 1
+      failureThreshold: 3
+    readiness:
+      enabled: true
+      initialDelaySeconds: 35
+      periodSeconds: 20
+      successThreshold: 1
+      failureThreshold: 3
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "700Mi"
+    limits:
+      cpu: "4000m"
+      memory: "8Gi"
+  nodeSelector: {}
+  tolerations: []
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: "kubernetes.io/arch"
+                operator: In
+                values:
+                  - amd64
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    cpu:
+      enabled: true
+      averageUtilization: 80
+    memory:
+      enabled: true
+      averageUtilization: 80
+    custom:
+      enabled: false
+      types: []
+    behavior: {}
+executor:
+  serviceAccount:
+    create: false
+    annotations: {}
+    existingName: ""
+  replicas: 1
+  probes:
+    liveness:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 20
+      successThreshold: 1
+      failureThreshold: 3
+    readiness:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 20
+      successThreshold: 1
+      failureThreshold: 3
+  resources:
+    requests:
+      cpu: 250m
+      memory: 700Mi
+    limits:
+      cpu: 4000m
+      memory: 4Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: "kubernetes.io/arch"
+                operator: In
+                values:
+                  - amd64
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    cpu:
+      enabled: true
+      averageUtilization: 80
+    memory:
+      enabled: true
+      averageUtilization: 80
+    custom:
+      enabled: false
+      types: []
+    behavior: {}
+external:
+  data:
+    volume:
+      path: "/xdata"
+      size: 50Mi
+    secret:
+      subpath: "sec"
+    configMap:
+      subpath: "cfg"
+    map:
+      subpath: "map"
+  mq:
+    secret: ""
+    chlTab: ""
+    chlLib: "/xdata/sec"
+    sslKeyPath: ""
+    dataPath: "/tmp"
+  secrets: []
+  configMaps: []
+  maps: []
+  hostAliases: []
+  env: []
+  cos:
+    enabled: false
+    name: maps.zip
+    bucket: itx
+    targetDir: "/data/maps"
+    platform: "s3"
+    gcp:
+      cf: "cf.json"
+    s3:
+      accessKey: ""
+      secretKey: ""
+      region: us-east-1
+      endpoint: ""
+itxRedis:
+  host: redis-master
+  port: 6379
+  database: 0
+  password:
+    secret: ""
+    key: "redis-password"
+  tls:
+    enabled: false
+    clientSecret: ""
+    certFilename: ""
+    certKeyFilename: ""
+    clientCaConfigMap: ""
+    certCAFilename: ""
+    sni: ""
+  maxStatisticCount: 100000
+  statusExpiration: 7
+route:
+  deploy: true
+  host: ""
+routeV1:
+  deploy: true
+  host: ""
+ingress:
+  deploy: false
+  annotations: {}
+  className: "openshift-default"
+  hosts: []
+  tls: []
+  default:
+    enabled: true
+ingressV1:
+  deploy: false
+  annotations: {}
+  className: "openshift-default"
+  hosts: []
+  tls: []
+  default:
+    enabled: true
+config:
+  runtime:
+    connectionsManager:
+      idle: 60
+      sLim: 4
+    externalJarFiles: []
+    externalJarDirectories: []
+    jvmOptions: []
+    trace: "stdout"
+    locale: "en"
+  rest:
+    logging:
+      level: "ERROR"
+      header: true
+      columns:
+        time: 1
+        uuid: false
+        rc: true
+        rcText: false
+        msgID: false
+        flowName: true
+        msg: true
+        funcName: false
+        sourceInfo: false
+      trigger: "ALWAYS"
+      addWebServerConsoleLogging: true
+      disableWebServerAccessLogging: false
+      rotation:
+        fileCount: 5
+        fileSize: 20000
+        fileAge: 30
+    resources:
+      mapThreads: 10
+      flowThreads: 10
+    listeners:
+      adapter:
+        jvmOptions: ""
+      file:
+        zone: ""
+        cooperativeMode: false
+  patch:
+    directory: ""
+    manifest: "/xdata/cfg/patchmanifest.txt"
