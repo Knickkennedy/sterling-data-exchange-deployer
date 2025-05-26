@@ -16,10 +16,11 @@ db2_storage_size: 100Gi
 
 # MQ Settings
 deploy_mq: true
-mq_version: v3.4
+mq_version: v3.5.3
 mq_namespace: b2bi-mq
 mq_registry_secret: ibm-registry-secret
 mq_secret: b2bi-mq-secret
-mq_admin_password: Passw0rd
-mq_crd_name: b2bimq
+jms_user: app
+mq_appuser_password: Passw0rd
+mq_crd_name: qmgr
 mq_storage_size: 20Gi

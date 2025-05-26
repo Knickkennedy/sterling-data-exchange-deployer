@@ -24,6 +24,17 @@
     state: present
     src: ../output/{{ mq_namespace }}/{{ mq_namespace }}-mq-registry-secret.yml
 
+- name: Template the mq secret for reuse
+  ansible.builtin.template:
+    src: templates/mq-secret.yml.j2
+    dest: ../output/{{ mq_namespace }}/mq-secret.yml
+    mode: '0644'
+
+- name: Generate mq secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ mq_namespace }}/mq-secret.yml
+
 - name: Template the mq configmap for reuse
   ansible.builtin.template:
     src: templates/mq-auth-configmap.yml.j2

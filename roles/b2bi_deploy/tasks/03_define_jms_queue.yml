@@ -11,7 +11,7 @@
 
     - name: Register Database Networking Configuration
       ansible.builtin.set_fact:
-        jms_password: "{{ mq_admin_password }}"
+        jms_password: "{{ mq_appuser_password }}"
         jms_host: "{{ mq_crd_name }}-ibm-mq.{{ mq_namespace }}.svc.cluster.local"
         jms_port: >-
           {{ mq_service_output.resources[0].spec.ports

@@ -6,8 +6,8 @@ metadata:
 spec:
   license:
     accept: true
-    license: L-DRNQ-NGCA76
-    use: NonProduction
+    license: L-HYGL-6STWD6
+    use: Development
   queueManager:
     mqsc:
     - configMap:
@@ -29,6 +29,25 @@ spec:
         deleteClaim: true
         size: "{{ mq_storage_size }}"
         type: persistent-claim
+  template:
+    pod:
+      containers:
+        - env:
+            - name: MQ_DEV
+              value: "true"
+            - name: MQ_CONNAUTH_USE_HTP
+              value: "true"
+            - name: MQ_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ mq_deploy_secret }}"
+                  key: dev-admin-password
+            - name: MQ_APP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ mq_deploy_secret }}"
+                  key: dev-app-password
+          name: qmgr
   version: "{{ mq_operator_version }}"
   web:
     enabled: true
