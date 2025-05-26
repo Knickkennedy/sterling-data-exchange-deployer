@@ -1,0 +1,21 @@
+---
+- name: Template the Sterling External Authentication Server instance for reuse
+  ansible.builtin.template:
+    src: templates/values.yml.j2
+    dest: ../output/{{ seas_namespace }}/seas-values.yml
+    mode: '0644'
+
+- name: Download Helm Chart tarball
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/IBM/charts/master/repo/ibm-helm/ibm-seas-{{ versions[seas_version].helm_chart_version }}.tgz"
+    dest: ../output/{{ seas_namespace }}/ibm-seas-{{ versions[seas_version].helm_chart_version }}.tgz
+    mode: "0666"
+
+- name: Deploy Sterling External Authentication Server
+  kubernetes.core.helm:
+    name: "{{ seas_release_name }}"
+    chart_ref: ../output/{{ seas_namespace }}/ibm-seas-{{ versions[seas_version].helm_chart_version }}.tgz
+    release_namespace: "{{ seas_namespace }}"
+    timeout: "1h"
+    values_files:
+      - ../output/{{ seas_namespace }}/seas-values.yml

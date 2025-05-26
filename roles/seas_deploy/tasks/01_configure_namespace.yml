@@ -1,0 +1,85 @@
+---
+- name: Create SEAS namespace scoped output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ seas_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Build registry secret content "{{ seas_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template the SEAS scc for reuse
+  ansible.builtin.template:
+    src: templates/seas-scc.yml.j2
+    dest: ../output/{{ seas_namespace }}/seas-scc.yml
+    mode: '0644'
+
+- name: Create the SEAS scc
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ seas_namespace }}/seas-scc.yml
+
+- name: Template the SEAS Namespace for reuse
+  ansible.builtin.template:
+    src: templates/seas-namespace.yml.j2
+    dest: ../output/{{ seas_namespace }}/{{ seas_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create SEAS namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ seas_namespace }}/{{ seas_namespace }}-namespace.yml
+
+- name: Template PVC
+  ansible.builtin.template:
+    src: templates/seas-pvc.yml.j2
+    dest: ../output/{{ seas_namespace }}/seas-pvc.yml
+    mode: '0644'
+
+- name: Create PVC
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ seas_namespace }}/seas-pvc.yml
+
+- name: Template the SEAS registry secret
+  ansible.builtin.template:
+    src: templates/seas-registry-secret.yml.j2
+    dest: ../output/{{ seas_namespace }}/seas-registry-secret.yml
+    mode: '0644'
+
+- name: Create SEAS registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ seas_namespace }}/seas-registry-secret.yml
+
+- name: Template the SEAS secret
+  ansible.builtin.template:
+    src: templates/seas-secret.yml.j2
+    dest: ../output/{{ seas_namespace }}/seas-secret.yml
+    mode: '0644'
+
+- name: Create the SEAS secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ seas_namespace }}/seas-secret.yml
+
+- name: Template the SEAS service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/seas-sa-role-rolebinding-scc.yml.j2
+    dest: ../output/{{ seas_namespace }}/seas-sa-role-rolebinding-scc.yml
+    mode: '0644'
+
+- name: Create the SEAS service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ seas_namespace }}/seas-sa-role-rolebinding-scc.yml

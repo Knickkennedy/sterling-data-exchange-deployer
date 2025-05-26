@@ -1,0 +1,103 @@
+license: true
+licenseType: "{{ seas_license_type }}"
+timezone: "UTC"
+image:
+  repository: "cp.icr.io/cp/ibm-seas/seas-docker-image"
+  tag: "{{ seas_version }}"
+  imageSecrets: ""
+  digest:
+    enabled: false
+    value: sha256:beed97617548448532abb3a4a9d26631d25f910eba86f9f96d21d7a8a7e69229
+  pullPolicy: IfNotPresent
+nameOverride: ""
+arch: "amd64"
+seasArgs:
+  maxHeapSize: "1024m"
+  installAnyWhereMaxHeap: "1G"
+  installAnyWhereDebug: false
+storageSecurity:
+  fsGroup: 65534
+  supplementalGroups:
+  - 65534
+  rootSquashCheck: true
+  rootSquash:
+    enabled: false
+    runAsUser: 65534
+persistentVolume:
+  enabled: true
+  useDynamicProvisioning: false
+  existingClaimName: "{{ seas_pvc }}"
+  labelName: "app.kubernetes.io/name"
+  labelValue: "ibm-seas-pv"
+  storageClassName: "{{ file_storage_class }}"
+  size: 2Gi
+  accessMode: "ReadWriteOnce"
+service:
+  type: "LoadBalancer"
+  loadBalancerIP: ""
+  externalIP: ""
+  annotations: {}
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: ""
+  sessionAffinity: "ClientIP"
+  nonSecure:
+    servicePort: 61365
+    containerPort: 61365
+  secure:
+    servicePort: 61366
+    containerPort: 61366
+  jetty:
+    servicePort: 9080
+    containerPort: 9080
+secret:
+  secretName: "{{ seas_secret }}"
+serviceAccount:
+  create: false
+  name: "{{ seas_serviceaccount }}"
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+    ephemeral-storage: "5Gi"
+  requests:
+    cpu: 1000m
+    memory: 1Gi
+    ephemeral-storage: "3Gi"
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: {}
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+livenessProbe:
+  initialDelaySeconds: 175
+  timeoutSeconds: 30
+  periodSeconds: 60
+  failureThreshold: 10
+readinessProbe:
+  initialDelaySeconds: 170
+  timeoutSeconds: 5
+  periodSeconds: 60
+  failureThreshold: 10
+route:
+  enabled: true
+dashboard:
+  enabled: false
+customProperties: []
+vmArguments: []
+customFiles: []
+networkPolicy:
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from: []
+  egress:
+  - to: []
+DeleteBackup:
+  enabled: false
+  count: 3

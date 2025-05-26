@@ -41,10 +41,6 @@
     dest: ../output/{{ ssp_cm_namespace }}/ibm-ssp-cm-{{ versions[ssp_cm_version].helm_chart_version }}.tgz
     mode: "0666"
 
-# - name: Deploy Sterling Secure Proxy Configuration Manager
-#   ansible.builtin.command:
-#     cmd: "helm install --timeout 10m0s -f ../output/{{ ssp_cm_namespace }}/ssp-cm-values.yml -n {{ ssp_cm_namespace }} {{ ssp_cm_release_name }} ../output/{{ ssp_cm_namespace }}/ibm-ssp-cm-{{ versions[ssp_cm_version].helm_chart_version }}.tgz"
-
 - name: Deploy Sterling Secure Proxy Configuration Manager
   kubernetes.core.helm:
     name: "{{ ssp_cm_release_name }}"

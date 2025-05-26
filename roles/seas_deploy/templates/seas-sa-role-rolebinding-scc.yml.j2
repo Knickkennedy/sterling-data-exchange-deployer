@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "{{ seas_serviceaccount }}"
+  namespace: "{{ seas_namespace }}"
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ibm-seas-scc
+  labels:
+    app.kubernetes.io/name: ibm-seas-scc
+    app.kubernetes.io/instance: ibm-seas-scc
+    app.kubernetes.io/managed-by: IBM
+rules:
+  - apiGroups:
+    - security.openshift.io
+    resourceNames:
+    - ibm-seas-scc
+    resources:
+    - securitycontextconstraints
+    verbs:
+    - use
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "ibm-seas-scc"
+  namespace: "{{ seas_namespace }}"
+  labels:
+    app: "ibm-seas-scc"
+roleRef:
+  kind: ClusterRole
+  name: "ibm-seas-scc"
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: "{{ seas_serviceaccount }}"
+    namespace: {{ seas_namespace }}

@@ -37,3 +37,7 @@
       ansible.builtin.include_role:
         name: connect_direct_web_services_deploy
       when: deploy_connect_direct_web_services
+    - name: Deploy Sterling External Authentication Server
+      ansible.builtin.include_role:
+        name: seas_deploy
+      when: deploy_seas
