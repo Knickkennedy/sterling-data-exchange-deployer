@@ -17,11 +17,15 @@
 - name: "Configure B2Bi namespace"
   ansible.builtin.include_tasks: 01_configure_namespace.yml
 
+- name: Configure DB2 for B2Bi
+  ansible.builtin.include_tasks: 02_configure_db2_for_b2bi.yml
+  when: deploy_db2_for_b2bi
+
 - name: "Define database configuration for B2Bi"
-  ansible.builtin.include_tasks: 02_define_database.yml
+  ansible.builtin.include_tasks: 03_define_database.yml
 
 - name: "Define the JMS queue for B2Bi"
-  ansible.builtin.include_tasks: 03_define_jms_queue.yml
+  ansible.builtin.include_tasks: 04_define_jms_queue.yml
 
 - name: "Deploy B2Bi helm chart and configuration"
-  ansible.builtin.include_tasks: 04_deploy_b2bi.yml
+  ansible.builtin.include_tasks: 05_deploy_b2bi.yml

@@ -7,45 +7,64 @@
     - name: Load configuration of installation
       ansible.builtin.include_role:
         name: load_config
+
     - name: Check prerequisites of installation
       ansible.builtin.include_role:
         name: check_prereqs
+
     - name: Create output directories for reuse and debugging
       ansible.builtin.include_role:
         name: create_output_directories
+
     - name: Deploy IBM Catalog Source
       ansible.builtin.include_role:
         name: ibm_catalog_source_deploy
       when: deploy_ibm_catalog_source | bool
+
     - name: Deploy Sterling Data Exchange B2Bi
       ansible.builtin.include_role:
         name: b2bi_deploy
+        vars_from: "{{ config_dir }}/b2bi.yml"
       when: deploy_b2bi | bool
+
     - name: Deploy Sterling Secure Proxy Configuration Manager
       ansible.builtin.include_role:
         name: ssp_cm_deploy
+        vars_from: "{{ config_dir }}/ssp-cm.yml"
       when: deploy_ssp_cm | bool
+
     - name: Deploy Sterling Secure Proxy Engine
       ansible.builtin.include_role:
         name: ssp_engine_deploy
+        vars_from: "{{ config_dir }}/ssp-engine.yml"
       when: deploy_ssp_engine | bool
+
     - name: Deploy Sterling Secure Proxy Perimeter Server
       ansible.builtin.include_role:
         name: ssp_ps_deploy
-      when: deploy_ssp_ps
+        vars_from: "{{ config_dir }}/ssp-ps.yml"
+      when: deploy_ssp_ps | bool
+
     - name: Deploy Sterling Connect Direct
       ansible.builtin.include_role:
         name: connect_direct_deploy
+        vars_from: "{{ config_dir }}/connect-direct.yml"
       when: deploy_connect_direct | bool
+
     - name: Deploy Sterling Connect Direct Web Services
       ansible.builtin.include_role:
         name: connect_direct_web_services_deploy
-      when: deploy_connect_direct_web_services
+        vars_from: "{{ config_dir }}/connect-direct-web-services.yml"
+      when: deploy_connect_direct_web_services | bool
+
     - name: Deploy Sterling External Authentication Server
       ansible.builtin.include_role:
         name: seas_deploy
-      when: deploy_seas
+        vars_from: "{{ config_dir }}/seas.yml"
+      when: deploy_seas | bool
+
     - name: Deploy Sterling Transformation Extender
       ansible.builtin.include_role:
         name: itx_rs_deploy
-      when: deploy_itx_rs
+        vars_from: "{{ config_dir }}/itx-rs.yml"
+      when: deploy_itx_rs | bool

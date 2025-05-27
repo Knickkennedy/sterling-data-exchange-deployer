@@ -1,3 +1,0 @@
----
-- name: Update DB2 Configuration for B2BI
-  ansible.builtin.include_tasks: 01_update_db2.yml

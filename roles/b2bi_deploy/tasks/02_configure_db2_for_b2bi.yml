@@ -47,13 +47,6 @@
                         storage: 10Gi
                     storageClassName: "{{ block_storage_class }}"
 
-# - name: Stop DB2 Instance
-#   kubernetes.core.k8s_exec:
-#     impersonate_user: "{{ db2_username }}"
-#     namespace: "{{ db2_namespace }}"
-#     pod: "{{ db2_pod_name }}"
-#     command: "su - {{ db2_username }} -c 'db2stop'"
-
 - name: Wait for the DB2 deployment to finish before moving on
   kubernetes.core.k8s_info:
     kind: Db2uInstance
