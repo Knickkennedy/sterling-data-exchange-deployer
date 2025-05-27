@@ -1,0 +1,85 @@
+---
+- name: Create b2bi namespace scoped output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ b2bi_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Template the B2Bi Namespace for reuse
+  ansible.builtin.template:
+    src: templates/b2bi-namespace.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/{{ b2bi_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create B2Bi namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ b2bi_namespace }}/{{ b2bi_namespace }}-namespace.yml
+
+- name: Build registry secret content "{{ b2bi_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template the B2Bi registry secret
+  ansible.builtin.template:
+    src: templates/b2bi-registry-secret.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/b2bi-registry-secret.yml
+    mode: '0644'
+
+- name: Create B2Bi registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ b2bi_namespace }}/b2bi-registry-secret.yml
+
+- name: Template the B2Bi system passphrase secret
+  ansible.builtin.template:
+    src: templates/b2bi-system-passphrase-secret.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/b2bi-system-passphrase-secret.yml
+    mode: '0644'
+
+- name: Create B2Bi system passphrase secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ b2bi_namespace }}/b2bi-system-passphrase-secret.yml
+
+- name: Template the B2Bi liberty passphrase secret
+  ansible.builtin.template:
+    src: templates/b2bi-liberty-keystore-password-secret.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/b2bi-liberty-keystore-password-secret.yml
+    mode: '0644'
+
+- name: Create B2Bi liberty passphrase secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ b2bi_namespace }}/b2bi-liberty-keystore-password-secret.yml
+
+- name: Template the b2bi service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/b2bi-sa-role-and-binding.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/b2bi-sa-role-and-binding.yml
+    mode: '0644'
+
+- name: Create the b2bi service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ b2bi_namespace }}/b2bi-sa-role-and-binding.yml
+
+- name: Template the b2bi database secret
+  ansible.builtin.template:
+    src: templates/b2bi-db-secret.yml.j2
+    dest: ../output/{{ b2bi_namespace }}/{{ b2bi_db_secret }}.yml
+    mode: '0644'
+
+- name: Create the b2bi database secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ b2bi_namespace }}/{{ b2bi_db_secret }}.yml

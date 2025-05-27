@@ -1,0 +1,117 @@
+---
+itxa_helm_release_name: auto
+itxa_version: 6.2.1.0
+itxa_license_type: non-prod
+
+itxa_namespace: itxa
+itxa_serviceaccount: itxa-sa
+
+itxa_registry_secret: ibm-registry-secret
+itxa_registry: cp.icr.io
+itxa_registry_user: cp
+itxa_registry_key:
+
+jms_secret: itxa-jms-queue
+jms_keystore_path: ""
+jms_keystore_secret: ""
+jms_truststore_path: ""
+jms_truststore_secret: ""
+jms_protocol: TLSv1.2
+
+# jms_user: ""
+# jms_vendor: ""
+# jms_connection_factory: ""
+# jms_queue_name: ""
+# jms_channel: ""
+# jms_enable_ssl: false
+
+jms_user: root
+jms_vendor: IBMMQ
+jms_connection_factory: com.ibm.mq.jms.MQQueueConnectionFactory
+jms_queue_name: DEV.QUEUE.1
+jms_channel: DEV.CHANNEL.SVRCONN
+jms_enable_ssl: false
+
+itxa_app_logs_size: 1Gi
+
+itxa_app_documents_enabled: false
+itxa_app_documents_size: 1Gi
+
+itxa_data_setup_enabled: true
+itxa_data_setup_upgrade: false
+
+itxa_seas_enabled: false
+itxa_itx_enabled: false
+itxa_itxa_enabled: false
+itxa_sfg_enabled: false
+itxa_ebics_enabled: false
+itxa_financial_services_enabled: false
+itxa_file_operation_enabled: false
+itxa_fips_enabled: false
+
+itxa_db_vendor: DB2
+itxa_db_drivers: db2jcc4.jar
+itxa_db_create_schema: true
+itxa_use_oracle_service_name: false
+itxa_cfg_use_ssl: false
+itxa_db_secret: itxa-db-secret
+itxa_db_truststore: ""
+itxa_db_truststore_secret: ""
+itxa_db_keystore: ""
+itxa_db_keystore_secret: ""
+itxa_admin_email: admin@temp.net
+itxa_smtp_host: localhost
+itxa_document_service_enabled: false
+
+itxa_system_passphrase_secret: itxa-system-passphrase-secret
+itxa_system_passphrase: password
+
+itxa_liberty_keystore_password_secret: itxa-liberty-secret
+itxa_liberty_keystore_password: changeit
+
+# accepts on or off
+itxa_nist_enabled: "off"
+
+asi_backend_nodeport_range: 30351-30353
+
+versions:
+  6.2.1.0:
+    helm_chart_version: 3.1.0
+    ocp_min_version: 4.14
+    k8s_min_version: 1.27
+    k8s_max_version: 1.29
+    resourcesInit_version: 6.2.1.0
+    dataSetup_version: 6.2.1.0
+    seas_version: 1.0
+    itx_version: 10.1.2.1.20241122
+    itxa_version: 10.0.1.10-x86_64
+    itxa_resourcesInit_version: 10.0.1.10-x86_64
+    test_version: 1.1.68
+    purge_version: 6.2.1.0
+    documentService_version: 6.2.1.0
+
+db_values:
+  STMT_CONC: "LITERALS"
+  SELF_TUNING_MEM: "ON"
+  LOCKLIST: "AUTOMATIC"
+  MAXLOCKS: "AUTOMATIC"
+  PCKCACHESZ: "AUTOMATIC"
+  SHEAPTHRES_SHR: "AUTOMATIC"
+  SORTHEAP: "AUTOMATIC"
+  NUM_IOCLEANERS: "AUTOMATIC"
+  NUM_IOSERVERS: "AUTOMATIC"
+  DFT_PREFETCH_SZ: "AUTOMATIC"
+  MAXAPPLS: "AUTOMATIC"
+  APPLHEAPSZ: "AUTOMATIC"
+  APPL_MEMORY: "AUTOMATIC"
+  DBHEAP: "AUTOMATIC"
+  LOGFILSIZ: "65536"
+  LOGPRIMARY: "40"
+  LOGSECOND: "12"
+  NUM_LOG_SPAN: "40"
+  DFT_DEGREE: "1"
+  LOGBUFSZ: "2152"
+  STMTHEAP: "51200 AUTOMATIC"
+  CATALOGCACHE_SZ: "300"
+  UTIL_HEAP_SZ: "AUTOMATIC"
+  CHNGPGS_THRESH: "80"
