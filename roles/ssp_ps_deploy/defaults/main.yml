@@ -1,0 +1,17 @@
+---
+ssp_ps_release_name: auto-ps
+ssp_ps_version: 6.2.0.1.02
+ssp_ps_license_type: non-prod
+
+ssp_ps_namespace: ssp
+
+ssp_ps_registry_secret: ibm-entitlement-key
+ssp_ps_registry: cp.icr.io
+ssp_ps_registry_user: cp
+ssp_ps_registry_key:
+
+ssp_ps_serviceaccount: ssp-ps-sa
+
+versions:
+  6.2.0.1.02:
+    helm_chart_version: 1.5.4

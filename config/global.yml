@@ -3,10 +3,11 @@ deploy_ibm_catalog_source: false
 deploy_b2bi: false
 deploy_ssp_cm: false
 deploy_ssp_engine: false
+deploy_ssp_ps: true
 deploy_connect_direct: false
 deploy_connect_direct_web_services: false
 deploy_seas: false
-deploy_itx_rs: true
+deploy_itx_rs: false
 
 registry: cp.icr.io
 registry_user: cp

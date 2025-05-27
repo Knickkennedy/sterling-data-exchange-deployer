@@ -1,0 +1,63 @@
+---
+- name: Create SSP PS namespace scoped output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ ssp_ps_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Build registry secret content "{{ ssp_ps_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template the SSP Ps scc for reuse
+  ansible.builtin.template:
+    src: templates/ssp-ps-scc.yml.j2
+    dest: ../output/{{ ssp_ps_namespace }}/ssp-ps-scc.yml
+    mode: '0644'
+
+- name: Create the SSP Ps scc
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_ps_namespace }}/ssp-ps-scc.yml
+
+- name: Template the SSP ps registry secret
+  ansible.builtin.template:
+    src: templates/ssp-ps-registry-secret.yml.j2
+    dest: ../output/{{ ssp_ps_namespace }}/ssp-ps-registry-secret.yml
+    mode: '0644'
+
+- name: Template the SSP PS Namespace for reuse
+  ansible.builtin.template:
+    src: templates/ssp-ps-namespace.yml.j2
+    dest: ../output/{{ ssp_ps_namespace }}/{{ ssp_ps_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create SSP PS namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_ps_namespace }}/{{ ssp_ps_namespace }}-namespace.yml
+
+- name: Create SSP Ps registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_ps_namespace }}/ssp-ps-registry-secret.yml
+
+- name: Template the SSP PS service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/ssp-ps-sa-role-rolebinding-scc.yml.j2
+    dest: ../output/{{ ssp_ps_namespace }}/ssp-ps-sa-role-rolebinding-scc.yml
+    mode: '0644'
+
+- name: Create the SSP PS service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ ssp_ps_namespace }}/ssp-ps-sa-role-rolebinding-scc.yml

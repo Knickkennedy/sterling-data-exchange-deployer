@@ -1,0 +1,21 @@
+---
+- name: Template the Sterling Secure Proxy Ps instance for reuse
+  ansible.builtin.template:
+    src: templates/values.yml.j2
+    dest: ../output/{{ ssp_ps_namespace }}/ssp-ps-values.yml
+    mode: '0644'
+
+- name: Download Helm Chart tarball
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/IBM/charts/master/repo/ibm-helm/ibm-ssp-ps-{{ versions[ssp_ps_version].helm_chart_version }}.tgz"
+    dest: ../output/{{ ssp_ps_namespace }}/ibm-ssp-ps-{{ versions[ssp_ps_version].helm_chart_version }}.tgz
+    mode: "0666"
+
+- name: Deploy Sterling Secure Proxy Ps
+  kubernetes.core.helm:
+    name: "{{ ssp_ps_release_name }}"
+    chart_ref: ../output/{{ ssp_ps_namespace }}/ibm-ssp-ps-{{ versions[ssp_ps_version].helm_chart_version }}.tgz
+    release_namespace: "{{ ssp_ps_namespace }}"
+    timeout: "1h"
+    values_files:
+      - ../output/{{ ssp_ps_namespace }}/ssp-ps-values.yml

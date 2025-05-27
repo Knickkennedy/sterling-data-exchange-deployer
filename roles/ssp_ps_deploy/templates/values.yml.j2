@@ -1,0 +1,95 @@
+license: true
+licenseType: "{{ ssp_ps_license_type }}"
+timezone: "UTC"
+image:
+  repository: "{{ ssp_ps_registry }}/cp/ibm-ssp-ps/ssp-ps-docker-image"
+  tag: "{{ ssp_ps_version }}"
+  imageSecrets: ""
+  digest:
+    enabled: false
+    value: sha256:12741a6e51e6b8882e7d1916d044c6ab9087c046b8a6f4430cbc2b7ef6258555
+  pullPolicy: IfNotPresent
+nameOverride: ""
+arch: "amd64"
+psArgs:
+  networkZoneSecure: false
+  secureInterface: "*"
+  externalInterface: "*"
+  remotePort: 30900
+  remoteAddress: ""
+  maxAllocation: 768
+  maxHeapSize: 1024
+  restricted: false
+  receiveBufferSize: "131072"
+  sendBufferSize: "131072"
+  logLevel: "ERROR"
+  rotateLogs: true
+  maxLogSize: "100000"
+  maxnumLogs: 10
+  installAnyWhereMaxHeap: "1G"
+  installAnyWhereDebug: false
+service:
+  type: "LoadBalancer"
+  loadBalancerIP: ""
+  externalIP: ""
+  annotations: {}
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: ""
+  sessionAffinity: "ClientIP"
+  psLessSecure:
+    servicePort: 30800
+    containerPort: 30800
+service2:
+  type: "LoadBalancer"
+  loadBalancerIP: ""
+  externalIP: ""
+  annotations: {}
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: ""
+  sessionAffinity: "ClientIP"
+  portRanges: []
+  ports: []
+serviceAccount:
+  create: false
+  name: "{{ ssp_ps_serviceaccount }}"
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+    ephemeral-storage: "5Gi"
+  requests:
+    cpu: 1000m
+    memory: 1Gi
+    ephemeral-storage: "3Gi"
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: {}
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: []
+    preferredDuringSchedulingIgnoredDuringExecution: []
+livenessProbe:
+  initialDelaySeconds: 150
+  timeoutSeconds: 30
+  periodSeconds: 60
+  failureThreshold: 10
+readinessProbe:
+  initialDelaySeconds: 140
+  timeoutSeconds: 5
+  periodSeconds: 60
+  failureThreshold: 10
+route:
+  enabled: true
+dashboard:
+  enabled: false
+networkPolicy:
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from: []
+  egress:
+  - to: []

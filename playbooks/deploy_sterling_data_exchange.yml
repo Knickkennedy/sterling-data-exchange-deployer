@@ -29,6 +29,10 @@
       ansible.builtin.include_role:
         name: ssp_engine_deploy
       when: deploy_ssp_engine | bool
+    - name: Deploy Sterling Secure Proxy Perimeter Server
+      ansible.builtin.include_role:
+        name: ssp_ps_deploy
+      when: deploy_ssp_ps
     - name: Deploy Sterling Connect Direct
       ansible.builtin.include_role:
         name: connect_direct_deploy

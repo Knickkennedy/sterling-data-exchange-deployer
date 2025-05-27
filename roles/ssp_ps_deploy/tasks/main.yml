@@ -1,0 +1,6 @@
+---
+- name: "Configure Sterling Secure Proxy Ps Namespace"
+  ansible.builtin.include_tasks: 01_configure_namespace.yml
+
+- name: "Deploy the SSP PS helm chart configuration"
+  ansible.builtin.include_tasks: 02_deploy_ssp_ps.yml
