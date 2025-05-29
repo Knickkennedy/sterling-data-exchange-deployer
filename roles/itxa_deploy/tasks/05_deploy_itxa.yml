@@ -1,0 +1,44 @@
+---
+- name: Template the Itxa Route for reuse
+  ansible.builtin.template:
+    src: templates/itxa-route.yml.j2
+    dest: ../output/{{ itxa_namespace }}/{{ itxa_namespace }}-route.yml
+    mode: '0644'
+
+- name: Create Itxa Route
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ itxa_namespace }}/{{ itxa_namespace }}-route.yml
+
+- name: Download Helm Chart tarball
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/IBM/charts/master/repo/ibm-helm/ibm-itxa-prod-{{ versions[itxa_version].helm_chart_version }}.tgz"
+    dest: ../output/{{ itxa_namespace }}/ibm-itxa-prod-{{ versions[itxa_version].helm_chart_version }}.tgz
+    mode: "0666"
+
+- name: "Lookup Route from 'openshift-console' if provided"
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Route
+    name: "console"
+    namespace: "openshift-console"
+  register: oc_route_cout
+
+- name: Get subdomain of openshift cluster
+  ansible.builtin.set_fact:
+    openshift_host: "{{ oc_route_cout.resources[0].spec.host | regex_replace('.*console-openshift-console\\.', '') }}"
+
+- name: Template values.yaml for reusability
+  ansible.builtin.template:
+    src: templates/values.yml.j2
+    dest: ../output/{{ itxa_namespace }}/values.yml
+    mode: '0644'
+
+- name: Deploy Itxa helm Chart
+  kubernetes.core.helm:
+    name: "{{ itxa_helm_release_name }}"
+    chart_ref: ../output/{{ itxa_namespace }}/ibm-itxa-prod-{{ versions[itxa_version].helm_chart_version }}.tgz
+    release_namespace: "{{ itxa_namespace }}"
+    timeout: "6h"
+    values_files:
+      - ../output/{{ itxa_namespace }}/values.yml

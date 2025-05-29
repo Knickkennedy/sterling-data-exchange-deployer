@@ -12,7 +12,7 @@
   ansible.builtin.set_fact:
     db2_pod_name: "{{ db2_pod.resources[0].metadata.name }}"
 
-- name: Update the DB2 CR associated with B2BI
+- name: Update the DB2 CR associated with ITXA
   kubernetes.core.k8s:
     state: patched
     definition:

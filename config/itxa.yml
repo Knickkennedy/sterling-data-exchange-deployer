@@ -1,0 +1,16 @@
+---
+itxa_version: 10.0.1.10-x86_64
+itxa_helm_release_name: auto-itxa
+itxa_namespace: itxa
+
+deploy_db2: true
+db2_version: s11.5.9.0-cn3
+db2_namespace: itxa-db2
+db2_registry_secret: ibm-registry-secret
+db2_secret: db2-secret
+db2_service_account: db2-sa
+db2_crd_name: db2inst1
+db2_username: db2inst1
+db2_password: passw0rd
+db2_dbname: db2inst1
+db2_storage_size: 100Gi

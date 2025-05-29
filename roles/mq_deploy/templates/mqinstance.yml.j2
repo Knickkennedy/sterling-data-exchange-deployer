@@ -9,6 +9,18 @@ spec:
     license: L-HYGL-6STWD6
     use: Development
   queueManager:
+    env:
+      - name: MQ_DEV
+        value: "true"
+      - name: MQ_CONNAUTH_USE_HTP
+        value: "true"
+    files:
+      - secret:
+          items:
+            - item: mqAdminPassword
+            - item: mqAppPassword
+          name: "{{ mq_deploy_secret }}"
+          defaultMountPath: /run/secrets
     mqsc:
     - configMap:
         name: mqsc-ini-example
@@ -29,25 +41,6 @@ spec:
         deleteClaim: true
         size: "{{ mq_storage_size }}"
         type: persistent-claim
-  template:
-    pod:
-      containers:
-        - env:
-            - name: MQ_DEV
-              value: "true"
-            - name: MQ_CONNAUTH_USE_HTP
-              value: "true"
-            - name: MQ_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ mq_deploy_secret }}"
-                  key: dev-admin-password
-            - name: MQ_APP_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ mq_deploy_secret }}"
-                  key: dev-app-password
-          name: qmgr
   version: "{{ mq_operator_version }}"
   web:
     enabled: true

@@ -2,7 +2,7 @@
 b2bi_version: 6.2.1.0
 asi_backend_nodeport_range: 31765-31767
 
-deploy_db2_for_b2bi: true
+deploy_db2: true
 db2_version: s11.5.9.0-cn3
 db2_namespace: b2bi-db2
 db2_registry_secret: ibm-registry-secret

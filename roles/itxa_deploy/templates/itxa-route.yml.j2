@@ -1,0 +1,19 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: "itxa-web-route"
+  namespace: "{{ itxa_namespace }}"
+  labels:
+    app.kubernetes.io/instance: s0
+    app.kubernetes.io/name: ibm-itxa
+    release: "{{ itxa_helm_release_name }}"
+spec:
+  path: "/spe/myspe"
+  to:
+    kind: Service
+    name: "{{ itxa_svc_web }}"
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  wildcardPolicy: None

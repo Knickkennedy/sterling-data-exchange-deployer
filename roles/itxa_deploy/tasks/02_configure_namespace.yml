@@ -1,0 +1,74 @@
+---
+- name: Create itxa namespace scoped output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ itxa_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Template the Itxa Namespace for reuse
+  ansible.builtin.template:
+    src: templates/itxa-namespace.yml.j2
+    dest: ../output/{{ itxa_namespace }}/{{ itxa_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create Itxa namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ itxa_namespace }}/{{ itxa_namespace }}-namespace.yml
+
+- name: Build registry secret content "{{ itxa_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template the Itxa registry secret
+  ansible.builtin.template:
+    src: templates/itxa-registry-secret.yml.j2
+    dest: ../output/{{ itxa_namespace }}/itxa-registry-secret.yml
+    mode: '0644'
+
+- name: Create Itxa registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ itxa_namespace }}/itxa-registry-secret.yml
+
+- name: Template the Itxa user password secret
+  ansible.builtin.template:
+    src: templates/itxa-admin-secret.yml.j2
+    dest: ../output/{{ itxa_namespace }}/itxa-admin-secret.yml
+    mode: '0644'
+
+- name: Create Itxa user password secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ itxa_namespace }}/itxa-admin-secret.yml
+
+- name: Template the Itxa tls password secret
+  ansible.builtin.template:
+    src: templates/itxa-tls-secret.yml.j2
+    dest: ../output/{{ itxa_namespace }}/itxa-tls-secret.yml
+    mode: '0644'
+
+- name: Create Itxa tls password secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ itxa_namespace }}/itxa-tls-secret.yml
+
+- name: Template the itxa service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/itxa-sa-role-and-binding.yml.j2
+    dest: ../output/{{ itxa_namespace }}/itxa-sa-role-and-binding.yml
+    mode: '0644'
+
+- name: Create the itxa service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ itxa_namespace }}/itxa-sa-role-and-binding.yml

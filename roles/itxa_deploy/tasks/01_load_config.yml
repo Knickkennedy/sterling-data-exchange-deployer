@@ -1,0 +1,6 @@
+---
+- name: Load configuration of ITXA
+  ansible.builtin.include_role:
+    name: load_config
+  vars:
+    config_file: itxa.yml

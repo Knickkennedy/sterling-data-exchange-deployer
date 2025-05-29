@@ -1,0 +1,30 @@
+---
+- name: Look Up DB2 Information
+  when: deploy_db2
+  block:
+    - name: Collect DB2 networking information
+      kubernetes.core.k8s_info:
+        kind: Service
+        namespace: "{{ db2_namespace }}"
+        name: "c-{{ db2_crd_name }}-db2u"
+      register: db2_service_output
+
+    - name: Register Database Networking Configuration
+      ansible.builtin.set_fact:
+        itxa_dbvender: "DB2"
+        itxa_dbhost: "c-{{ db2_crd_name }}-db2u.{{ db2_namespace }}.svc.cluster.local"
+        itxa_dbport: >-
+          {{ db2_service_output.resources[0].spec.ports
+          | selectattr('name', '==', 'db2-server')
+          | map(attribute='port') | first }}
+
+    - name: Template the itxa database secret
+      ansible.builtin.template:
+        src: templates/itxa-db-secret.yml.j2
+        dest: ../output/{{ itxa_namespace }}/{{ itxa_db_secret }}.yml
+        mode: '0644'
+
+    - name: Create the itxa database secret
+      kubernetes.core.k8s:
+        state: present
+        src: ../output/{{ itxa_namespace }}/{{ itxa_db_secret }}.yml

@@ -1,4 +1,7 @@
 ---
+- name: Load ITXA configuration
+  ansible.builtin.include_tasks: 01_load_config.yml
+
 - name: Deploy MQ
   ansible.builtin.include_role:
     name: mq_deploy
@@ -7,19 +10,14 @@
 - name: Deploy DB2
   ansible.builtin.include_role:
     name: db2_deploy
-  when: deploy_db2_for_b2bi
-
-- name: Configure DB2 for Sterling B2B Integrator
-  ansible.builtin.include_role:
-    name: db2_configure_for_b2bi
-  when: deploy_db2_for_b2bi
+  when: deploy_db2
 
 - name: "Configure B2Bi namespace"
   ansible.builtin.include_tasks: 01_configure_namespace.yml
 
 - name: Configure DB2 for B2Bi
   ansible.builtin.include_tasks: 02_configure_db2_for_b2bi.yml
-  when: deploy_db2_for_b2bi
+  when: deploy_db2
 
 - name: "Define database configuration for B2Bi"
   ansible.builtin.include_tasks: 03_define_database.yml
