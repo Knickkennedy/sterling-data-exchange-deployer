@@ -28,8 +28,8 @@ global:
       accessMode: ReadWriteMany
       requestSize: "{{ itxa_app_logs_size }}"
     securityContext:
-      fsGroup:
-      supplementalGroup: 65534
+      fsGroup: 1001
+      supplementalGroup: 0
   resourcesInit:
     enabled: true
     image:

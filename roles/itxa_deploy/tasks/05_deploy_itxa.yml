@@ -37,7 +37,7 @@
 - name: Deploy Itxa helm Chart
   kubernetes.core.helm:
     name: "{{ itxa_helm_release_name }}"
-    chart_ref: ../output/{{ itxa_namespace }}/ibm-itxa-prod-{{ versions[itxa_version].helm_chart_version }}.tgz
+    chart_ref: "{{ role_path }}/files/ibm-itxa-prod-{{ versions[itxa_version].helm_chart_version }}.tgz"
     release_namespace: "{{ itxa_namespace }}"
     timeout: "6h"
     values_files:
