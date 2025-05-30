@@ -67,3 +67,8 @@
       ansible.builtin.include_role:
         name: itxa_deploy
       when: deploy_itxa | bool
+
+    - name: Deploy MIN.IO
+      ansible.builtin.include_role:
+        name: minio_deploy
+      when: deploy_minio | bool

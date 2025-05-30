@@ -1,0 +1,5 @@
+---
+- name: Deploy the MIN.IO Operator
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ role_path }}/files/minio-operator.yml"

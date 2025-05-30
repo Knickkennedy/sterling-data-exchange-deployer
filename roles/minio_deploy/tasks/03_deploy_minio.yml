@@ -1,0 +1,39 @@
+---
+- name: Create minio namespace scoped output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ minio_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Template the Minio Namespace for reuse
+  ansible.builtin.template:
+    src: templates/minio-namespace.yml.j2
+    dest: ../output/{{ minio_namespace }}/{{ minio_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create Minio namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ minio_namespace }}/{{ minio_namespace }}-namespace.yml
+
+- name: Template the Minio service account for reuse
+  ansible.builtin.template:
+    src: templates/minio-sa-role-and-binding.yml.j2
+    dest: ../output/{{ minio_namespace }}/minio-sa-role-and-binding.yml
+    mode: '0644'
+
+- name: Create the Minio service account
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ minio_namespace }}/minio-sa-role-and-binding.yml
+
+- name: Template the Minio tenant for reuse
+  ansible.builtin.template:
+    src: templates/tenant-base.yml.j2
+    dest: ../output/{{ minio_namespace }}/tenant-base.yml
+    mode: '0644'
+
+- name: Create the Minio tenant instance
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ minio_namespace }}/tenant-base.yml

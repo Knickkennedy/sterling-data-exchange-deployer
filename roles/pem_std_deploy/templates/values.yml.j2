@@ -148,8 +148,8 @@ ssomigration:
   log_file_count:
 masterKeyRegenerator:
   enable: false
-  passphraseOldSecret:
-  passphraseNewSecret:
+  passphraseOldSecret: "{{ pem_std_secret }}"
+  passphraseNewSecret: "{{ pem_std_secret }}"
 pem:
   enable: true
   replicas: 1
@@ -179,7 +179,7 @@ pem:
   hostname:
   ingress:
     tls:
-      secretName:
+      secretName: "{{ pem_std_cert_jks_secret }}"
   route:
     timeout:
     tls:
@@ -188,9 +188,9 @@ pem:
   setupfile:
     servers:
       jvm_options:
-      keystore_password:
-      keystore_alias:
-      keystore_filename:
+      keystore_password: "{{ pem_std_secret }}"
+      keystore_alias: "{{ pem_std_keyalias }}"
+      keystore_filename: "{{ pem_std_cert_jks_secret }}"
       max_file_size: 100
       max_files: 20
       console_log_level: INFO
@@ -224,7 +224,7 @@ pp:
   hostname:
   ingress:
     tls:
-      secretName:
+      secretName: "{{ pem_std_cert_jks_secret }}"
   route:
     timeout:
     tls:
@@ -233,9 +233,9 @@ pp:
   setupfile:
     servers:
       jvm_options:
-      keystore_password:
-      keystore_alias:
-      keystore_filename:
+      keystore_password: "{{ pem_std_secret }}"
+      keystore_alias: "{{ pem_std_keyalias }}"
+      keystore_filename: pem_std_cert_jks_secret
       max_file_size: 100
       max_files: 20
       console_log_level: INFO
@@ -275,7 +275,7 @@ pr:
   hostname:
   ingress:
     tls:
-      secretName:
+      secretName: "{{ pem_std_cert_jks_secret }}"
   route:
     timeout:
     tls:
@@ -284,9 +284,9 @@ pr:
   setupfile:
     servers:
       jvm_options:
-      keystore_password:
-      keystore_alias:
-      keystore_filename:
+      keystore_password: "{{ pem_std_secret }}"
+      keystore_alias: "{{ pem_std_keyalias }}"
+      keystore_filename: pem_std_cert_jks_secret
       max_file_size: 100
       max_files: 20
       console_log_level: INFO
@@ -298,7 +298,7 @@ pr:
       remote_server_host:
       remote_server_port: 80
 wmq:
-  channel:
+  channel: "{{ jms_channel }}"
   connection_name_list:
   queue_manager:
   username:

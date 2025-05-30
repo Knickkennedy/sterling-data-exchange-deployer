@@ -1,0 +1,6 @@
+---
+- name: Load configuration of MIN.IO
+  ansible.builtin.include_role:
+    name: load_config
+  vars:
+    config_file: minio.yml

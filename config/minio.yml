@@ -1,0 +1,7 @@
+---
+minio_namespace: minio
+
+minio_root_user: minio
+minio_root_password: minio123
+minio_size: 250Gi
+minio_serviceaccount: minio

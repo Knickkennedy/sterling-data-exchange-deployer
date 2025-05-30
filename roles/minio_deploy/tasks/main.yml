@@ -1,0 +1,9 @@
+---
+- name: Check for required environment variables
+  ansible.builtin.include_tasks: 01_load_config.yml
+
+- name: Install IBM Operator Catalog Source
+  ansible.builtin.include_tasks: 02_deploy_operator.yml
+
+- name: Deploy Minio instance
+  ansible.builtin.include_tasks: 03_deploy_minio.yml
