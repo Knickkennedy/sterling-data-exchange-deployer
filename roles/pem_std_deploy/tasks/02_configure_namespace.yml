@@ -1,0 +1,85 @@
+---
+- name: Create pem std namespace scoped output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ pem_std_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Template the Pem std Namespace for reuse
+  ansible.builtin.template:
+    src: templates/pem-std-namespace.yml.j2
+    dest: ../output/{{ pem_std_namespace }}/{{ pem_std_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create Pem std namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ pem_std_namespace }}/{{ pem_std_namespace }}-namespace.yml
+
+- name: Build registry secret content "{{ pem_std_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    new_secret: "{{ content | join('') }}"
+
+- name: Template the Pem std registry secret
+  ansible.builtin.template:
+    src: templates/pem-std-registry-secret.yml.j2
+    dest: ../output/{{ pem_std_namespace }}/pem-std-registry-secret.yml
+    mode: '0644'
+
+- name: Create Pem std registry secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ pem_std_namespace }}/pem-std-registry-secret.yml
+
+- name: Template the Pem std system passphrase secret
+  ansible.builtin.template:
+    src: templates/pem-std-system-passphrase-secret.yml.j2
+    dest: ../output/{{ pem_std_namespace }}/pem-std-system-passphrase-secret.yml
+    mode: '0644'
+
+- name: Create Pem std system passphrase secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ pem_std_namespace }}/pem-std-system-passphrase-secret.yml
+
+- name: Template the Pem std liberty passphrase secret
+  ansible.builtin.template:
+    src: templates/pem-std-liberty-keystore-password-secret.yml.j2
+    dest: ../output/{{ pem_std_namespace }}/pem-std-liberty-keystore-password-secret.yml
+    mode: '0644'
+
+- name: Create Pem std liberty passphrase secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ pem_std_namespace }}/pem-std-liberty-keystore-password-secret.yml
+
+- name: Template the pem std service account, role, and rolebinding
+  ansible.builtin.template:
+    src: templates/pem-std-sa-role-and-binding.yml.j2
+    dest: ../output/{{ pem_std_namespace }}/pem-std-sa-role-and-binding.yml
+    mode: '0644'
+
+- name: Create the pem std service account, role, and rolebinding
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ pem_std_namespace }}/pem-std-sa-role-and-binding.yml
+
+- name: Template the pem std database secret
+  ansible.builtin.template:
+    src: templates/pem-std-db-secret.yml.j2
+    dest: ../output/{{ pem_std_namespace }}/{{ pem_std_db_secret }}.yml
+    mode: '0644'
+
+- name: Create the pem std database secret
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ pem_std_namespace }}/{{ pem_std_db_secret }}.yml

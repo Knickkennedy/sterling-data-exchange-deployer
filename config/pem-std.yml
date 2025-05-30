@@ -1,0 +1,26 @@
+---
+pem_std_version: 6.2.4.0.1_standard
+
+deploy_db2: true
+
+db2_version: s11.5.9.0-cn3
+db2_namespace: pem-std-db2
+db2_registry_secret: ibm-registry-secret
+db2_secret: db2-secret
+db2_service_account: db2-sa
+db2_crd_name: pem-std-db2
+db2_username: db2inst1
+db2_password: passw0rd
+db2_dbname: BLUDB
+db2_storage_size: 100Gi
+
+# MQ Settings
+deploy_mq: true
+mq_version: v3.5.3
+mq_namespace: pem-std-mq
+mq_registry_secret: ibm-registry-secret
+mq_secret: pem-std-mq-secret
+jms_user: app
+mq_appuser_password: Passw0rd
+mq_crd_name: qmgr
+mq_storage_size: 20Gi

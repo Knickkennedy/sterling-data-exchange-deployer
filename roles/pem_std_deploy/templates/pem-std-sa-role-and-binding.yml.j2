@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "{{ pem_std_serviceaccount }}"
+  namespace: "{{ pem_std_namespace }}"
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "ibm-pem-scc"
+  labels:
+    app: "ibm-pem-scc" 
+rules:
+- apiGroups:
+  - security.openshift.io
+  resourceNames:
+  - "ibm-pem-scc"
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ibm-pem_std-rolebinding-{{ pem_std_namespace }}
+  namespace: {{ pem_std_namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ pem_std_serviceaccount }}
+    namespace: {{ pem_std_namespace }}
+roleRef:
+  kind: Role
+  name: ibm-pem-scc
+  apiGroup: rbac.authorization.k8s.io

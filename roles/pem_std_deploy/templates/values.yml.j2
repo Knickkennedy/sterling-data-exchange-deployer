@@ -1,0 +1,916 @@
+image:
+   name: "{{ pem_std_registry }}/cp/ibm-pem/pem"
+   tag: "{{ pem_std_version }}"
+   pullPolicy:
+   pullSecret: "{{ pem_std_registry_secret }}"
+arch: amd64
+license: true
+envType: "{{ pem_std_license_type }}"
+global:
+  networkPolicies:
+    ingress:
+      enabled: false
+    egress:
+      enabled: true
+      customPolicies:
+serviceAccountName: "{{ pem_std_serviceaccount }}"
+timezone:
+   configmapname: "localtime"
+volumeClaims:
+   resources:
+      enabled: true
+      capacity: 100Mi
+      storageclass: "{{ file_storage_class }}"
+      subpath:
+        dbdrivers: dbdrivers
+        wmq: wmq
+        sso: sso
+        ssomigrator: ssomigrator
+        pcm: pcm
+   logs:
+      enabled: true
+      subpath:
+        migrator: migrator
+        dbutils: dbutil
+        pem: pem
+        pp: pp
+        pr: pr
+        apigateway: apigateway
+        ssoMigrator: ssomigration
+        purge: purge
+        agent: agent
+        pcmProd: PCM_prod
+        pcmNonProd: PCM_nonProd
+      capacity: 1Gi
+      storageclass: "{{ file_storage_class }}"
+      accessModes:
+        - ReadWriteMany
+test:
+  image:
+    repository: "{{ pem_std_registry }}/cp"
+    name: 'opencontent-common-utils'
+    tag: "{{ versions[pem_std_version].test_version }}"
+    pullPolicy: 'IfNotPresent'
+    pullSecret: "{{ pem_std_registry_secret }}"
+dbsetup:
+  enabled: "{{ pem_std_data_setup_enabled }}"
+  upgrade: "{{ pem_std_data_setup_upgrade }}"
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "250m"
+      ephemeral-storage: "2Gi"
+    limits:
+      memory: "4Gi"
+      cpu: "500m"
+      ephemeral-storage: "3Gi"
+  setupfile:
+    passphrasesecret: "{{ pem_std_secret }}"
+    migrator:
+      default_sponsor: true
+    accept_license: true
+    customer_id:
+    db_type: "{{ pem_std_dbvender }}"
+    ssl_connection: false
+    db_port: "{{ pem_std_dbport }}"
+    db_host: "{{ pem_std_dbhost }}"
+    db_name: "{{ db2_dbname }}"
+    db_schema: "{{ db2_username | upper }}"
+    db_user: "{{ db2_username }}"
+    db_password: "{{ db2_password }}"
+    db_driver: "{{ pem_std_dbdriver }}"
+    db_max_pool_size: 500
+    db_min_pool_size: 5
+    db_aged_timeout: 1440m
+    db_max_idle_time: 1440m
+    db_sslProtocol:
+    db_sslTrustStoreName:
+    db_sslTrustStoresecret:
+    db_sslTrustStorePassword:
+    db_mssql_hostNameInCertificate:
+    db_mssql_sslProtocol:
+    db_mssql_encrypt:
+    testmode_db_port: "{{ pem_std_dbport }}"
+    testmode_db_host: "{{ pem_std_dbhost }}"
+    testmode_db_name: "{{ db2_dbname }}"
+    testmode_db_schema: "{{ db2_username | upper }}"
+    testmode_db_user: "{{ db2_username }}"
+    testmode_db_password: "{{ db2_password }}"
+    testmode_db_driver: "{{ pem_std_dbdriver }}"
+    testmode_db_max_pool_size: 500
+    testmode_db_min_pool_size: 5
+    testmode_db_aged_timeout: 1440m
+    testmode_db_max_idle_time: 1440m
+    testmode_db_sslProtocol:
+    testmode_db_sslTrustStoreName:
+    testmode_db_sslTrustStoresecret:
+    testmode_db_sslTrustStorePassword:
+    testmode_db_mssql_hostNameInCertificate:
+    testmode_db_mssql_sslProtocol:
+    testmode_db_mssql_encrypt:
+ingress:
+  enabled: true
+  controller: "nginx"
+  annotations: {}
+security:
+  runAsUser: 1011
+  supplementalGroups:
+    - 555
+  fsGroup: 1011
+setupfile:
+  servers:
+    ssl_protocol: "TLSv1.2"
+    enabled_ciphers:
+    enableConsoleLogs: true
+    provisioner_request_listener_max_concurrency: 10
+    provisioner_response_listener_max_concurrency: 10
+    skipHostnameVerificationForHosts:
+ssoSeas:
+  enable: false
+  truststoreName:
+  truststoreSecret:
+  truststorePassword:
+  truststoreAlias:
+  truststoreType:
+  keystoreName:
+  keystoreSecret:
+  keystorePassword:
+  keystoretype:
+  keystoreAlias:
+ssomigration:
+  enable: false
+  migrationAction:
+  sponsorContext:
+  orgDataFilename:
+  userDataFilename:
+  log_level: "INFO"
+  log_file_max_size:
+  log_file_count:
+masterKeyRegenerator:
+  enable: false
+  passphraseOldSecret:
+  passphraseNewSecret:
+pem:
+  enable: true
+  replicas: 1
+  resources:
+    requests:
+      memory: "4Gi"
+      cpu: "1000m"
+      ephemeral-storage: "2Gi"
+    limits:
+      memory: "8Gi"
+      cpu: "2000m"
+      ephemeral-storage: "4Gi"
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 85
+  readinessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 60
+  livenessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 30
+    periodSeconds: 60
+    successThreshold: 1
+    failureThreshold: 3
+  hostname:
+  ingress:
+    tls:
+      secretName:
+  route:
+    timeout:
+    tls:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: None
+  setupfile:
+    servers:
+      jvm_options:
+      keystore_password:
+      keystore_alias:
+      keystore_filename:
+      max_file_size: 100
+      max_files: 20
+      console_log_level: INFO
+      trace_specification: "*: info"
+pp:
+  enable: true
+  replicas: 1
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1000m"
+      ephemeral-storage: "2Gi"
+    limits:
+      memory: "4Gi"
+      cpu: "2000m"
+      ephemeral-storage: "4Gi"
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 85
+  readinessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 60
+  livenessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 30
+    periodSeconds: 60
+    successThreshold: 1
+    failureThreshold: 3
+  hostname:
+  ingress:
+    tls:
+      secretName:
+  route:
+    timeout:
+    tls:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: None
+  setupfile:
+    servers:
+      jvm_options:
+      keystore_password:
+      keystore_alias:
+      keystore_filename:
+      max_file_size: 100
+      max_files: 20
+      console_log_level: INFO
+      trace_specification: "*: info"
+      enable_jms_features: embdServerAndClientOnly
+      provisioner_request_queue: PEM_request
+      provisioner_response_queue: PEM_response
+      remote_server_ssl: false
+      remote_server_host:
+      remote_server_port: 80
+pr:
+  enable: true
+  replicas: 1
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1000m"
+      ephemeral-storage: "2Gi"
+    limits:
+      memory: "4Gi"
+      cpu: "2000m"
+      ephemeral-storage: "4Gi"
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 85
+  readinessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 60
+  livenessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 30
+    periodSeconds: 60
+    successThreshold: 1
+    failureThreshold: 3
+  hostname:
+  ingress:
+    tls:
+      secretName:
+  route:
+    timeout:
+    tls:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: None
+  setupfile:
+    servers:
+      jvm_options:
+      keystore_password:
+      keystore_alias:
+      keystore_filename:
+      max_file_size: 100
+      max_files: 20
+      console_log_level: INFO
+      trace_specification: "*: info"
+      enable_jms_features: embdClientOnly
+      provisioner_request_queue: PEM_request
+      provisioner_response_queue: PEM_response
+      remote_server_ssl: false
+      remote_server_host:
+      remote_server_port: 80
+wmq:
+  channel:
+  connection_name_list:
+  queue_manager:
+  username:
+  password:
+  wmq_provisioner_request_queue_manager:
+  wmq_provisioner_response_queue_manager:
+  wmq_provisioner_request_queue_name:
+  wmq_provisioner_response_queue_name:
+  ssl_cipher_suite:
+purge:
+  enable: false
+  schedule: "0 9 * * 1"
+  resources:
+    requests:
+      memory: "0.5Gi"
+      cpu: "100m"
+      ephemeral-storage: "2Gi"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+      ephemeral-storage: "3Gi"
+  setupfile:
+    purge:
+      name:
+      number_of_purge_days: 180
+      purge_count: 1
+      sponsor_context:
+      no_of_db_connections: 50
+      resource_to_purge: SPONSOR
+      resource_to_purge_key:
+      purge_strategy: ARCHIVE
+      purge_strategy_data_scope: DELETED_DATA
+      target_db_is_same_as_source_db: false
+      target_no_of_db_connections: 50
+      target_db_port:
+      target_db_host:
+      target_db_name:
+      target_db_schema:
+      target_db_user:
+      target_db_password:
+      target_db_driver:
+      target_ssl_connection: false
+      target_db_sslProtocol:
+      target_db_sslTrustStoreName:
+      target_db_sslTrustStoreSecret:
+      target_db_sslTrustStorePassword:
+      target_db_mssql_hostNameInCertificate:
+      target_db_mssql_sslProtocol:
+      target_db_mssql_encrypt:
+      target_db_type:
+      jvm_options:
+      java_util_logging_file_handler_level: INFO
+      java_util_logging_file_handler_limit:
+      java_util_logging_file_handler_count:
+agent:
+  replicas: 1
+  enable: false
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1000m"
+      ephemeral-storage: "2Gi"
+    limits:
+      memory: "4Gi"
+      cpu: "2000m"
+      ephemeral-storage: "3Gi"
+  setupfile:
+    agent:
+      type:
+      jvm_options:
+      antivirus_server_host:
+      antivirus_server_port:
+      no_of_db_connections: 50
+      retry_interval_in_sec: 21600
+      max_retry_count: 1460
+      com_ibm_vch_identity_security_limit: 100
+      com_ibm_vch_identity_security_level: INFO
+      com_ibm_vch_identity_security_count: 20
+      scan_extensibility_class:
+gateway:
+  enable: true
+  replicas: 1
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1000m"
+      ephemeral-storage: "2Gi"
+    limits:
+      memory: "4Gi"
+      cpu: "2000m"
+      ephemeral-storage: "4Gi"
+  readinessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 60
+  livenessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 30
+    periodSeconds: 60
+    successThreshold: 1
+    failureThreshold: 3
+  hostname:
+  ingress:
+    tls:
+      secretName:
+  route:
+    timeout:
+    tls:
+      termination: reencrypt
+      insecureEdgeTerminationPolicy: None
+  setupfile:
+    servers:
+      jvm_options:
+      keystore_password:
+      keystore_alias:
+      keystore_filename:
+      max_file_size: 100
+      max_files: 20
+      console_log_level: INFO
+      trace_specification: "*: info"
+    gateway:
+      cors_allowedOrigins: "*"
+      pem_servers:
+      pr_servers:
+      max_file_size:
+      max_request_size:
+      hostname_validation_required: true
+      truststore_filename:
+      truststore_type:
+      truststore_alias:
+      truststore_password:
+      ratelimit:
+        limit_for_period: 45
+        limit_refresh_period: 60
+        timeout_duration: 5
+communitymanager:
+  install: true
+  image:
+    repository: "cp.icr.io/cp/ibm-pem/pem_cm"
+    pullPolicy: Always
+    tag: "6.2.4.0.1"
+    pullSecret:
+  prod:
+    enable: true
+    setupfile:
+      time_zone: UTC
+      max_file_length: 10
+      edit_and_upload: true
+      jvmoptions: "-Dspring.datasource.hikari.maximum-pool-size=60"
+      acceptLicence: true
+      cm:
+        color: black
+        cmSecret: ibm-pem-cm-secret-prod
+        logo_location:
+        protocol:
+          disallowed_special_characters: "!@
+      ssl_enabled_protocols: TLSv1.2,TLSv1.3
+      ssl_ciphers: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_DSS_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_SHA256,TLS_ECDHE_RSA_WITH_AES_128_SHA,TLS_ECDHE_ECDSA_WITH_AES_128_SHA,TLS_ECDHE_RSA_WITH_AES_256_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_SHA384,TLS_ECDHE_RSA_WITH_AES_256_SHA,TLS_ECDHE_ECDSA_WITH_AES_256_SHA,TLS_DHE_RSA_WITH_AES_128_SHA256,TLS_DHE_RSA_WITH_AES_128_SHA,TLS_DHE_DSS_WITH_AES_128_SHA256,TLS_DHE_RSA_WITH_AES_256_SHA256,TLS_DHE_DSS_WITH_AES_256_SHA,TLS_DHE_RSA_WITH_AES_256_SHA
+      spring:
+        datasource:
+          url: ""
+          username:
+          driver_class_name:
+          ssl:
+            enabled: false
+            trust_store:
+            trustStoreSecret:
+        jpa:
+          database_platform: com.pe.pcm.config.database.dialect.Oracle12cExtendedDialect
+        mail:
+          host:
+          port:
+          username:
+          from: from_mailid@company.com
+          app_contact_mail: app_contact_mailid@company.com
+          mail_signature: "Community Manager Portal support team."
+          properties:
+            mail:
+              smtp:
+                auth: true
+                starttls:
+                  enable: true
+      jwt:
+        secretkey:
+      sterling_b2bi:
+        connectivity:
+          api:
+            baseUrl:
+            username:
+            password:
+        user:
+          cmks_validation: false
+          cmks:
+        username: b2bapi_username
+        baseUrl:
+        b2bi_api:
+          active: true
+          auth_host:
+            host1:
+              name: "[SEAS Authentication]"
+              value: 1
+          as2:
+            active: false
+          cd:
+            net_map_name: nonprodCD
+            proxy:
+              internal:
+                server_host:
+                server_port: 1364
+                secure_plus_option: ENABLED
+                ca_cert:
+                system_certificate: B2BHttp
+                security_protocol: TLS 1.2
+                cipher_suites: ECDHE_RSA_WITH_3DES_EDE_CBC_SHA
+              external:
+                server_host:
+                server_port: 1364
+                secure_plus_option: ENABLED
+                ca_cert:
+                system_certificate: B2BHttp
+                security_protocol: TLS 1.2
+                cipher_suites: ECDHE_RSA_WITH_3DES_EDE_CBC_SHA
+      ssp:
+        active: false
+        api:
+          username: ssp_user
+          baseUrl:
+      adapters:
+        ftpServerAdapterName: CM_FTPServerAdapter
+        ftpsClientAdapterName: FTP Client Adapter
+        ftpClientAdapterName: CDServrAdapter
+        ftpsServerAdapterName: CM_FTPS_ServerAdapter
+        sftpServerAdapterName: CM_SFTPServerAdapter
+        sftpClientAdapterName: CM_SFTPClientAdapter
+        as2ServerAdapterName: CM_AS2ServerAdapter
+        as2ClientAdapterName: CM_AS2ClientAdapter
+        as2HttpClientAdapter: HTTPClientAdapter
+        cdClientAdapterName: CM_CDClientAdapter
+        httpServerAdapterName: CM_HTTPServerSync
+        httpsServerAdapterName: CM_HTTPSServerSync
+        mqAdapterName: CM_MQAdapter
+        wsServerAdapterName: CM_HTTPSServerSync
+        fsAdapter: CMFileSystem
+        sfgSftpClientAdapterName: CM_SFTPClientAdapter
+        sfgSftpServerAdapterName: CM_SFTPServerAdapter
+        sfgFtpClientAdapterName: CM_FTPClientAdapter
+        sfgFtpServerAdapterName: CM_FTPServerAdapter
+        sfgFtpsClientAdapterName: CM_FTPSClientAdapter
+        sfgFtpsServerAdapterName: CM_FTPS_ServerAdapter
+      pem:
+        remote:
+          server:
+            enabled: false
+            pem_key:
+            pemKeySecret:
+            base_directory:
+              path:
+            session_timeout: 5000
+        datasource:
+          url: jdbc:oracle:thin:@DBHostname:1521/DBName
+          username: USERNAME
+          driver_class_name: oracle.jdbc.driver.OracleDriver
+        api_ws:
+          active: true
+          base_url:
+          username:
+      file:
+        archive:
+          pgp:
+            enabled: false
+            private_key:
+            privateKeySecret:
+      ssomigration:
+        enable: false
+        data:
+          action: EXPORT
+          file_name: pcm_user
+      loggerLevel: INFO
+      saml:
+        enabled: false
+        ssourl:
+        idp:
+          metadata:
+          registrationid: pcm
+        idpgroupsrolemapper: pcmsuperadmin-super_admin,pcmadmin-admin,cmonboarder-on_boarder
+        defaultrole: super_admin
+        jwt:
+          secretkey:
+          sessionexpire: 60
+      sso_ssp_seas:
+        enable: false
+        ssp:
+          logout_endpoint: /Signon/logout.html
+          user_header_name: SM_USER
+          token_cookie_name: SSOTOKEN
+        seas:
+          auth_profile: communityManager
+          host: SEAS_Host
+          port: SEAS_Port
+          ssl:
+            enabled: false
+            trust_store:
+              name: keystore.p12
+              secretName:
+              alias: seasssl_sso
+              type: PKCS12
+            key_store:
+              name: keystore.p12
+              secretName:
+              alias: community_manager
+              type: PKCS12
+        user_request:
+          user:
+            email: email
+            role: role
+            first_name: firstName
+            last_name: lastName
+            phone: phone
+            external_id: externalId
+            preferred_language: prefferedLanguage
+          user_roles:
+            super_admin: superAdmin
+            admin: admin
+            on_boarder: creator
+            business_admin: bAdmin
+            business_user: bUser
+            data_processor: processor
+            data_processor_restricted: processorRes
+            file_processor:
+            business_admin_dpr:
+          role_delimiter:
+      oauth2:
+        enable: false
+        token_url: ""
+        grant_type: client_credentials
+        client_id:
+        client_secret:
+        username:
+        cmks:
+        scope: openid
+        resource:
+        token:
+          response_parser: access_token
+          prefix: Bearer
+          header: Authorization
+    replicacount: 1
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 2
+      targetCPUUtilizationPercentage: 85
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1000m"
+        ephemeral-storage: 2Gi
+      limits:
+        memory: "4Gi"
+        cpu: "2000m"
+        ephemeral-storage: 3Gi
+    readinessProbe:
+      initialDelaySeconds: 10
+      periodSeconds: 60
+    livenessProbe:
+      initialDelaySeconds: 60
+      timeoutSeconds: 30
+      periodSeconds: 60
+      successThreshold: 1
+      failureThreshold: 3
+    hostname:
+    route:
+      timeout:
+    ingress:
+      tls:
+        secretName:
+    archive:
+      enable: false
+      pvcname:
+      path: /ibm/b2bi/install/documents
+  nonprod:
+    enable: false
+    setupfile:
+      time_zone: UTC
+      max_file_length: 10
+      edit_and_upload: true
+      jvmoptions: "-Dspring.datasource.hikari.maximum-pool-size=60"
+      acceptLicence: true
+      cm:
+        color: black
+        cmSecret:
+        logo_location:
+        protocol:
+          disallowed_special_characters: "!@
+      ssl_enabled_protocols: TLSv1.2,TLSv1.3
+      ssl_ciphers: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_DSS_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_SHA256,TLS_ECDHE_RSA_WITH_AES_128_SHA,TLS_ECDHE_ECDSA_WITH_AES_128_SHA,TLS_ECDHE_RSA_WITH_AES_256_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_SHA384,TLS_ECDHE_RSA_WITH_AES_256_SHA,TLS_ECDHE_ECDSA_WITH_AES_256_SHA,TLS_DHE_RSA_WITH_AES_128_SHA256,TLS_DHE_RSA_WITH_AES_128_SHA,TLS_DHE_DSS_WITH_AES_128_SHA256,TLS_DHE_RSA_WITH_AES_256_SHA256,TLS_DHE_DSS_WITH_AES_256_SHA,TLS_DHE_RSA_WITH_AES_256_SHA
+      spring:
+        datasource:
+          url: ""
+          username:
+          driver_class_name:
+          ssl:
+            enabled: false
+            trust_store:
+            trustStoreSecret:
+        jpa:
+          database_platform: com.pe.pcm.config.database.dialect.Oracle12cExtendedDialect
+        mail:
+          host:
+          port:
+          username:
+          from: from_mailid@company.com
+          app_contact_mail: app_contact_mailid@company.com
+          mail_signature: "Community Manager Portal support team."
+          properties:
+            mail:
+              smtp:
+                auth: true
+                starttls:
+                  enable: true
+      jwt:
+        secretkey:
+      sterling_b2bi:
+        connectivity:
+          api:
+            baseUrl:
+            username:
+            password:
+        user:
+          cmks_validation: false
+          cmks:
+        username: b2bapi_username
+        baseUrl:
+        b2bi_api:
+          active: true
+          auth_host:
+            host1:
+              name: "[SEAS Authentication]"
+              value: 1
+          as2:
+            active: false
+          cd:
+            net_map_name: nonprodCD
+            proxy:
+              internal:
+                server_host:
+                server_port: 1364
+                secure_plus_option: ENABLED
+                ca_cert:
+                system_certificate: B2BHttp
+                security_protocol: TLS 1.2
+                cipher_suites: ECDHE_RSA_WITH_3DES_EDE_CBC_SHA
+              external:
+                server_host:
+                server_port: 1364
+                secure_plus_option: ENABLED
+                ca_cert:
+                system_certificate: B2BHttp
+                security_protocol: TLS 1.2
+                cipher_suites: ECDHE_RSA_WITH_3DES_EDE_CBC_SHA
+      ssp:
+        active: false
+        api:
+          username: ssp_user
+          baseUrl:
+      adapters:
+        ftpServerAdapterName: CM_FTPServerAdapter
+        ftpsClientAdapterName: FTP Client Adapter
+        ftpClientAdapterName: CDServrAdapter
+        ftpsServerAdapterName: CM_FTPS_ServerAdapter
+        sftpServerAdapterName: CM_SFTPServerAdapter
+        sftpClientAdapterName: CM_SFTPClientAdapter
+        as2ServerAdapterName: CM_AS2ServerAdapter
+        as2ClientAdapterName: CM_AS2ClientAdapter
+        as2HttpClientAdapter: HTTPClientAdapter
+        cdClientAdapterName: CM_CDClientAdapter
+        httpServerAdapterName: CM_HTTPServerSync
+        httpsServerAdapterName: CM_HTTPSServerSync
+        mqAdapterName: CM_MQAdapter
+        wsServerAdapterName: CM_HTTPSServerSync
+        fsAdapter: CMFileSystem
+        sfgSftpClientAdapterName: CM_SFTPClientAdapter
+        sfgSftpServerAdapterName: CM_SFTPServerAdapter
+        sfgFtpClientAdapterName: CM_FTPClientAdapter
+        sfgFtpServerAdapterName: CM_FTPServerAdapter
+        sfgFtpsClientAdapterName: CM_FTPSClientAdapter
+        sfgFtpsServerAdapterName: CM_FTPS_ServerAdapter
+      pem:
+        remote:
+          server:
+            enabled: false
+            pem_key:
+            pemKeySecret:
+            base_directory:
+              path:
+            session_timeout: 5000
+        datasource:
+          url: jdbc:oracle:thin:@DBHostname:1521/DBName
+          username: USERNAME
+          driver_class_name: oracle.jdbc.driver.OracleDriver
+        api_ws:
+          active: true
+          base_url:
+          username:
+      file:
+        archive:
+          pgp:
+            enabled: false
+            private_key:
+            privateKeySecret:
+      ssomigration:
+        enable: false
+        data:
+          action: EXPORT
+          file_name: pcm_user
+      loggerLevel: INFO
+      saml:
+        enabled: false
+        ssourl:
+        idp:
+          metadata:
+          registrationid: pcm
+        idpgroupsrolemapper: pcmsuperadmin-super_admin,pcmadmin-admin,cmonboarder-on_boarder
+        defaultrole: super_admin
+        jwt:
+          secretkey:
+          sessionexpire: 60
+      sso_ssp_seas:
+        enable: false
+        ssp:
+          logout_endpoint: /Signon/logout.html
+          user_header_name: SM_USER
+          token_cookie_name: SSOTOKEN
+        seas:
+          auth_profile: communityManager
+          host: SEAS_Host
+          port: SEAS_Port
+          ssl:
+            enabled: false
+            trust_store:
+              name: keystore.p12
+              secretName:
+              alias: seasssl_sso
+              type: PKCS12
+            key_store:
+              name: keystore.p12
+              secretName:
+              alias: community_manager
+              type: PKCS12
+        user_request:
+          user:
+            email: email
+            role: role
+            first_name: firstName
+            last_name: lastName
+            phone: phone
+            external_id: externalId
+            preferred_language: prefferedLanguage
+          user_roles:
+            super_admin: superAdmin
+            admin: admin
+            on_boarder: creator
+            business_admin: bAdmin
+            business_user: bUser
+            data_processor: processor
+            data_processor_restricted: processorRes
+            file_processor:
+            business_admin_dpr:
+          role_delimiter:
+      oauth2:
+        enable: false
+        token_url: ""
+        grant_type: client_credentials
+        client_id:
+        client_secret:
+        username:
+        cmks:
+        scope: openid
+        resource:
+        token:
+          response_parser: access_token
+          prefix: Bearer
+          header: Authorization
+    replicacount: 1
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 2
+      targetCPUUtilizationPercentage: 85
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "1000m"
+        ephemeral-storage: 2Gi
+      limits:
+        memory: "4Gi"
+        cpu: "2000m"
+        ephemeral-storage: 3Gi
+    readinessProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 90
+    livenessProbe:
+      initialDelaySeconds: 90
+      timeoutSeconds: 60
+      periodSeconds: 180
+      successThreshold: 1
+      failureThreshold: 3
+    hostname:
+    route:
+      timeout:
+    ingress:
+      tls:
+        secretName:
+    archive:
+      enable: false
+      pvcname:
+      path: /ibm/b2bi/install/documents
