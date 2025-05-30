@@ -37,3 +37,22 @@
   kubernetes.core.k8s:
     state: present
     src: ../output/{{ minio_namespace }}/tenant-base.yml
+
+- name: Create the Openshift Route
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: route.openshift.io/v1
+      kind: Route
+      metadata:
+        name: minio-console
+        namespace: "{{ minio_namespace }}"
+      spec:
+        to:
+          kind: Service
+          name: myminio-console
+        port:
+          targetPort: 9443
+        tls:
+          termination: passthrough
+        wildcardPolicy: None
