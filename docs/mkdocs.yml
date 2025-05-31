@@ -67,7 +67,6 @@ markdown_extensions:
 
 plugins:
   - search
-  - mkdocs-git-revision-date-localized-plugin
   - minify:
       minify_html: true
   - awesome-pages:
