@@ -6,6 +6,6 @@ Welcome to the documentation for the Sterling Data Exchange Deployer project. Th
 
 ## Overview
 
-Sterling Data Exchange Deployer aims to simplify the setup and management of Sterling B2B Integrator environments by providing reusable Ansible playbooks and a Go-based orchestration container.
+Sterling Data Exchange Deployer aims to simplify the setup and management of Sterling Data Exchange environments by providing reusable Ansible playbooks and a Go-based orchestration container.
 
 Explore this documentation to get started, configure, and extend your deployment deployer.
