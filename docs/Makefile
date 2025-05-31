@@ -1,67 +1,37 @@
 VENVS_DIR := $(HOME)/.venv
 VENV_DIR := $(VENVS_DIR)/sde-deployer-doc
-.PHONY: help
-help:
-	@grep "^# help\:" Makefile | grep -v grep | sed 's/\# help\: //' | sed 's/\# help\://'
 
-# help: MAINTAIN
-# help: venv                           - create a clean virtual environment for development
-.PHONY: venv
+.PHONY: help venv activate clean serve build deploy
+
+help:
+	@grep "^# help\:" Makefile | grep -v grep | sed 's/# help: //'
+
+# help: venv   - create and install dependencies in virtual environment
 venv:
 	@test -d "$(VENVS_DIR)" || mkdir -p "$(VENVS_DIR)"
 	@rm -rf "$(VENV_DIR)"
 	@python3 -m venv "$(VENV_DIR)"
 	@$(VENV_DIR)/bin/pip install --upgrade pip setuptools wheel
-	@$(VENV_DIR)/bin/pip install -r requirements.txt
+	@$(VENV_DIR)/bin/pip install -r docs/requirements.txt
 	@$(VENV_DIR)/bin/pip install sphinx_rtd_theme
-	@echo -e "Enter virtual environment using:\n. $(VENV_DIR)/bin/activate\n"
+	@echo -e "Virtual environment created.\nActivate with:\n. $(VENV_DIR)/bin/activate"
 
-
-# help: activate                       - enter existing venv
-.PHONY: activate
+# help: activate - show how to activate venv (run manually)
 activate:
 	@echo -e "Activate virtual environment:\n. $(VENV_DIR)/bin/activate"
 
-
-# help: clean                          - clean all files
-.PHONY: clean
+# help: clean - remove build artifacts
 clean:
 	@rm -rf ./site
 
-
-# help: git-clean                      - clean all files using .gitignore rules
-.PHONY: git-clean
-git-clean:
-	@git clean -X -f -d
-
-
-# help: git-scrub                      - clean all files, even untracked files
-.PHONY: git-scrub
-git-scrub:
-	@git clean -x -f -d
-
-# help:
-# help: MKDOCS
-# help: serve                          - serve project html documentation
-.PHONY: serve
+# help: serve - serve docs locally
 serve:
 	@$(VENV_DIR)/bin/mkdocs serve
 
-# help: build                          - serve project html documentation
-.PHONY: build
+# help: build - build static site
 build:
 	@$(VENV_DIR)/bin/mkdocs build
 
-# help: package                        - package the sources for box deployment (Red Hat sharing)
-.PHONY: package
-package:
-	@$(VENV_DIR)/bin/mkdocs build && mkdir -p release
-
-
-# help: deploy                         - deploy project to github pages
-.PHONY: deploy
+# help: deploy - deploy site to GitHub pages
 deploy:
 	@$(VENV_DIR)/bin/mkdocs gh-deploy --force
-
-# Keep these lines at the end of the file to retain output formatting.
-# help:
