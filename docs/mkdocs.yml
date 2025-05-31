@@ -73,11 +73,6 @@ plugins:
       filename: .pages
       collapse_single_pages: false
       strict: false
-  - pdf-export:
-      verbose: true
-      media_type: print
-      enabled_if_env: ENABLE_PDF_EXPORT
-      combined: false
 
 extra:
   social:
