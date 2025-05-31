@@ -67,8 +67,18 @@ markdown_extensions:
 
 plugins:
   - search
-  - mkdocs-material
   - mkdocs-git-revision-date-localized-plugin
+  - minify:
+      minify_html: true
+  - awesome-pages:
+      filename: .pages
+      collapse_single_pages: false
+      strict: false
+  - pdf-export:
+      verbose: true
+      media_type: print
+      enabled_if_env: ENABLE_PDF_EXPORT
+      combined: false
 
 extra:
   social:

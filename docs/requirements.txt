@@ -7,3 +7,4 @@ mkdocs-open-in-new-tab
 mkdocs-pdf-export-plugin
 mkdocs-table-reader-plugin
 pymdown-extensions
+mkdocs-git-revision-date-localized-plugin
