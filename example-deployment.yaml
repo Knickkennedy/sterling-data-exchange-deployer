@@ -1,0 +1,230 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sde-deployer
+---
+apiVersion: v1
+data:
+  ENTITLEMENT_KEY: <your-key-here>
+kind: Secret
+metadata:
+  name: entitlement-key-secret
+  namespace: sde-deployer
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sde-config
+  namespace: sde-deployer
+data:
+  b2bi.yml: |
+    ---
+    b2bi_version: 6.2.1.0
+    asi_backend_nodeport_range: 31765-31767
+
+    deploy_db2: true
+    db2_version: s11.5.9.0-cn3
+    db2_namespace: b2bi-db2
+    db2_registry_secret: ibm-registry-secret
+    db2_secret: db2-secret
+    db2_service_account: db2-sa
+    db2_crd_name: b2bi-db2
+    db2_username: db2inst1
+    db2_password: passw0rd
+    db2_dbname: BLUDB
+    db2_storage_size: 100Gi
+
+    # MQ Settings
+    deploy_mq: true
+    mq_version: v3.5.3
+    mq_namespace: b2bi-mq
+    mq_registry_secret: ibm-registry-secret
+    mq_secret: b2bi-mq-secret
+    jms_user: app
+    mq_appuser_password: Passw0rd
+    mq_crd_name: qmgr
+    mq_storage_size: 20Gi
+  connect-direct-web-services.yml: |
+    ---
+    cd_ws_release_name: auto-cd-ws
+    cd_ws_version: 6.4.0.2_ifix001
+  connect-direct.yml: |
+    ---
+    cd_release_name: auto-cd
+    cd_version: 6.4.0.1_iFix029
+  global.yml: |
+    ---
+    deploy_ibm_catalog_source: false
+    deploy_b2bi: true
+    deploy_ssp_cm: false
+    deploy_ssp_engine: false
+    deploy_ssp_ps: false
+    deploy_connect_direct: false
+    deploy_connect_direct_web_services: false
+    deploy_seas: false
+    deploy_itx_rs: false
+    deploy_itxa: true
+    deploy_minio: false
+    deploy_kafka: false
+
+    registry: cp.icr.io
+    registry_user: cp
+
+    file_storage_class: ocs-external-storagecluster-cephfs
+    block_storage_class: ocs-external-storagecluster-ceph-rbd
+  itx-rs.yml: |
+    ---
+    itxrs_version: 11.0.1.1.20250425
+    itxrs_release_name: auto-itxrs
+  itxa.yml: |
+    ---
+    itxa_version: 10.0.1.10-x86_64
+    itxa_helm_release_name: auto-itxa
+    itxa_namespace: itxa
+
+    deploy_db2: true
+    db2_version: s11.5.9.0-cn3
+    db2_namespace: itxa-db2
+    db2_registry_secret: ibm-registry-secret
+    db2_secret: db2-secret
+    db2_service_account: db2-sa
+    db2_crd_name: db2
+    db2_username: db2inst1
+    db2_password: passw0rd
+    db2_dbname: itxa
+    db2_storage_size: 100Gi
+  kafka.yml: |
+    ---
+    kafka_version: latest
+    kafka_operator_version: v3.7.0
+    kafka_channel: v3.7
+    kafka_namespace: kafka
+    kafka_registry_secret: ibm-registry-secret
+    registry: cp.icr.io
+    registry_user: cp
+    kafka_admin_password: "Passw0rd"
+    kafka_crd_name: kafka
+    kafka_storage_size: 20Gi
+    kafka_deploy_secret: "kafka-secret"
+    kafka_appuser_password: "Passw0rd"
+  minio.yml: |
+    ---
+    minio_namespace: minio
+
+    minio_root_user: minio
+    minio_root_password: minio123
+    minio_size: 250Gi
+    minio_serviceaccount: minio
+  pem-std.yml: |
+    ---
+    pem_std_version: 6.2.4.0.1_standard
+
+    deploy_db2: true
+
+    db2_version: s11.5.9.0-cn3
+    db2_namespace: pem-std-db2
+    db2_registry_secret: ibm-registry-secret
+    db2_secret: db2-secret
+    db2_service_account: db2-sa
+    db2_crd_name: pem-std-db2
+    db2_username: db2inst1
+    db2_password: passw0rd
+    db2_dbname: BLUDB
+    db2_storage_size: 100Gi
+
+    # MQ Settings
+    deploy_mq: true
+    mq_version: v3.5.3
+    mq_namespace: pem-std-mq
+    mq_registry_secret: ibm-registry-secret
+    mq_secret: pem-std-mq-secret
+    jms_user: app
+    mq_appuser_password: Passw0rd
+    mq_crd_name: qmgr
+    mq_storage_size: 20Gi
+  seas.yml: |
+    ---
+    seas_release_name: auto-seas
+    seas_version: 6.1.0.2.03
+  ssp-cm.yml: |
+    ---
+    ssp_cm_release_name: sspcm
+    ssp_cm_version: 6.2.0.1.02
+  ssp-engine.yml: |
+    ---
+    ssp_engine_release_name: ssp-eng
+    ssp_engine_version: 6.2.0.1.02
+  ssp-ps.yml: |
+    ---
+    ssp_ps_release_name: ssp-ps
+    ssp_ps_version: 6.2.0.1.02
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sde-deployer-sa
+  namespace: sde-deployer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: system:openshift:scc:privileged
+  namespace: sde-deployer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+subjects:
+- kind: ServiceAccount
+  name: sde-deployer-sa
+  namespace: sde-deployer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: sde-deployer-cluster-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: sde-deployer-sa
+  namespace: sde-deployer
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sde-deployer-job
+  namespace: sde-deployer
+  labels:
+    app: sde-deployer
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: sde-deployer
+    spec:
+      serviceAccountName: sde-deployer-sa
+      restartPolicy: Never
+      containers:
+        - name: sde-deployer
+          image: knickkennedy/sde-deployer:v6.2.1.0
+          imagePullPolicy: Always
+          env:
+            - name: CONFIG_DIR
+              value: /app/config
+            - name: ENTITLEMENT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: entitlement-key-secret
+                  key: ENTITLEMENT_KEY
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: sde-config

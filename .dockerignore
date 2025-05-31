@@ -1,0 +1,6 @@
+.ansible/
+.ansible-lint
+.gitignore
+.vscode/
+example-configs/
+output/
