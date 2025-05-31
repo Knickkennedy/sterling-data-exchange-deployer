@@ -1,4 +1,5 @@
 /output/*
 .ansible
+.ansible-lint
 .vscode
 *local*
