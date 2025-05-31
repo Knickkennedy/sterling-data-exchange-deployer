@@ -11,7 +11,7 @@ venv:
 	@test -d "$(VENVS_DIR)" || mkdir -p "$(VENVS_DIR)"
 	@rm -Rf "$(VENV_DIR)"
 	@python3 -m venv "$(VENV_DIR)"
-	@$(VENV_DIR)/bin/activate && pip3 install --upgrade pip setuptools wheel && pip3 install -r requirements.txt &&  pip install sphinx_rtd_theme "
+	@/bin/bash -c "source $(VENV_DIR)/bin/activate && pip3 install --upgrade pip setuptools wheel && pip3 install -r requirements.txt &&  pip install sphinx_rtd_theme "
 	@echo -e "Enter virtual environment using:\n. $(VENV_DIR)/bin/activate\n"
 
 
@@ -44,23 +44,23 @@ git-scrub:
 # help: serve                          - serve project html documentation
 .PHONY: serve
 serve:
-	@$(VENV_DIR)/bin/activate && mkdocs serve -t material
+	@$(VENV_DIR)/bin/mkdocs serve -t material"
 
 # help: build                          - serve project html documentation
 .PHONY: build
 build:
-	@$(VENV_DIR)/bin/activate && mkdocs build -t material
+	@$(VENV_DIR)/bin/mkdocs build -t material"
 
 # help: package                        - package the sources for box deployment (Red Hat sharing)
 .PHONY: package
 package:
-	@$(VENV_DIR)/bin/activate && mkdocs build -t material && mkdir -p release
+	@$(VENV_DIR)/bin/mkdocs build -t material && mkdir -p release "
 
 
 # help: deploy                         - deploy project to github pages
 .PHONY: deploy
 deploy:
-	@$(VENV_DIR)/bin/activate && mkdocs gh-deploy -t material --force
+	@$(VENV_DIR)/bin/mkdocs gh-deploy -t material --force"
 
 # Keep these lines at the end of the file to retain output formatting.
 # help:
