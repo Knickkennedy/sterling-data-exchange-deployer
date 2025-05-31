@@ -9,7 +9,7 @@
 ## Building the Container
 
 ```bash
-docker build -t sterling-deployer .
+docker build -t sterling-deployer:<tag> .
 ```
 
 ## Running the Container
@@ -19,7 +19,7 @@ docker run --rm \
   -v $(pwd)/playbooks:/app/playbooks \
   -v $(pwd)/roles:/app/roles \
   -v $(pwd)/examples:/app/examples \
-  sterling-deployer
+  sterling-deployer:<tag>
 ```
 
 *Adjust volume mounts as needed for your environment.*

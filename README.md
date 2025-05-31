@@ -1,7 +1,7 @@
 
-# Sterling Data Exchange Automation
+# Sterling Data Exchange Deployer
 
-A containerized automation framework designed to streamline the deployment and management of IBM Sterling Data Exchange environments using Ansible and Go.
+A containerized deployer framework designed to streamline the deployment and management of IBM Sterling Data Exchange environments using Ansible and Go.
 
 ---
 
@@ -11,7 +11,7 @@ This project provides a modular and reproducible approach to automate the setup 
 
 - **Ansible**: For defining and executing infrastructure as code via playbooks and roles.
 - **Go**: For orchestrating and managing the execution flow through a custom entrypoint.
-- **Containerization**: Encapsulates the automation logic within a container for portability and consistency.
+- **Containerization**: Encapsulates the deployer logic within a container for portability and consistency.
 
 ---
 
@@ -22,7 +22,7 @@ This project provides a modular and reproducible approach to automate the setup 
 ├── .github/workflows/    # CI/CD workflows
 ├── docs/                 # Documentation files
 ├── examples/             # Sample configurations and usage examples
-├── playbooks/            # Ansible playbooks for automation tasks
+├── playbooks/            # Ansible playbooks for deployer tasks
 ├── roles/                # Ansible roles defining reusable tasks
 ├── Containerfile         # Definition for building the container image
 ├── ansible.cfg           # Ansible configuration file
@@ -78,7 +78,7 @@ Comprehensive documentation is available in the [docs/](docs/) directory. It inc
 
 - **Setup Guides**: Instructions for setting up the environment.
 - **Usage Examples**: Sample playbooks and configurations.
-- **Best Practices**: Recommendations for maintaining and scaling your automation.
+- **Best Practices**: Recommendations for maintaining and scaling your deployer.
 
 To build and serve the documentation locally:
 
@@ -95,7 +95,7 @@ Then navigate to `http://127.0.0.1:8000/` in your browser.
 
 - **Latest Release**: v6.2.1.0
 - **Release Date**: May 26, 2025
-- **Changelog**: See [Releases](https://github.com/Knickkennedy/sterling-data-exchange-automation/releases) for detailed information.
+- **Changelog**: See [Releases](https://github.com/Knickkennedy/sterling-data-exchange-deployer/releases) for detailed information.
 
 ---
 
