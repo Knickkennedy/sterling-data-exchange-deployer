@@ -1,0 +1,75 @@
+site_name: Sterling Data Exchange Automation
+site_description: Documentation for the Sterling Data Exchange Automation project
+site_author: Knick Kennedy
+site_url: https://knickkennedy.github.io/sterling-data-exchange-automation/
+
+repo_url: https://github.com/Knickkennedy/sterling-data-exchange-automation
+repo_name: GitHub
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.expand
+    - toc.integrate
+    - content.code.annotate
+    - content.tabs.link
+  palette:
+    scheme: default
+    primary: indigo
+    accent: indigo
+  font:
+    text: Roboto
+    code: Roboto Mono
+  language: en
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Overview: getting-started/overview.md
+      - Installation: getting-started/installation.md
+  - Usage:
+      - Running the Application: usage/running.md
+      - Configuration: usage/configuration.md
+  - Development:
+      - Contributing: development/contributing.md
+      - Testing: development/testing.md
+  - Reference:
+      - API Reference: reference/api.md
+      - CLI Commands: reference/cli.md
+  - Changelog: changelog.md
+  - License: license.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - search
+  - mkdocs-material
+  - mkdocs-git-revision-date-localized-plugin
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Knickkennedy/sterling-data-exchange-automation
