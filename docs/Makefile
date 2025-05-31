@@ -1,5 +1,4 @@
-VENVS_DIR := $(HOME)/.venv
-VENV_DIR := $(VENVS_DIR)/sde-deployer-doc
+VENV_DIR := ./docs/.venv
 
 .PHONY: help venv activate clean serve build deploy
 
@@ -9,7 +8,7 @@ help:
 # help: venv   - create and install dependencies in virtual environment
 venv:
 	@test -d "$(VENVS_DIR)" || mkdir -p "$(VENVS_DIR)"
-	@rm -rf "$(VENV_DIR)"
+	@rm -Rf "$(VENV_DIR)"
 	@python3 -m venv "$(VENV_DIR)"
 	@$(VENV_DIR)/bin/pip install --upgrade pip setuptools wheel
 	@$(VENV_DIR)/bin/pip install -r docs/requirements.txt
