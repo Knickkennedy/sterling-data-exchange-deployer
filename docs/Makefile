@@ -1,36 +1,42 @@
-VENV_DIR := ./docs/.venv
+# Makefile inside docs/
+
+VENV_DIR := .venv
+PYTHON := $(VENV_DIR)/bin/python
+PIP := $(VENV_DIR)/bin/pip
+MKDOCS := $(VENV_DIR)/bin/mkdocs
 
 .PHONY: help venv activate clean serve build deploy
 
 help:
-	@grep "^# help\:" Makefile | grep -v grep | sed 's/# help: //'
+	@echo "Makefile commands:"
+	@echo "  venv    - Create virtual environment and install dependencies"
+	@echo "  activate- Print instructions to activate venv"
+	@echo "  clean   - Remove site/ and .venv/"
+	@echo "  serve   - Serve documentation locally"
+	@echo "  build   - Build the documentation site"
+	@echo "  deploy  - Deploy to GitHub Pages"
 
-# help: venv   - create and install dependencies in virtual environment
 venv:
-	@test -d "$(VENVS_DIR)" || mkdir -p "$(VENVS_DIR)"
-	@rm -Rf "$(VENV_DIR)"
-	@python3 -m venv "$(VENV_DIR)"
-	@$(VENV_DIR)/bin/pip install --upgrade pip setuptools wheel
-	@$(VENV_DIR)/bin/pip install -r docs/requirements.txt
-	@$(VENV_DIR)/bin/pip install sphinx_rtd_theme
-	@echo -e "Virtual environment created.\nActivate with:\n. $(VENV_DIR)/bin/activate"
+	@test -d "$(VENV_DIR)" || python3 -m venv $(VENV_DIR)
+	@$(PIP) install --upgrade pip setuptools wheel
+	@$(PIP) install -r requirements.txt
+	@echo "Virtual environment created at $(VENV_DIR)"
+	@echo "Activate it with: . $(VENV_DIR)/bin/activate"
 
-# help: activate - show how to activate venv (run manually)
 activate:
-	@echo -e "Activate virtual environment:\n. $(VENV_DIR)/bin/activate"
+	@echo "To activate the virtual environment, run:"
+	@echo ". $(VENV_DIR)/bin/activate"
 
-# help: clean - remove build artifacts
 clean:
-	@rm -rf ./site
+	@rm -rf site
+	@rm -rf $(VENV_DIR)
+	@echo "Cleaned site/ and virtual environment."
 
-# help: serve - serve docs locally
-serve:
-	@$(VENV_DIR)/bin/mkdocs serve
+serve: venv
+	@$(MKDOCS) serve -t material
 
-# help: build - build static site
-build:
-	@$(VENV_DIR)/bin/mkdocs build
+build: venv
+	@$(MKDOCS) build -t material
 
-# help: deploy - deploy site to GitHub pages
-deploy:
-	@$(VENV_DIR)/bin/mkdocs gh-deploy --force
+deploy: venv
+	@$(MKDOCS) gh-deploy -t material --force
