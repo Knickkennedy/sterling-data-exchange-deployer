@@ -42,6 +42,8 @@ This project provides a modular and reproducible approach to automate the setup 
 - [Go](https://golang.org/) installed if you plan to build the entrypoint outside the container.
 - [Ansible](https://www.ansible.com/) installed if you plan to run playbooks outside the container.
 
+*Note: If running locally, ensure you are logged into the kubernetes/Openshift cluster you wish to deploy to.*
+
 ### Building the Container
 
 ```
@@ -55,7 +57,7 @@ docker run --rm \
   -v $(pwd)/playbooks:/app/playbooks \
   -v $(pwd)/roles:/app/roles \
   -v $(pwd)/examples:/app/examples \
-  sterling-deployer
+  sterling-deployer:<tag>
 ```
 
 *Note: Adjust volume mounts as necessary to match your local directory structure.*
