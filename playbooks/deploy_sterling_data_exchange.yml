@@ -72,3 +72,8 @@
       ansible.builtin.include_role:
         name: minio_deploy
       when: deploy_minio | bool
+
+    - name: Deploy Kafka
+      ansible.builtin.include_role:
+        name: kafka_deploy
+      when: deploy_kafka | bool

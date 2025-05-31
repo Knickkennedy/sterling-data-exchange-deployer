@@ -1,0 +1,12 @@
+---
+kafka_version: latest
+kafka_operator_version: v3.7.0
+kafka_channel: v3.7
+kafka_namespace: kafka
+kafka_registry_secret: ibm-registry-secret
+registry: cp.icr.io
+registry_user: cp
+kafka_crd_name: kafka
+kafka_zookeeper_storage_size: 100Gi
+kafka_node_storage_size: 50Gi
+kafka_appuser_password: "Passw0rd"

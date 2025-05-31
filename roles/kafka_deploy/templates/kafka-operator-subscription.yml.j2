@@ -1,0 +1,11 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: ibm-eventstreams
+  namespace: "{{ kafka_namespace }}"
+spec:
+  channel: "{{ kafka_channel }}"
+  installPlanApproval: Automatic
+  name: ibm-eventstreams
+  source: ibm-operator-catalog
+  sourceNamespace: openshift-marketplace

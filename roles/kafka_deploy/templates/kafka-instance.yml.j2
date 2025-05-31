@@ -1,0 +1,74 @@
+apiVersion: eventstreams.ibm.com/v1beta2
+kind: EventStreams
+metadata:
+  labels:
+    backup.eventstreams.ibm.com/component: eventstreams
+  name: "{{ kafka_crd_name }}"
+  namespace: "{{ kafka_namespace }}"
+spec:
+  version: "{{ kafka_version }}"
+  license:
+    accept: true
+    license: "L-AUKS-FKVXVL"
+    use: "EventAutomationDevelopment"
+  adminApi: {}
+  adminUI:
+    authentication:
+      - type: scram-sha-512
+  apicurioRegistry: {}
+  collector: {}
+  restProducer: {}
+  strimziOverrides:
+    kafka:
+      authorization:
+        type: simple
+      config:
+        inter.broker.protocol.version: "3.9"
+        log.cleaner.threads: 6
+        num.io.threads: 24
+        num.network.threads: 9
+        num.replica.fetchers: 3
+        offsets.topic.replication.factor: 3
+        default.replication.factor: 3
+        min.insync.replicas: 2
+        auto.create.topics.enable: 'false'
+      listeners:
+        - name: external
+          port: 9094
+          type: route
+          tls: true
+          authentication:
+            type: scram-sha-512
+        - name: tls
+          port: 9093
+          type: internal
+          tls: true
+          authentication:
+            type: tls
+      metricsConfig:
+        type: jmxPrometheusExporter
+        valueFrom:
+          configMapKeyRef:
+            key: kafka-metrics-config.yaml
+            name: development-metrics-config
+    zookeeper:
+      replicas: 3
+      metricsConfig:
+        type: jmxPrometheusExporter
+        valueFrom:
+          configMapKeyRef:
+            key: zookeeper-metrics-config.yaml
+            name: development-metrics-config
+      storage:
+        type: persistent-claim
+        class: "{{ block_storage_class }}"
+        size: "{{ kafka_zookeeper_storage_size }}"
+    nodePools:
+      - name: kafka
+        replicas: 3
+        storage:
+          type: persistent-claim
+          class: "{{ block_storage_class }}"
+          size: "{{ kafka_node_storage_size }}"
+        roles:
+          - broker

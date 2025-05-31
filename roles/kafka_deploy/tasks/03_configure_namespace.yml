@@ -1,0 +1,25 @@
+---
+- name: Create registry secret content "{{ kafka_registry_secret }}"
+  no_log: true
+  vars:
+    auth: "{{ registry_user }}:{{ entitlement_key }}"
+    auth_b64: "{{ auth | b64encode }}"
+    content:
+      - '{"auths":{"{{ registry }}":{"username":"{{ registry_user }}","password":"{{ entitlement_key }}",'
+      - '"email":"{{ registry_user }}","auth":"{{ auth_b64 }}"}'
+      - "}"
+      - "}"
+  ansible.builtin.set_fact:
+    kafka_new_secret: "{{ content | join('') }}"
+
+- name: Template KAFKA registry secret for reuse
+  ansible.builtin.template:
+    src: templates/kafka-registry-secret.yml.j2
+    dest: ../output/{{ kafka_namespace }}/{{ kafka_namespace }}-kafka-registry-secret.yml
+    mode: '0644'
+
+- name: Generate kafka registry secret "{{ kafka_registry_secret }}"
+  no_log: true
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ kafka_namespace }}/{{ kafka_namespace }}-kafka-registry-secret.yml

@@ -1,0 +1,25 @@
+- name: Template the Kafka instance for reuse
+  ansible.builtin.template:
+    src: templates/kafka-instance.yml.j2
+    dest: ../output/{{ kafka_namespace }}/{{ kafka_namespace }}-{{ kafka_crd_name }}-instance.yml
+    mode: '0644'
+
+- name: Deploy KAFKA
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ kafka_namespace }}/{{ kafka_namespace }}-{{ kafka_crd_name }}-instance.yml
+
+- name: Wait for Kafka instance to start
+  ansible.builtin.pause:
+    seconds: 60
+
+- name: Wait for the KAFKA deployment to finish before moving on
+  kubernetes.core.k8s_info:
+    api_version: eventstreams.ibm.com/v1beta2
+    kind: EventStreams
+    namespace: "{{ kafka_namespace }}"
+    name: "{{ kafka_crd_name }}"
+  register: result
+  until: result.resources[0].status.phase == "Ready"
+  retries: 40
+  delay: 30

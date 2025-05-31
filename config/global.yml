@@ -9,7 +9,8 @@ deploy_connect_direct_web_services: false
 deploy_seas: false
 deploy_itx_rs: false
 deploy_itxa: false
-deploy_minio: true
+deploy_minio: false
+deploy_kafka: true
 
 registry: cp.icr.io
 registry_user: cp

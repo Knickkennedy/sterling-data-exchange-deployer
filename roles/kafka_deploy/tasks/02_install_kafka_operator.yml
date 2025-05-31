@@ -1,0 +1,51 @@
+---
+- name: Create global output directory if it does not exist
+  ansible.builtin.file:
+    path: ../output/{{ kafka_namespace }}
+    state: directory
+    mode: '0755'
+
+- name: Template the KAFKA Namespace for reuse
+  ansible.builtin.template:
+    src: templates/kafka-namespace.yml.j2
+    dest: ../output/{{ kafka_namespace }}/{{ kafka_namespace }}-namespace.yml
+    mode: '0644'
+
+- name: Create KAFKA namespace
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ kafka_namespace }}/{{ kafka_namespace }}-namespace.yml
+
+- name: Tempalte KAFKA operator group for reuse
+  ansible.builtin.template:
+    src: templates/kafka-operatorgroup.yml.j2
+    dest: ../output/{{ kafka_namespace }}/{{ kafka_namespace }}-operatorgroup.yml
+    mode: '0644'
+
+- name: Create KAFKA operator group
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ kafka_namespace }}/{{ kafka_namespace }}-operatorgroup.yml
+
+- name: Template KAFKA Operator Subscription for reuse
+  ansible.builtin.template:
+    src: templates/kafka-operator-subscription.yml.j2
+    dest: ../output/{{ kafka_namespace }}/{{ kafka_namespace }}-operator-subscription.yml
+    mode: '0644'
+
+- name: Create KAFKA Operator
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ kafka_namespace }}/{{ kafka_namespace }}-operator-subscription.yml
+
+- name: Wait for KAFKA Operator to be Ready
+  kubernetes.core.k8s_info:
+    kind: Pod
+    namespace: "{{ kafka_namespace }}"
+    label_selectors:
+      - app=eventstreams
+      - name=eventstreams-cluster-operator
+    wait: true
+    wait_condition:
+      type: Ready
+      status: "True"

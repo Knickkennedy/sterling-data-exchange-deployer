@@ -1,0 +1,12 @@
+---
+- name: Load Config
+  ansible.builtin.include_tasks: 01_load_config.yml
+
+- name: Install KAFKA Operator
+  ansible.builtin.include_tasks: 02_install_kafka_operator.yml
+
+- name: Configure the KAFKA Namespace
+  ansible.builtin.include_tasks: 03_configure_namespace.yml
+
+- name: Deploy KAFKA
+  ansible.builtin.include_tasks: 04_deploy_kafka.yml
