@@ -36,7 +36,7 @@ jobs:
         run: |
           make venv
           make build
-        working-directory: .
+        working-directory: docs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -46,13 +46,13 @@ jobs:
 
       - name: Add .nojekyll to prevent Jekyll processing
         run: touch site/.nojekyll
-        working-directory: .
+        working-directory: docs
 
       - name: Deploy static pages to gh-pages branch
         if: ${{ github.event_name != 'pull_request' }}
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           make deploy
-        working-directory: .
+        working-directory: docs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

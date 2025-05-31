@@ -6,6 +6,7 @@ site_url: https://knickkennedy.github.io/sterling-data-exchange-automation/
 repo_url: https://github.com/Knickkennedy/sterling-data-exchange-automation
 repo_name: GitHub
 edit_uri: edit/main/docs/
+docs_dir: src
 
 theme:
   name: material
