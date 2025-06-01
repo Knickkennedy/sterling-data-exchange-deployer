@@ -13,6 +13,7 @@
       ansible.builtin.set_fact:
         b2bi_dbvender: "DB2"
         b2bi_dbhost: "c-{{ db2_crd_name }}-db2u.{{ db2_namespace }}.svc.cluster.local"
+        b2bi_dbname: "{{ db2_dbname }}"
         b2bi_dbport: >-
           {{ db2_service_output.resources[0].spec.ports
           | selectattr('name', '==', 'db2-server')
