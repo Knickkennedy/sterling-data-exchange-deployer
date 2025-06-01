@@ -12,7 +12,7 @@ b2bi_version: 6.2.1.0                      # Version of B2Bi to deploy
 
 ---
 
-## 🗃️ Database (DB2) Configuration
+## 🗃️ DB2 Configuration if deploying DB2 alongside B2Bi
 
 ```yaml
 deploy_db2: true                          # Deploy DB2 for B2Bi
@@ -30,7 +30,7 @@ db2_storage_size: 100Gi                   # Persistent storage size for DB2
 
 ---
 
-## 💬 MQ Configuration
+## 💬 MQ Configuration if deploying MQ alongside B2Bi
 
 ```yaml
 deploy_mq: true                           # Deploy IBM MQ
