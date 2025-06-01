@@ -9,28 +9,28 @@ This file documents the global configuration variables used to control the deplo
 ```yaml
 # Deployment toggles — set true to deploy the component, false to skip
 
-deploy_ibm_catalog_source: false        # Deploy IBM Operator catalog source for IBM operators
-deploy_b2bi: true                       # Deploy IBM Sterling B2B Integrator
-deploy_ssp_cm: false                    # Deploy Secure Proxy Configuration Manager (SSP CM)
-deploy_ssp_engine: false                # Deploy Secure Proxy Engine (core SSP service)
-deploy_ssp_ps: false                    # Deploy Secure Proxy Perimeter Server (SSP PS)
-deploy_connect_direct: false            # Deploy IBM Connect:Direct managed file transfer
-deploy_connect_direct_web_services: false  # Deploy web services for Connect:Direct
-deploy_seas: false                      # Deploy Sterling External Authentication Server (SEAS)
-deploy_itx_rs: false                    # Deploy IBM Transformation Extender Runtime Services
-deploy_itxa: true                       # Deploy IBM Transformation Extender Advanced (ITXA)
-deploy_minio: false                     # Deploy MinIO object storage backend
-deploy_kafka: false                     # Deploy Apache Kafka for event-driven messaging
+deploy_ibm_catalog_source: false            # Deploy IBM Operator catalog source for IBM operators
+deploy_b2bi: true                           # Deploy IBM Sterling B2B Integrator
+deploy_ssp_cm: false                        # Deploy Secure Proxy Configuration Manager (SSP CM)
+deploy_ssp_engine: false                    # Deploy Secure Proxy Engine (core SSP service)
+deploy_ssp_ps: false                        # Deploy Secure Proxy Perimeter Server (SSP PS)
+deploy_connect_direct: false                # Deploy IBM Connect:Direct managed file transfer
+deploy_connect_direct_web_services: false   # Deploy web services for Connect:Direct
+deploy_seas: false                          # Deploy Sterling External Authentication Server (SEAS)
+deploy_itx_rs: false                        # Deploy IBM Transformation Extender Runtime Services
+deploy_itxa: true                           # Deploy IBM Transformation Extender Advanced (ITXA)
+deploy_minio: false                         # Deploy MinIO object storage backend
+deploy_kafka: false                         # Deploy Apache Kafka for event-driven messaging
 
 # Container registry settings
 
-registry: cp.icr.io                     # Container image registry URL
-registry_user: cp                      # Registry username (often 'cp' for IBM Cloud)
+registry: cp.icr.io                         # Container image registry URL
+registry_user: cp                           # Registry username (often 'cp' for IBM Cloud)
 
 # Storage classes for persistent volumes
 
-file_storage_class: ocs-external-storagecluster-cephfs    # File-based storage class
-block_storage_class: ocs-external-storagecluster-ceph-rbd # Block-based storage class
+file_storage_class: ocs-external-storagecluster-cephfs      # File-based storage class
+block_storage_class: ocs-external-storagecluster-ceph-rbd   # Block-based storage class
 ```
 
 ## Product Deployment Explanation
