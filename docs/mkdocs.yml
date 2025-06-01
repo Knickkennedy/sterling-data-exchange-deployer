@@ -37,7 +37,6 @@ nav:
           - B2Bi: 02-usage/configuration/b2bi.md
   - Development:
       - Contributing: 05-development/contributing.md
-      - Testing: 05-development/testing.md
   - License: license.md
 
 markdown_extensions:
