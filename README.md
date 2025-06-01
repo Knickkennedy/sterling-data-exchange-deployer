@@ -105,9 +105,9 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 
 ---
 
-## 📄 License
+# License
 
-This project is licensed under the [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/).
+This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 ---
 
