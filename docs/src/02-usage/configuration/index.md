@@ -2,7 +2,7 @@
 
 ## Component Configurations
 
-There are examples of each component being defined [here](https://github.com/Knickkennedy/sterling-data-exchange-deployer/tree/main/examples/configs) that will work for demo environments. The [global.yml](https://github.com/Knickkennedy/sterling-data-exchange-deployer/blob/main/examples/configs/global.yml) config is the only one that's required to deploy other products, as it contains metadata needed by the ansible installation role. The rest of the individual products can be run as-is if your environment allows, or with customizations based on the variables provided on their respective configuration page.
+There are examples of each component being defined [here](https://github.com/Knickkennedy/sterling-data-exchange-deployer/tree/main/examples/configs) that will work for demo environments. The [global](https://knickkennedy.github.io/sterling-data-exchange-deployer/02-usage/configuration/global/) config is the only one that's required to deploy other products, as it contains metadata needed by the ansible installation role. The rest of the individual products can be run as-is if your environment allows, or with customizations based on the variables provided on their respective configuration page.
 
 ## ansible.cfg
 
