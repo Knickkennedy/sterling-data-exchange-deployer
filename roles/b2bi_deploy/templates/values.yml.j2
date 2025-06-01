@@ -93,7 +93,7 @@ integrations:
   itxIntegration:
     enabled: {{ b2bi_itx_enabled }}
     dataSetup:
-      enabled: true
+      enabled: {{ b2bi_itx_data_setup_enabled }}
     image:
       repository: "cp.icr.io/cp/ibm-itx-rs"
       tag: "{{ versions[b2bi_version].itx_version }}"
@@ -128,33 +128,33 @@ integrations:
   itxaIntegration:
     enabled: {{ b2bi_itxa_enabled }}
     dataSetup:
-      enabled: true
+      enabled: {{ b2bi_itxa_data_setup_enabled }}
     image:
       repository: "cp.icr.io/cp/ibm-itxa/itxa-runtime"
       tag: "{{ versions[b2bi_version].itxa_version }}"
       pullPolicy: IfNotPresent
       pullSecret: "{{ b2bi_registry_secret }}"
-    appSecret: "itxa-oracle-secrets"
+    appSecret: "{{ b2bi_itxa_app_secret }}"
     secureDBConnection:
-      enabled: false
-      dbservercertsecretname: ""
+      enabled: {{ b2bi_itxa_secure_dbconnection }}
+      dbservercertsecretname: "{{ b2bi_itxa_db_cert_secret }}"
     persistence:
       claims:
         name: itxa-logs-pvc
     sso:
-      host: "speui.apps.openshift.in.dev"
-      port: 443
+      host: "{{ b2bi_itxa_sso_host }}"
+      port: {{ b2bi_itxa_sso_port }}
       ssl:
-        enabled: true
+        enabled: {{ b2bi_itxa_ssl_enabled }}
     resourcesInit:
-      enabled: true
+      enabled: {{ b2bi_itxa_resources_init_enabled }}
       image:
         repository: "cp.icr.io/cp/ibm-itxa/itxa-resources"
         tag: "{{ versions[b2bi_version].itxa_resourcesInit_version }}"
         pullPolicy: "IfNotPresent"
 setupCfg:
-  upgrade: false
-  basePort: 50000
+  upgrade: {{ setup_cfg_upgrade }}
+  basePort: {{ setup_cfg_base_port }}
   licenseAcceptEnableSfg: {{ b2bi_sfg_enabled }}
   licenseAcceptEnableEbics: {{ b2bi_ebics_enabled }}
   licenseAcceptEnableFinancialServices: {{ b2bi_financial_services_enabled }}
@@ -210,7 +210,7 @@ setupCfg:
   sapSncLibName:  
   launchClaServer: false
 asi:
-  replicaCount: 1
+  replicaCount: {{ asi_replica_count }}
   env:
     jvmOptions:
     extraEnvs: []
@@ -324,10 +324,10 @@ asi:
       memory: 4Gi
       ephemeral-storage: "2Gi"
   autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 2
-    targetCPUUtilizationPercentage: 60
+    enabled: {{ asi_autoscaling_enabled }}
+    minReplicas: {{ asi_autoscaling_min_replicas }}
+    maxReplicas: {{ asi_autoscaling_max_replicas }}
+    targetCPUUtilizationPercentage: {{ asi_autoscaling_cpu_utilization_target_percent }}
   defaultPodDisruptionBudget:
     enabled: false
     minAvailable: 1
@@ -346,8 +346,8 @@ asi:
   extraSecrets: []
   extraConfigMaps: []
   myFgAccess:
-    myFgPort:
-    myFgProtocol:
+    myFgPort: {{ asi_fg_access_port }}
+    myFgProtocol: "{{ asi_fg_protocol }}"
   hostAliases: []
   performanceTuning:
     allocateMemToBI: false
@@ -361,7 +361,7 @@ asi:
     egress:
       customPolicies:
 ac:
-  replicaCount: 1
+  replicaCount: {{ ac_replica_count }}
   env:
     jvmOptions:
     extraEnvs: []
@@ -390,9 +390,9 @@ ac:
     ports: []
     portRanges:
       - name: adapters
-        portRange: 30501-30600
-        targetPortRange: 30501-30600
-        nodePortRange: 30501-30600
+        portRange: {{ ac_backend_nodeport_range }}
+        targetPortRange: {{ ac_backend_nodeport_range }}
+        nodePortRange: {{ ac_backend_nodeport_range }}
         protocol: TCP
     loadBalancerIP:  
     loadBalancerSourceRanges: []
@@ -435,10 +435,10 @@ ac:
       memory: 4Gi
       ephemeral-storage: "2Gi"
   autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 2
-    targetCPUUtilizationPercentage: 60
+    enabled: {{ ac_autoscaling_enabled }}
+    minReplicas: {{ ac_autoscaling_min_replicas }}
+    maxReplicas: {{ ac_autoscaling_max_replicas }}
+    targetCPUUtilizationPercentage: {{ ac_autoscaling_cpu_utilization_target_percent }}
   defaultPodDisruptionBudget:
     enabled: false
     minAvailable: 1
@@ -457,8 +457,8 @@ ac:
   extraSecrets: []
   extraConfigMaps: []
   myFgAccess:
-    myFgPort:
-    myFgProtocol:
+    myFgPort: {{ ac_fg_access_port }}
+    myFgProtocol: "{{ ac_fg_protocol }}"
   hostAliases: []
   performanceTuning:
     allocateMemToSAP: false
@@ -468,7 +468,7 @@ ac:
     egress:
       customPolicies:
 api:
-  replicaCount: 1
+  replicaCount: {{ api_replica_count }}
   env:
     jvmOptions:
     extraEnvs: []
@@ -529,10 +529,10 @@ api:
       memory: 2Gi
       ephemeral-storage: "2Gi"
   autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 2
-    targetCPUUtilizationPercentage: 60
+    enabled: {{ api_autoscaling_enabled }}
+    minReplicas: {{ api_autoscaling_min_replicas }}
+    maxReplicas: {{ api_autoscaling_max_replicas }}
+    targetCPUUtilizationPercentage: {{ api_autoscaling_cpu_utilization_target_percent }}
   defaultPodDisruptionBudget:
     enabled: false
     minAvailable: 1
@@ -564,14 +564,14 @@ test:
     tag: "{{ versions[b2bi_version].test_version }}"
     pullPolicy: 'IfNotPresent'
 purge:
-  enabled: true
+  enabled: {{ b2bi_purge_enabled }}
   image:
     repository: "cp.icr.io/cp/ibm-b2bi/b2bi-purge"
     tag: "{{ versions[b2bi_version].purge_version }}"
     pullPolicy: IfNotPresent
     pullSecret: "{{ b2bi_registry_secret }}"
     extraLabels: {}
-  schedule: "0 0 * * *"
+  schedule: {{ b2bi_purge_schedule }}
   startingDeadlineSeconds: 60
   activeDeadlineSeconds: 3600
   concurrencyPolicy: Forbid
@@ -598,13 +598,13 @@ purge:
     preferredDuringSchedulingIgnoredDuringExecution: []
 documentService:
   enabled: {{ b2bi_document_service_enabled }}
-  sslEnabled: true
-  useGrpc: true
+  sslEnabled: {{ b2bi_document_ssl_enabled }}
+  useGrpc: {{ b2bi_document_use_grpc }}
   readBufferSize: 32768
   grpcPoolSize: 150
   keepAliveGrpc: 300
   license: false
-  replicaCount: 1
+  replicaCount: {{ b2bi_document_replica_count }}
   image:
     repository: cp.icr.io/cp/ibm-b2bi/b2bi-documentservice
     pullPolicy: IfNotPresent

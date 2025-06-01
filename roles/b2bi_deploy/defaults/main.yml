@@ -18,13 +18,6 @@ jms_truststore_path: ""
 jms_truststore_secret: ""
 jms_protocol: TLSv1.2
 
-# jms_user: ""
-# jms_vendor: ""
-# jms_connection_factory: ""
-# jms_queue_name: ""
-# jms_channel: ""
-# jms_enable_ssl: false
-
 jms_user: root
 jms_vendor: IBMMQ
 jms_connection_factory: com.ibm.mq.jms.MQQueueConnectionFactory
@@ -41,14 +34,28 @@ b2bi_data_setup_enabled: true
 b2bi_data_setup_upgrade: false
 
 b2bi_seas_enabled: false
+
 b2bi_itx_enabled: false
+b2bi_itx_data_setup_enabled: false
+
 b2bi_itxa_enabled: false
+b2bi_itxa_data_setup_enabled: false
+b2bi_itxa_app_secret: ""
+b2bi_itxa_secure_dbconnection: false
+b2bi_itxa_db_cert_secret: ""
+b2bi_itxa_sso_host: ""
+b2bi_itxa_sso_port: 443
+b2bi_itxa_ssl_enabled: true
+b2bi_itxa_resources_init_enabled: false
+
 b2bi_sfg_enabled: false
 b2bi_ebics_enabled: false
 b2bi_financial_services_enabled: false
 b2bi_file_operation_enabled: false
 b2bi_fips_enabled: false
 
+setup_cfg_upgrade: false
+setup_cfg_base_port: 50000
 b2bi_db_vendor: DB2
 b2bi_db_drivers: db2jcc4.jar
 b2bi_db_create_schema: true
@@ -61,7 +68,6 @@ b2bi_db_keystore: ""
 b2bi_db_keystore_secret: ""
 b2bi_admin_email: admin@temp.net
 b2bi_smtp_host: localhost
-b2bi_document_service_enabled: false
 
 b2bi_system_passphrase_secret: b2bi-system-passphrase-secret
 b2bi_system_passphrase: password
@@ -72,7 +78,37 @@ b2bi_liberty_keystore_password: changeit
 # accepts on or off
 b2bi_nist_enabled: "off"
 
+asi_replica_count: 1
 asi_backend_nodeport_range: 30351-30353
+asi_autoscaling_enabled: false
+asi_autoscaling_min_replicas: 1
+asi_autoscaling_max_replicas: 2
+asi_autoscaling_cpu_utilization_target_percent: 60
+asi_fg_access_port:
+asi_fg_protocol:
+
+ac_replica_count: 1
+ac_backend_nodeport_range: 30501-30600
+ac_autoscaling_enabled: false
+ac_autoscaling_min_replicas: 1
+ac_autoscaling_max_replicas: 2
+ac_autoscaling_cpu_utilization_target_percent: 60
+ac_fg_access_port:
+ac_fg_protocol:
+
+api_replica_count: 1
+api_autoscaling_enabled: false
+api_autoscaling_min_replicas: 1
+api_autoscaling_max_replicas: 2
+api_autoscaling_cpu_utilization_target_percent: 60
+
+b2bi_purge_enabled: true
+b2bi_purge_schedule: "0 0 * * *"
+
+b2bi_document_service_enabled: false
+b2bi_document_ssl_enabled: true
+b2bi_document_use_grpc: true
+b2bi_document_replica_count: 1
 
 versions:
   6.2.1.0:
@@ -89,29 +125,3 @@ versions:
     test_version: 1.1.68
     purge_version: 6.2.1.0
     documentService_version: 6.2.1.0
-
-db_values:
-  STMT_CONC: "LITERALS"
-  SELF_TUNING_MEM: "ON"
-  LOCKLIST: "AUTOMATIC"
-  MAXLOCKS: "AUTOMATIC"
-  PCKCACHESZ: "AUTOMATIC"
-  SHEAPTHRES_SHR: "AUTOMATIC"
-  SORTHEAP: "AUTOMATIC"
-  NUM_IOCLEANERS: "AUTOMATIC"
-  NUM_IOSERVERS: "AUTOMATIC"
-  DFT_PREFETCH_SZ: "AUTOMATIC"
-  MAXAPPLS: "AUTOMATIC"
-  APPLHEAPSZ: "AUTOMATIC"
-  APPL_MEMORY: "AUTOMATIC"
-  DBHEAP: "AUTOMATIC"
-  LOGFILSIZ: "65536"
-  LOGPRIMARY: "40"
-  LOGSECOND: "12"
-  NUM_LOG_SPAN: "40"
-  DFT_DEGREE: "1"
-  LOGBUFSZ: "2152"
-  STMTHEAP: "51200 AUTOMATIC"
-  CATALOGCACHE_SZ: "300"
-  UTIL_HEAP_SZ: "AUTOMATIC"
-  CHNGPGS_THRESH: "80"

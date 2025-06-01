@@ -33,7 +33,8 @@ nav:
   - Usage:
       - Running the Application: 02-usage/running.md
       - Configuration:
-        - Global: 02-usage/configuration/global.md
+          - Global: 02-usage/configuration/global.md
+          - B2Bi: 02-usage/configuration/b2bi.md
   - Development:
       - Contributing: 05-development/contributing.md
       - Testing: 05-development/testing.md
