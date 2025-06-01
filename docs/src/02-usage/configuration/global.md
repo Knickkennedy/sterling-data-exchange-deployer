@@ -1,7 +1,4 @@
-# Create a global-configuration.md file with descriptions of the provided variables
-
-global_config_md = """
-# Global Configuration
+## Global Configuration
 
 This file documents the global configuration variables used to control the deployment of various components in the Sterling Data Exchange Deployer. These variables are typically defined in group variables or passed as extra variables during playbook execution.
 
@@ -35,6 +32,8 @@ registry_user: cp                      # Registry username (often 'cp' for IBM C
 file_storage_class: ocs-external-storagecluster-cephfs    # File-based storage class
 block_storage_class: ocs-external-storagecluster-ceph-rbd # Block-based storage class
 ```
+
+## Product Deployment Explanation
 
 Each of the following boolean flags controls whether a specific component is deployed.
 
