@@ -14,6 +14,7 @@ mq_namespace: mq                                             # Kubernetes namesp
 mq_crd_name: mq                                              # Custom Resource Definition name
 mq_storage_size: 20Gi                                        # Persistent volume size for MQ data
 ```
+
 ---
 
 ##    Registry Configuration 
@@ -23,6 +24,7 @@ mq_registry_secret: ibm-registry-secret                      # Secret for access
 registry: cp.icr.io                                          # Image registry URL
 registry_user: cp                                            # Registry username
 ```
+
 ---
 
 ##    Passwords & Secrets 
@@ -32,4 +34,5 @@ mq_admin_password: "Passw0rd"                                # Administrator pas
 mq_appuser_password: "Passw0rd"                              # Password for application user
 mq_deploy_secret: "mq-secret"                                # Kubernetes secret for deployment
 ```
+
 ---

@@ -14,6 +14,7 @@ ssp_ps_license_type: non-prod                            # License type: prod, n
 ssp_ps_namespace: ssp                                   # Kubernetes namespace for SSP PS
 ssp_ps_serviceaccount: ssp-ps-sa                        # Service account for SSP PS
 ```
+
 ---
 
 ##    Registry Configuration 
@@ -24,6 +25,7 @@ ssp_ps_registry: cp.icr.io                              # Image registry URL
 ssp_ps_registry_user: cp                                # Registry username
 ssp_ps_registry_key:                                    # Optional registry key, leave empty if not used
 ```
+
 ---
 
 ##    Version Info 
@@ -33,4 +35,5 @@ versions:
   6.2.0.1.02:
     helm_chart_version: 1.5.4                           # Helm chart version for this SSP PS version
 ```
+
 ---

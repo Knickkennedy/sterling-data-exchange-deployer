@@ -18,6 +18,7 @@ ssp_cm_generate_certificates: true                      # Enable generation of c
 ssp_cm_serviceaccount: ssp-cm-sa                        # Service account for SSP CM
 ssp_cm_pvc: ibm-ssp-cm-pvc                              # Persistent volume claim for SSP CM
 ```
+
 ---
 
 ##    Registry Configuration 
@@ -28,6 +29,7 @@ ssp_cm_registry: cp.icr.io                              # Image registry URL
 ssp_cm_registry_user: cp                                # Registry username
 ssp_cm_registry_key:                                    # Optional registry key, leave empty if not used
 ```
+
 ---
 
 ##    Passwords & Secrets 
@@ -50,6 +52,7 @@ ssp_cm_export_cert_password: password                    # Export certificate pa
 
 ssp_cm_keycert_secret: "engine-keycert"                 # Kubernetes secret containing keycert data
 ```
+
 ---
 
 ##    Version Info 
@@ -59,4 +62,5 @@ versions:
   6.2.0.1.02:
     helm_chart_version: 1.5.4                            # Helm chart version for this SSP CM version
 ```
+
 ---

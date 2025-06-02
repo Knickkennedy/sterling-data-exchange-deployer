@@ -32,4 +32,4 @@ docker run --rm -v $(pwd):/app sde-deployer
 
 ---
 
-For detailed configuration options, refer to the [Configuration](../usage/configuration.md) section.
+For detailed configuration options, refer to the [Configuration](https://knickkennedy.github.io/sterling-data-exchange-deployer/02-usage/configuration) section.

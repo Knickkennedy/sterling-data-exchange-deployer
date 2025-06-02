@@ -13,6 +13,7 @@ pem_std_license_type: nonprod                               # License type
 pem_std_namespace: pem-std                                  # Kubernetes namespace
 pem_std_serviceaccount: pem-std-sa                          # Service account for PEM pods
 ```
+
 ---
 
 ##    Registry Configuration 
@@ -23,6 +24,7 @@ pem_std_registry: cp.icr.io                                 # Docker image regis
 pem_std_registry_user: cp                                   # Registry username
 pem_std_registry_key:                                       # Registry access key (to be filled)
 ```
+
 ---
 
 ##    Passwords & Credentials 
@@ -32,6 +34,7 @@ pem_std_default_password: Passw0rd123!                      # Default PEM passwo
 pem_std_default_passphrase: P@ssPhr4s3_890@                 # PEM system passphrase
 pem_std_keystore_password: Change1t@                        # Java keystore password
 ```
+
 ---
 
 ##    Admin & SMTP Settings 
@@ -41,6 +44,7 @@ pem_std_admin_email: admin@company.com                      # PEM admin email
 pem_std_smtp_host: smtp.company.com                         # SMTP mail server
 pem_std_smtp_port: 25                                       # SMTP server port
 ```
+
 ---
 
 ##    JMS Settings (Optional) 
@@ -51,6 +55,7 @@ pem_std_jms_password: ""
 pem_std_jms_keystore_password: ""
 pem_std_jms_truststore_password: ""
 ```
+
 ---
 
 ##    Database Setup Flags 
@@ -60,6 +65,7 @@ pem_std_dbsetup_enabled: true                               # Enable database se
 pem_std_dbsetup_upgrade: false                              # Allow DB upgrade during setup
 pem_std_dbdriver: com.ibm.db2.jcc.DB2Driver                 # JDBC driver class name
 ```
+
 ---
 
 ##    Secrets 
@@ -74,6 +80,7 @@ pem_std_cert_jks_secret: pem-keystore.jks                   # JKS certificate se
 pem_std_cert_p12_secret: pem-keystore.p12                   # P12 certificate secret
 pem_std_cert_crt_secret: pem-cert.crt                       # PEM certificate secret
 ```
+
 ---
 
 ##    B2Bi Integration (Prod) 
@@ -91,6 +98,7 @@ pem_std_b2bi_prod_dbuser: ""
 pem_std_b2bi_prod_dbpw: ""
 pem_std_b2bi_prod_jpa_dialect: com.pe.pcm.config.database.dialect.DB2ExtendedDialect
 ```
+
 ---
 
 ##    B2Bi Integration (Non-prod) 
@@ -108,6 +116,7 @@ pem_std_b2bi_nonprod_dbuser: ""
 pem_std_b2bi_nonprod_dbpw: ""
 pem_std_b2bi_nonprod_jpa_dialect: com.pe.pcm.config.database.dialect.DB2ExtendedDialect
 ```
+
 ---
 
 ##    JMS Configuration 
@@ -120,6 +129,7 @@ jms_queue_name: DEV.QUEUE.1                                 # JMS queue name
 jms_channel: DEV.CHANNEL.SVRCONN                            # JMS channel
 jms_enable_ssl: false                                       # Enable JMS over SSL
 ```
+
 ---
 
 ##    Storage & Logging 
@@ -129,6 +139,7 @@ pem_std_app_logs_size: 1Gi                                  # Application log vo
 pem_std_app_documents_enabled: false                        # Enable document service
 pem_std_app_documents_size: 1Gi                             # Volume size for documents
 ```
+
 ---
 
 ##    Data Setup Flags 
@@ -137,6 +148,7 @@ pem_std_app_documents_size: 1Gi                             # Volume size for do
 pem_std_data_setup_enabled: true                            # Enable data setup at deploy
 pem_std_data_setup_upgrade: false                           # Enable data upgrade
 ```
+
 ---
 
 ##    Additional Secrets 
@@ -148,6 +160,7 @@ pem_std_system_passphrase: password                         # System-level PEM p
 pem_std_liberty_keystore_password_secret: pem-std-liberty-secret
 pem_std_liberty_keystore_password: changeit                # Liberty keystore password
 ```
+
 ---
 
 ##    Security & Compliance 
@@ -155,6 +168,7 @@ pem_std_liberty_keystore_password: changeit                # Liberty keystore pa
 ```yaml
 pem_std_nist_enabled: "off"                                 # Enable/disable NIST compliance
 ```
+
 ---
 
 ##    Network 
@@ -162,6 +176,7 @@ pem_std_nist_enabled: "off"                                 # Enable/disable NIS
 ```yaml
 asi_backend_nodeport_range: 30351-30353                     # NodePort range for backend services
 ```
+
 ---
 
 ##    Version Details 
@@ -180,6 +195,7 @@ versions:
     purge_version: 6.2.1.0
     documentService_version: 6.2.1.0
 ```
+
 ---
 
 ##    DB2 Tuning Parameters 
@@ -211,4 +227,5 @@ db_values:
   UTIL_HEAP_SZ: "AUTOMATIC"
   CHNGPGS_THRESH: "80"
 ```
+
 ---

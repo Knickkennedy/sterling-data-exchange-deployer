@@ -18,6 +18,7 @@ cd_ws_pvc: cd-ws-pvc                           # Persistent Volume Claim for sto
 cd_ws_nodename: localhost                      # Node name used within the application
 cd_ws_deploy_sum_enabled: 1                    # Whether to deploy SUM (1 = true, 0 = false)
 ```
+
 ---
 
 ##    Passwords

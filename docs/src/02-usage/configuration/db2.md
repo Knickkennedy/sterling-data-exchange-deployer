@@ -11,6 +11,7 @@ db2_version: s11.5.9.0-cn3                      # Version of DB2 container image
 db2_channel: v110509.0                          # DB2 update channel or tag, if required
 db2_namespace: db2                              # Kubernetes namespace for the DB2 deployment
 ```
+
 ---
 
 ##    Registry Settings 
@@ -20,6 +21,7 @@ registry: cp.icr.io                             # IBM container registry URL
 registry_user: cp                               # IBM container registry username
 db2_registry_secret: ibm-registry-secret        # Kubernetes secret to authenticate with IBM registry
 ```
+
 ---
 
 ##    Secrets and Access 
@@ -28,6 +30,7 @@ db2_registry_secret: ibm-registry-secret        # Kubernetes secret to authentic
 db2_secret: db2-secret                          # Secret containing DB2 credentials
 db2_service_account: db2-sa                     # Service account used by the DB2 pods
 ```
+
 ---
 
 ##    Database Configuration 
@@ -39,4 +42,5 @@ db2_password: passw0rd                          # Password for the DB2 database 
 db2_dbname: BLUDB                               # Name of the DB2 database
 db2_storage_size: 100Gi                         # Size of the persistent volume for DB2 storage
 ```
+
 ---

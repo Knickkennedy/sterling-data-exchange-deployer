@@ -17,6 +17,7 @@ cd_pvc: cd-pvc                                   # Persistent Volume Claim for d
 cd_nodename: CDNODE01                            # Node name registered in Connect:Direct
 cd_deploy_sum_enabled: 1                         # Whether to deploy the SUM component (1 = true)
 ```
+
 ---
 
 ##    Passwords
@@ -27,6 +28,7 @@ cd_appuser_password: passw0rd                    # Password for the application 
 cd_local_cert_phrase: changeit                   # Passphrase for the local certificate
 cd_keystore_password: changeit                   # Password for the keystore file
 ```
+
 ---
 
 ##    LDAP Configuration
@@ -47,6 +49,7 @@ cd_ldap_client_validation: ""                    # Whether to validate LDAP clie
 cd_ldap_client_cert: ""                          # LDAP client certificate (if needed)
 cd_ldap_client_key: ""                           # LDAP client private key (if needed)
 ```
+
 ---
 
 ##    Secrets and Certificates
@@ -59,6 +62,7 @@ cd_cert_crt: /tmp/cdcert.crt                     # Path to the certificate file
 cd_cert_key: /tmp/cdkey.pem                      # Path to the private key file
 cd_cert_pem: /tmp/cdcert.pem                     # Path to combined certificate PEM file
 ```
+
 ---
 
 ##    Version Mapping
@@ -68,4 +72,5 @@ versions:
   6.4.0.1_iFix029:
     helm_chart_version: 1.4.4                    # Helm chart version associated with this app version
 ```
+
 ---

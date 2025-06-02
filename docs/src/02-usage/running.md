@@ -19,4 +19,4 @@ Watch the output for any errors and verify the components are deployed correctly
 
 ---
 
-For advanced usage and customization, see the [Configuration](../02-usage/configuration.md) section.
+For advanced usage and customization, see the [Configuration](https://knickkennedy.github.io/sterling-data-exchange-deployer/02-usage/configuration) section.

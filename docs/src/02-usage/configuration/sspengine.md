@@ -18,6 +18,7 @@ ssp_engine_generate_certificates: false                  # Enable/disable automa
 ssp_engine_serviceaccount: ssp-engine-sa                 # Service account for SSP Engine
 ssp_engine_pvc: ibm-ssp-engine-pvc                       # Persistent volume claim for SSP Engine
 ```
+
 ---
 
 ##    Registry Configuration 
@@ -28,6 +29,7 @@ ssp_engine_registry: cp.icr.io                            # Image registry URL
 ssp_engine_registry_user: cp                              # Registry username
 ssp_engine_registry_key:                                  # Optional registry key, leave empty if not used
 ```
+
 ---
 
 ##    Passwords & Secrets 
@@ -42,6 +44,7 @@ ssp_engine_keycert_encrypt_passphrase: password           # Keycert encryption p
 ssp_engine_keycert_secret: "cm-keycert"                   # Kubernetes secret containing keycert data
 ssp_engine_custom_keycert_passphrase: password            # Custom keycert passphrase
 ```
+
 ---
 
 ##    Version Info 
@@ -51,4 +54,5 @@ versions:
   6.2.0.1.02:
     helm_chart_version: 1.5.4                              # Helm chart version for this SSP Engine version
 ```
+
 ---
