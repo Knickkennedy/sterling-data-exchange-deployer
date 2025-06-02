@@ -36,6 +36,19 @@ nav:
           - Getting Started: 02-usage/configuration/index.md
           - Global: 02-usage/configuration/global.md
           - B2Bi: 02-usage/configuration/b2bi.md
+          - Connect Direct: 02-usage/configuration/connect-direct.md
+          - Connect Direct Web Services: 02-usage/configuration/cdws.md
+          - DB2: 02-usage/configuration/db2.md
+          - ITXA: 02-usage/configuration/itxa.md
+          - ITXRS: 02-usage/configuration/itxrs.md
+          - Kafka: 02-usage/configuration/kafka.md
+          - MinIO: 02-usage/configuration/minio.md
+          - MQ: 02-usage/configuration/mq.md
+          - PEM STD: 02-usage/configuration/pemstd.md
+          - SEAS: 02-usage/configuration/seas.md
+          - SSP CM: 02-usage/configuration/sspcm.md
+          - SSP Engine: 02-usage/configuration/sspengine.md
+          - SSP PS: 02-usage/configuration/sspps.md
   - Development:
       - Contributing: 05-development/contributing.md
   - License: license.md
