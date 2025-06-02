@@ -29,7 +29,6 @@ nav:
   - Home: index.md
   - Getting Started:
       - Overview: 01-getting-started/overview.md
-      - Installation: 01-getting-started/installation.md
   - Usage:
       - Running the Application: 02-usage/running.md
       - Configuration:
@@ -49,6 +48,7 @@ nav:
           - SSP CM: 02-usage/configuration/sspcm.md
           - SSP Engine: 02-usage/configuration/sspengine.md
           - SSP PS: 02-usage/configuration/sspps.md
+          - Reference: 02-usage/job-reference.md
   - Development:
       - Contributing: 05-development/contributing.md
   - License: license.md
