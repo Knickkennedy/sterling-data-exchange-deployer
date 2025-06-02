@@ -18,6 +18,26 @@ metadata:
   name: sde-config
   namespace: sde-deployer
 data:
+  global.yml: |
+    ---
+    deploy_ibm_catalog_source: false
+    deploy_b2bi: true
+    deploy_ssp_cm: false
+    deploy_ssp_engine: false
+    deploy_ssp_ps: false
+    deploy_connect_direct: false
+    deploy_connect_direct_web_services: false
+    deploy_seas: false
+    deploy_itx_rs: false
+    deploy_itxa: true
+    deploy_minio: false
+    deploy_kafka: false
+
+    registry: cp.icr.io
+    registry_user: cp
+
+    file_storage_class: ocs-external-storagecluster-cephfs
+    block_storage_class: ocs-external-storagecluster-ceph-rbd
   b2bi.yml: |
     ---
     b2bi_version: 6.2.1.0
@@ -53,26 +73,6 @@ data:
     ---
     cd_release_name: auto-cd
     cd_version: 6.4.0.1_iFix029
-  global.yml: |
-    ---
-    deploy_ibm_catalog_source: false
-    deploy_b2bi: true
-    deploy_ssp_cm: false
-    deploy_ssp_engine: false
-    deploy_ssp_ps: false
-    deploy_connect_direct: false
-    deploy_connect_direct_web_services: false
-    deploy_seas: false
-    deploy_itx_rs: false
-    deploy_itxa: true
-    deploy_minio: false
-    deploy_kafka: false
-
-    registry: cp.icr.io
-    registry_user: cp
-
-    file_storage_class: ocs-external-storagecluster-cephfs
-    block_storage_class: ocs-external-storagecluster-ceph-rbd
   itx-rs.yml: |
     ---
     itxrs_version: 11.0.1.1.20250425
