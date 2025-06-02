@@ -22,6 +22,6 @@ or if you're on the Openshift Web UI, you can click the + symbol next to your us
 
 ---
 
-For advanced usage and customization, see the [Configuration](https://knickkennedy.github.io/sterling-data-exchange-deployer/02-usage/configuration) section.
+For advanced usage and customization, see the [Configuration](configuration/index.md) section.
 
 To better understand the kubernetes job and necessary permissions, see [Reference](job-reference.md)

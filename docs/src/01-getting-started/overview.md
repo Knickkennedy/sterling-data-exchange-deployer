@@ -14,4 +14,4 @@ This documentation will guide you through installation, usage, development, and 
 
 ## Next Steps
 
-Run the installer as found [here](02-usage/running.md)
+[Run the installer](../02-usage/running.md)

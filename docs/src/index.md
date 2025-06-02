@@ -11,3 +11,7 @@ Sterling Data Exchange Deployer aims to simplify the setup and management of Ste
 More information will be forthcoming soon.
 
 Explore this documentation to get started, configure, and extend your deployment deployer.
+
+---
+
+[Getting Started](01-getting-started/overview.md)
