@@ -1,4 +1,4 @@
-## Global Configuration
+# Global Configuration
 
 This file documents the global configuration variables used to control the deployment of various components in the Sterling Data Exchange Deployer. These variables are typically defined in group variables or passed as extra variables during playbook execution.
 

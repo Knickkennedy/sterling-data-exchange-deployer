@@ -7,7 +7,7 @@ This file documents the configuration variables used for deploying IBM Sterling 
 ```yaml
 # Connect:Direct Web Services Configuration
 
-# --- Core Settings ---
+## --- Core Settings ---
 cd_ws_release_name: auto-cd-ws                 # Helm release name for the deployment
 cd_ws_version: 6.4.0.2_ifix001                 # Version of Connect:Direct Web Services to deploy
 cd_ws_license_type: non-prod                   # License type (e.g., non-prod, prod)
@@ -18,12 +18,12 @@ cd_ws_pvc: cd-ws-pvc                           # Persistent Volume Claim for sto
 cd_ws_nodename: localhost                      # Node name used within the application
 cd_ws_deploy_sum_enabled: 1                    # Whether to deploy SUM (1 = true, 0 = false)
 
-# --- Passwords ---
+## --- Passwords ---
 cd_ws_keystore_password: Change1t@             # Password for the keystore
 cd_ws_truststore_password: Change1t@           # Password for the truststore
 cd_ws_cacert_password: Change1t@               # Password for the CA certificate
 
-# --- Secrets and Certificates ---
+## --- Secrets and Certificates ---
 cd_ws_deploy_registry_secret: ibm-entitlement-key  # Secret name for registry credentials
 cd_ws_deploy_secret: cd-ws-secret              # Secret used for deployment credentials
 cd_ws_deploy_cert_secret: cd-ws-cert-secret    # Secret containing TLS certs
@@ -31,7 +31,7 @@ cd_ws_cert_crt: /tmp/cdwscert.crt              # Path to certificate CRT file
 cd_ws_cert_key: /tmp/cdwskey.pem               # Path to certificate KEY file
 cd_ws_cert_pem: /tmp/cdwscert.pem              # Path to certificate PEM file
 
-# --- Version Mapping ---
+## --- Version Mapping ---
 versions:
   6.4.0.2_ifix001:
     helm_chart_version: 1.1.6                  # Helm chart version corresponding to the release
