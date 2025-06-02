@@ -1,4 +1,4 @@
-# Global Configuration
+## Global Configuration
 
 This file documents the global configuration variables used to control the deployment of various components in the Sterling Data Exchange Deployer. These variables are typically defined in group variables or passed as extra variables during playbook execution.
 
@@ -7,7 +7,7 @@ This file documents the global configuration variables used to control the deplo
 ## Deployment Toggles
 
 ```yaml
-## Deployment toggles — set true to deploy the component, false to skip
+# Deployment toggles — set true to deploy the component, false to skip
 
 deploy_ibm_catalog_source: false            # Deploy IBM Operator catalog source for IBM operators
 deploy_b2bi: true                           # Deploy IBM Sterling B2B Integrator
@@ -22,12 +22,12 @@ deploy_itxa: true                           # Deploy IBM Transformation Extender
 deploy_minio: false                         # Deploy MinIO object storage backend
 deploy_kafka: false                         # Deploy Apache Kafka for event-driven messaging
 
-## Container registry settings
+# Container registry settings
 
 registry: cp.icr.io                         # Container image registry URL
 registry_user: cp                           # Registry username (often 'cp' for IBM Cloud)
 
-## Storage classes for persistent volumes
+# Storage classes for persistent volumes
 
 file_storage_class: ocs-external-storagecluster-cephfs      # File-based storage class
 block_storage_class: ocs-external-storagecluster-ceph-rbd   # Block-based storage class
