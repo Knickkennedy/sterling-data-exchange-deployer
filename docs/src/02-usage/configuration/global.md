@@ -1,10 +1,12 @@
 ## Global Configuration
 
+
 This file documents the global configuration variables used to control the deployment of various components in the Sterling Data Exchange Deployer. These variables are typically defined in group variables or passed as extra variables during playbook execution.
 
 ---
 
 ## Deployment Toggles
+
 
 ```yaml
 # Deployment toggles — set true to deploy the component, false to skip
@@ -34,6 +36,7 @@ block_storage_class: ocs-external-storagecluster-ceph-rbd   # Block-based storag
 ```
 
 ## Product Deployment Explanation
+
 
 Each of the following boolean flags controls whether a specific component is deployed.
 
@@ -77,6 +80,7 @@ Each of the following boolean flags controls whether a specific component is dep
 
 ## Registry Configuration
 
+
 - **registry**:  
   The container image registry to pull images from. Example: `cp.icr.io` (IBM Cloud Container Registry).
 
@@ -86,6 +90,7 @@ Each of the following boolean flags controls whether a specific component is dep
 ---
 
 ## Storage Classes
+
 
 - **file_storage_class**:  
   The default file-based storage class to use for persistent volumes. Example: `ocs-external-storagecluster-cephfs`.

@@ -3,7 +3,9 @@
 This file documents the configuration variables used for deploying IBM Sterling Connect Direct.
 
 ---
+
 ##    Core Settings
+
 ```yaml
 cd_release_name: auto-cd                         # Helm release name for Connect:Direct
 cd_version: 6.4.0.1_iFix029                      # Version of Connect:Direct
@@ -16,7 +18,9 @@ cd_nodename: CDNODE01                            # Node name registered in Conne
 cd_deploy_sum_enabled: 1                         # Whether to deploy the SUM component (1 = true)
 ```
 ---
-##    Passwords 
+
+##    Passwords
+
 ```yaml
 cd_admin_password: passw0rd                      # Password for the Connect:Direct admin user
 cd_appuser_password: passw0rd                    # Password for the application user
@@ -24,7 +28,9 @@ cd_local_cert_phrase: changeit                   # Passphrase for the local cert
 cd_keystore_password: changeit                   # Password for the keystore file
 ```
 ---
-##    LDAP Configuration 
+
+##    LDAP Configuration
+
 ```yaml
 cd_ldap_enabled: false                           # Enable LDAP integration
 cd_ldap_host: ""                                 # LDAP server host
@@ -42,7 +48,9 @@ cd_ldap_client_cert: ""                          # LDAP client certificate (if n
 cd_ldap_client_key: ""                           # LDAP client private key (if needed)
 ```
 ---
-##    Secrets and Certificates 
+
+##    Secrets and Certificates
+
 ```yaml
 cd_deploy_registry_secret: ibm-entitlement-key   # Secret for accessing IBM container registry
 cd_deploy_secret: cd-secret                      # Secret for Connect:Direct application credentials
@@ -52,7 +60,9 @@ cd_cert_key: /tmp/cdkey.pem                      # Path to the private key file
 cd_cert_pem: /tmp/cdcert.pem                     # Path to combined certificate PEM file
 ```
 ---
-##    Version Mapping 
+
+##    Version Mapping
+
 ```yaml
 versions:
   6.4.0.1_iFix029:

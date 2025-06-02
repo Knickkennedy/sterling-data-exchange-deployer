@@ -4,6 +4,7 @@ This file documents the configuration variables used for deploying IBM Sterling 
 
 ---
 
+
 ##    Core Settings 
 
 ```yaml
@@ -18,6 +19,7 @@ cd_ws_nodename: localhost                      # Node name used within the appli
 cd_ws_deploy_sum_enabled: 1                    # Whether to deploy SUM (1 = true, 0 = false)
 ```
 ---
+
 ##    Passwords
 
 ```yaml 
@@ -25,6 +27,7 @@ cd_ws_keystore_password: Change1t@             # Password for the keystore
 cd_ws_truststore_password: Change1t@           # Password for the truststore
 cd_ws_cacert_password: Change1t@               # Password for the CA certificate
 ```
+
 ##    Secrets and Certificates
 
 ```yaml
@@ -35,6 +38,7 @@ cd_ws_cert_crt: /tmp/cdwscert.crt              # Path to certificate CRT file
 cd_ws_cert_key: /tmp/cdwskey.pem               # Path to certificate KEY file
 cd_ws_cert_pem: /tmp/cdwscert.pem              # Path to certificate PEM file
 ```
+
 
 ##    Version Mapping
 

@@ -3,7 +3,9 @@
 This file documents the configuration variables used for deploying IBM Sterling Secure Proxy Configuration Manager.
 
 ---
+
 ##    Core Settings 
+
 ```yaml
 ssp_cm_release_name: auto                                # Helm release name for SSP CM deployment
 ssp_cm_version: 6.2.0.1.02                              # SSP CM version
@@ -17,7 +19,9 @@ ssp_cm_serviceaccount: ssp-cm-sa                        # Service account for SS
 ssp_cm_pvc: ibm-ssp-cm-pvc                              # Persistent volume claim for SSP CM
 ```
 ---
+
 ##    Registry Configuration 
+
 ```yaml
 ssp_cm_registry_secret: ibm-entitlement-key            # Secret to pull container images
 ssp_cm_registry: cp.icr.io                              # Image registry URL
@@ -25,7 +29,9 @@ ssp_cm_registry_user: cp                                # Registry username
 ssp_cm_registry_key:                                    # Optional registry key, leave empty if not used
 ```
 ---
+
 ##    Passwords & Secrets 
+
 ```yaml
 ssp_cm_secret: ibm-ssp-cm-secret                        # Kubernetes secret for SSP CM sensitive data
 
@@ -45,7 +51,9 @@ ssp_cm_export_cert_password: password                    # Export certificate pa
 ssp_cm_keycert_secret: "engine-keycert"                 # Kubernetes secret containing keycert data
 ```
 ---
+
 ##    Version Info 
+
 ```yaml
 versions:
   6.2.0.1.02:

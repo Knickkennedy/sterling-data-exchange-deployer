@@ -3,7 +3,9 @@
 This file documents the configuration variables used for deploying IBM Sterling ITX Runtime Services.
 
 ---
+
 ##    Core Settings 
+
 ```yaml
 itxrs_release_name: auto-itxrs                    # Helm release name for the ITXRS deployment
 itxrs_version: 11.0.1.1.20250425                  # Version of the ITXRS container/image
@@ -11,7 +13,9 @@ itxrs_license_type: non-prod                     # License type: 'prod' or 'non-
 itxrs_namespace: itxrs                            # Kubernetes namespace for ITXRS
 ```
 ---
+
 ##    Registry Settings 
+
 ```yaml
 itxrs_registry: cp.icr.io/cp                      # IBM container registry path
 itxrs_registry_user: cp                           # IBM container registry username
@@ -19,12 +23,16 @@ itxrs_registry_key:                               # IBM container registry key (
 itxrs_registry_secret: ibm-entitlement-key        # Kubernetes secret for pulling images from the registry
 ```
 ---
+
 ##    Access & Permissions 
+
 ```yaml
 itxrs_serviceaccount: itxrs-sa                    # Kubernetes service account used by ITXRS pods
 ```
 ---
+
 ##    Version-specific Helm Chart Mapping 
+
 ```yaml
 versions:
   11.0.1.1.20250425:
