@@ -3,6 +3,8 @@
 
 A containerized deployer framework designed to streamline the deployment and management of IBM Sterling Data Exchange environments using Ansible and Go.
 
+See Documentation [here](https://knickkennedy.github.io/sterling-data-exchange-deployer/01-getting-started/overview/) to get started.
+
 ---
 
 ## 🚀 Overview
@@ -31,36 +33,6 @@ This project provides a modular and reproducible approach to automate the setup 
 ├── .dockerignore         # Specifies files to ignore during Docker build
 └── .gitignore            # Specifies files to ignore in Git
 ```
-
----
-
-## 🛠️ Getting Started
-
-### Prerequisites
-
-- [Docker](https://www.docker.com/) or [Podman](https://podman.io/) installed on your machine.
-- [Go](https://golang.org/) installed if you plan to build the entrypoint outside the container.
-- [Ansible](https://www.ansible.com/) installed if you plan to run playbooks outside the container.
-
-*Note: If running locally, ensure you are logged into the kubernetes/Openshift cluster you wish to deploy to.*
-
-### Building the Container
-
-```
-docker build -t sterling-deployer:<tag> .
-```
-
-### Running the Container
-
-```
-docker run --rm \
-  -v $(pwd)/playbooks:/app/playbooks \
-  -v $(pwd)/roles:/app/roles \
-  -v $(pwd)/examples:/app/examples \
-  sterling-deployer:<tag>
-```
-
-*Note: Adjust volume mounts as necessary to match your local directory structure.*
 
 ---
 

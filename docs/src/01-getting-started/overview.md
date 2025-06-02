@@ -9,3 +9,9 @@ Key Features:
 - Automated provisioning and configuration
 
 This documentation will guide you through installation, usage, development, and more.
+
+---
+
+## Next Steps
+
+Run the installer as found [here](02-usage/running.md)
