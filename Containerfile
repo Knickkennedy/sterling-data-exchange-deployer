@@ -44,8 +44,7 @@ RUN curl -s -L -o openshift-client-linux.tar.gz https://mirror.openshift.com/pub
 
 RUN chown -R ${USER_ID}:0 /data && \
     chown -R ${USER_ID}:0 /sde-deployer && \
-    chmod -R ug+rwx /sde-deployer/*.go && \
-    chmod ug+rwx /sde-deployer/*.sh
+    chmod -R ug+rwx /sde-deployer/*.go
 
 ENTRYPOINT [ "go", "run", "/sde-deployer/entrypoint.go" ]
 CMD []

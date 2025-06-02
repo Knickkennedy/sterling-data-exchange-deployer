@@ -8,11 +8,11 @@ This file documents the configuration variables used for deploying IBM Sterling 
 
 ```yaml
 ssp_ps_release_name: auto-ps                             # Helm release name for SSP PS deployment
-ssp_ps_version: 6.2.0.1.02                              # SSP PS version
+ssp_ps_version: 6.2.0.1.02                               # SSP PS version
 ssp_ps_license_type: non-prod                            # License type: prod, non-prod, etc.
 
-ssp_ps_namespace: ssp                                   # Kubernetes namespace for SSP PS
-ssp_ps_serviceaccount: ssp-ps-sa                        # Service account for SSP PS
+ssp_ps_namespace: ssp                                    # Kubernetes namespace for SSP PS
+ssp_ps_serviceaccount: ssp-ps-sa                         # Service account for SSP PS
 ```
 
 ---
