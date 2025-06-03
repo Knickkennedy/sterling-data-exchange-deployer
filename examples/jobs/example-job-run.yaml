@@ -5,7 +5,7 @@ metadata:
   name: sde-deployer
 ---
 apiVersion: v1
-data:
+stringData:
   ENTITLEMENT_KEY: <your-key-here>
 kind: Secret
 metadata:
