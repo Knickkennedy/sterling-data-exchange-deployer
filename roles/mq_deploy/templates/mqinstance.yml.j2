@@ -4,11 +4,22 @@ metadata:
   name: "{{ mq_crd_name }}"
   namespace: "{{ mq_namespace }}"
 spec:
+  template:
+    pod:
+      containers:
+        - name: qmgr
+          resources: {}
+      securityContext:
+        fsGroup: 1001
+        runAsGroup: 1001
+        runAsUser: 1001
   license:
     accept: true
     license: L-HYGL-6STWD6
     use: Development
   queueManager:
+    configMap:
+      name: mq-poststart-script
     env:
       - name: MQ_DEV
         value: "true"
@@ -27,11 +38,6 @@ spec:
         items:
         - example1.mqsc
         - example2.mqsc
-    ini:
-    - configMap:
-        name: mqsc-ini-example
-        items:
-        - example.ini
     availability:
       type: SingleInstance
     storage:
@@ -43,12 +49,4 @@ spec:
         type: persistent-claim
   version: "{{ mq_operator_version }}"
   web:
-    enabled: true
-    console:
-      authentication:
-        provider: manual
-      authorization:
-        provider: manual
-    manualConfig:
-      configMap:
-        name: mqwebuserconfigmap    
+    enabled: true  

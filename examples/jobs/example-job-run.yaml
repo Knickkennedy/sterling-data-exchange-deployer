@@ -20,7 +20,7 @@ metadata:
 data:
   global.yml: |
     ---
-    deploy_ibm_catalog_source: false
+    deploy_ibm_catalog_source: true
     deploy_b2bi: true
     deploy_ssp_cm: false
     deploy_ssp_engine: false
@@ -29,7 +29,7 @@ data:
     deploy_connect_direct_web_services: false
     deploy_seas: false
     deploy_itx_rs: false
-    deploy_itxa: true
+    deploy_itxa: false
     deploy_minio: false
     deploy_kafka: false
 

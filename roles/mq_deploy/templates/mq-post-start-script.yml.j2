@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mq-poststart-script
+  namespace: {{ mq_namespace }}
+data:
+  postStart.sh: |
+    #!/bin/bash
+    echo "[postStart] Refreshing security..."
+    runmqsc <<EOF
+    REFRESH SECURITY TYPE(CONNAUTH)
+    EOF
+    echo "[postStart] Done."

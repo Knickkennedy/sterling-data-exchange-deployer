@@ -56,3 +56,14 @@
   kubernetes.core.k8s:
     state: present
     src: ../output/{{ mq_namespace }}/mq-mqsc-configmap.yml
+
+- name: Template the mq postinstall configmap for reuse
+  ansible.builtin.template:
+    src: templates/mq-post-start-script.yml.j2
+    dest: ../output/{{ mq_namespace }}/mq-post-start-script.yml.j2
+    mode: '0644'
+
+- name: Generate mq postinstall configmap
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ mq_namespace }}/mq-post-start-script.yml.j2
