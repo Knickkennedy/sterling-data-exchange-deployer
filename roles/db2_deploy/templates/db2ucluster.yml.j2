@@ -10,7 +10,6 @@ spec:
     accept: true
   account:
     privileged: true
-    serviceAccountName: "{{ db2_service_account }}"
     imagePullSecrets:
       - "{{ db2_registry_secret }}"
   environment:
@@ -20,7 +19,6 @@ spec:
     database:
       name: "{{ db2_dbname }}"
     instance:
-      user: "{{ db2_username }}"
       password: "{{ db2_password }}"
       registry:
         DB2_4K_DEVICE_SUPPORT: "ON"

@@ -8,7 +8,6 @@ registry: cp.icr.io
 registry_user: cp
 
 db2_secret: db2-secret
-db2_service_account: db2-sa
 
 db2_crd_name: db2
 db2_username: db2inst1
