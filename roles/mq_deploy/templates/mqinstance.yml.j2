@@ -8,6 +8,12 @@ spec:
     accept: true
     license: L-HYGL-6STWD6
     use: Development
+  securityContext:
+    supplementalGroups:
+      - 1001
+      - 0
+    fsGroup: 1001
+    runAsUser: 1001
   queueManager:
     configMap:
       name: mq-poststart-script

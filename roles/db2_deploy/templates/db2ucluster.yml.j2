@@ -1,0 +1,75 @@
+apiVersion: db2u.databases.ibm.com/v1
+kind: Db2uCluster
+metadata:
+  name: "{{ db2_crd_name }}"
+  namespace: "{{ db2_namespace }}"
+spec:
+  size: 1
+  version: "{{ db2_version }}"
+  license:
+    accept: true
+  account:
+    privileged: true
+    serviceAccountName: "{{ db2_service_account }}"
+    imagePullSecrets:
+      - "{{ db2_registry_secret }}"
+  environment:
+    dbType: db2oltp
+    ldap:
+      enabled: false
+    database:
+      name: "{{ db2_dbname }}"
+    instance:
+      user: "{{ db2_username }}"
+      password: "{{ db2_password }}"
+      registry:
+        DB2_4K_DEVICE_SUPPORT: "ON"
+        DB2_ATS_ENABLE: "NO"
+        DB2_DISPATCHER_PEEKTIMEOUT: "2"
+        DB2_OBJECT_STORAGE_SETTINGS: "OFF"
+  storage:
+    - name: meta
+      type: create
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 50Gi
+        storageClassName: "{{  file_storage_class }}"
+    - name: data
+      type: template
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Gi
+        storageClassName: "{{ block_storage_class }}"
+    - name: backup
+      type: create
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 100Gi
+        storageClassName: "{{  file_storage_class }}"
+    - name: tempts
+      type: template
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+        storageClassName: "{{ block_storage_class }}"
+    - name: archivelogs
+      type: create
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 25Gi
+        storageClassName: "{{  file_storage_class }}"

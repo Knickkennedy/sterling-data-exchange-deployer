@@ -67,3 +67,14 @@
   kubernetes.core.k8s:
     state: present
     src: ../output/{{ mq_namespace }}/mq-post-start-script.yml.j2
+
+- name: Template the mq sa permissions for reuse
+  ansible.builtin.template:
+    src: templates/mq-rolebinding.yml.j2
+    dest: ../output/{{ mq_namespace }}/mq-rolebinding.yml.j2
+    mode: '0644'
+
+- name: Generate mq sa permissions
+  kubernetes.core.k8s:
+    state: present
+    src: ../output/{{ mq_namespace }}/mq-rolebinding.yml.j2

@@ -1,6 +1,6 @@
-- name: Template the Db2uInstance for reuse
+- name: Template the Db2uCluster for reuse
   ansible.builtin.template:
-    src: templates/db2uinstance.yml.j2
+    src: templates/db2ucluster.yml.j2
     dest: ../output/{{ db2_namespace }}/{{ db2_namespace }}-{{ db2_crd_name }}-cr-instance.yml
     mode: '0644'
 
@@ -9,14 +9,14 @@
     state: present
     src: ../output/{{ db2_namespace }}/{{ db2_namespace }}-{{ db2_crd_name }}-cr-instance.yml
 
-- name: Wait for db2uinstance to start
+- name: Wait for Db2uCluster to start
   ansible.builtin.pause:
     seconds: 30
 
 - name: Wait for the DB2 deployment to finish before moving on
   kubernetes.core.k8s_info:
     api_version: db2u.databases.ibm.com/v1
-    kind: Db2uInstance
+    kind: Db2uCluster
     namespace: "{{ db2_namespace }}"
     name: "{{ db2_crd_name }}"
   register: result

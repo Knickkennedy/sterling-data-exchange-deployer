@@ -1,13 +1,36 @@
 kind: SecurityContextConstraints
 metadata:
   name: db2-scc
-allowHostDirVolumePlugin: true
-allowHostIPC: false
-allowHostNetwork: false
-allowHostPID: false
 allowHostPorts: false
-allowPrivilegeEscalation: true
+priority: 10
+requiredDropCapabilities:
+  - ALL
 allowPrivilegedContainer: true
+runAsUser:
+  type: RunAsAny
+users:
+  - system:serviceaccount:db2-tests:{{ db2_namespace }}:{{ db2_service_account }}
+allowHostDirVolumePlugin: true
+seccompProfiles:
+  - unconfined
+  - runtime/default
+allowHostIPC: false
+seLinuxContext:
+  type: MustRunAs
+readOnlyRootFilesystem: false
+fsGroup:
+  type: RunAsAny
+groups: []
+kind: SecurityContextConstraints
+defaultAddCapabilities: null
+supplementalGroups:
+  type: RunAsAny
+volumes:
+  - '*'
+allowHostPID: false
+allowHostNetwork: false
+allowPrivilegeEscalation: true
+apiVersion: security.openshift.io/v1
 allowedCapabilities:
   - CHOWN
   - DAC_OVERRIDE
@@ -23,31 +46,3 @@ allowedCapabilities:
   - SYS_CHROOT
   - KILL
   - AUDIT_WRITE
-apiVersion: security.openshift.io/v1
-defaultAddCapabilities: null
-fsGroup:
-  type: RunAsAny
-groups: []
-seccompProfiles:
-  - unconfined
-  - runtime/default
-priority: null
-readOnlyRootFilesystem: false
-requiredDropCapabilities:
-  - ALL
-runAsUser:
-  type: RunAsAny
-seLinuxContext:
-  type: MustRunAs
-supplementalGroups:
-  type: RunAsAny
-users:
-  - "system:serviceaccount:{{ db2_namespace }}:{{ db2_service_account }}"
-volumes:
-  - configMap
-  - downwardAPI
-  - emptyDir
-  - hostPath
-  - persistentVolumeClaim
-  - projected
-  - secret

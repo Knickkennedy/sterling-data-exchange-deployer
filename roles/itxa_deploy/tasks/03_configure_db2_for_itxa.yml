@@ -47,39 +47,19 @@
     state: patched
     definition:
       apiVersion: db2u.databases.ibm.com/v1
-      kind: Db2uInstance
+      kind: Db2uCluster
       metadata:
         name: "{{ db2_crd_name }}"
         namespace: "{{ db2_namespace }}"
       spec:
         environment:
-          databases:
-            - name: "{{ db2_dbname }}"
-              dbConfig:
-                "{{ db_values }}"
-              storage:
-                - name: data
-                  type: template
-                  spec:
-                    accessModes:
-                      - ReadWriteOnce
-                    resources:
-                      requests:
-                        storage: "{{ db2_storage_size }}"
-                    storageClassName: "{{ block_storage_class }}"
-                - name: activelogs
-                  type: template
-                  spec:
-                    accessModes:
-                      - ReadWriteOnce
-                    resources:
-                      requests:
-                        storage: 10Gi
-                    storageClassName: "{{ block_storage_class }}"
+          database:
+            settings:
+              "{{ db_values }}"
 
 - name: Wait for the DB2 deployment to finish before moving on
   kubernetes.core.k8s_info:
-    kind: Db2uInstance
+    kind: Db2uCluster
     namespace: "{{ db2_namespace }}"
     name: "{{ db2_crd_name }}"
   register: result
