@@ -4,15 +4,6 @@ metadata:
   name: "{{ mq_crd_name }}"
   namespace: "{{ mq_namespace }}"
 spec:
-  template:
-    pod:
-      containers:
-        - name: qmgr
-          resources: {}
-      securityContext:
-        fsGroup: 1001
-        runAsGroup: 1001
-        runAsUser: 1001
   license:
     accept: true
     license: L-HYGL-6STWD6
