@@ -10,3 +10,17 @@
     that:
       - db2_dbname | length <= 8
     fail_msg: "db2_db2name must be 8 characters or less"
+
+- name: Configure norootsquash for ibmc-file-gold-gid
+  when: block_storage_class == "ibmc-file-gold-gid"
+  block:
+    - name: Template required files
+      ansible.builtin.template:
+        src: templates/db2-norootsquash.yml.j2
+        dest: ../output/{{ db2_namespace }}/norootsquash.yml
+        mode: '0644'
+
+    - name: Deploy No Root Squash daemonset
+      kubernetes.core.k8s:
+        state: present
+        src: ../output/{{ db2_namespace }}/norootsquash.yml

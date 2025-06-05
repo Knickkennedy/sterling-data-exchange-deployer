@@ -1,0 +1,77 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: norootsquash
+  namespace: kube-system
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "privileged"
+  namespace: kube-system
+  labels:
+    app: "privileged"
+roleRef:
+  kind: ClusterRole
+  name: "system:openshift:scc:privileged"
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: norootsquash
+    namespace: kube-system
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: norootsquash
+  namespace: kube-system
+  labels:
+    tier: management
+    app: norootsquash
+spec:
+  selector:
+    matchLabels:
+      name: norootsquash
+  template:
+    metadata:
+      labels:
+        name: norootsquash
+    spec:
+      serviceAccountName: norootsquash
+      initContainers:
+        - resources:
+            requests:
+              cpu: 0.1
+          securityContext:
+            privileged: true
+          image: alpine:3.6
+          name: unrootsquash
+          command: ["chroot", "/host", "sh", "-c"]
+          args:
+            - >
+              grep "^Domain = slnfsv4.com" /etc/idmapd.conf;
+              if [ "\$?" -ne "0" ] ; then
+                sed -i 's/.*Domain =.*/Domain = slnfsv4.com/g' /etc/idmapd.conf;
+                nfsidmap -c;
+                rpc.idmapd
+              fi;
+          volumeMounts:
+            - name: host
+              mountPath: /host
+      containers:
+        - resources:
+            requests:
+              cpu: 0.1
+          image: alpine:3.6
+          name: sleep
+          command: ["/bin/sh", "-c"]
+          args:
+            - >
+              while true; do
+                sleep 100000;
+              done
+      volumes:
+        - hostPath:
+            path: /
+            type: Directory
