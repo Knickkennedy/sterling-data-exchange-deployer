@@ -24,6 +24,9 @@ jms_connection_factory: com.ibm.mq.jms.MQQueueConnectionFactory
 jms_queue_name: DEV.QUEUE.1
 jms_channel: DEV.CHANNEL.SVRCONN
 jms_enable_ssl: false
+jms_host: ""
+jms_port: ""
+jms_password: ""
 
 b2bi_app_logs_size: 1Gi
 
