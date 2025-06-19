@@ -1,6 +1,9 @@
 ---
+- name: Load Config for SSP Engine
+  ansible.builtin.include_tasks: 01_load_config.yml
+
 - name: "Configure Sterling Secure Proxy Engine Namespace"
-  ansible.builtin.include_tasks: 01_configure_namespace.yml
+  ansible.builtin.include_tasks: 02_configure_namespace.yml
 
 - name: "Deploy the SSP ENGINE helm chart configuration"
-  ansible.builtin.include_tasks: 02_deploy_ssp_engine.yml
+  ansible.builtin.include_tasks: 03_deploy_ssp_engine.yml
