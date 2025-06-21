@@ -19,3 +19,4 @@
     timeout: "1h"
     values_files:
       - ../output/{{ ssp_ps_namespace }}/ssp-ps-values.yml
+    wait: true

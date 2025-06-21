@@ -49,3 +49,4 @@
     timeout: "1h"
     values_files:
       - ../output/{{ ssp_cm_namespace }}/ssp-cm-values.yml
+    wait: true
