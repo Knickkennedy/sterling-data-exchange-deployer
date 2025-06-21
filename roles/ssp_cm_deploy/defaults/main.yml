@@ -27,6 +27,7 @@ ssp_cm_server_cert_password: password
 ssp_cm_web_cert_password: password
 ssp_cm_export_cert_password: password
 ssp_cm_keycert_secret: "engine-keycert"
+ssp_cm_service_type: LoadBalancer
 
 versions:
   6.2.0.1.02:

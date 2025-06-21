@@ -39,7 +39,7 @@ storageSecurity:
     enabled: false
     runAsUser: 65534
 service:
-  type: "LoadBalancer"
+  type: "{{ ssp_cm_service_type }}"
   loadBalancerIP: ""
   externalIP: ""
   annotations: {}

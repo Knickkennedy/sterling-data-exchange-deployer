@@ -21,6 +21,7 @@ ssp_engine_keycert_store_passphrase: password
 ssp_engine_keycert_encrypt_passphrase: password
 ssp_engine_keycert_secret: "cm-keycert"
 ssp_engine_custom_keycert_passphrase: password
+ssp_engine_service_type: LoadBalancer
 
 versions:
   6.2.0.1.02:

@@ -11,6 +11,8 @@ ssp_ps_registry_user: cp
 ssp_ps_registry_key:
 
 ssp_ps_serviceaccount: ssp-ps-sa
+ssp_ps_service_type: LoadBalancer
+ssp_ps_service_two_type: LoadBalancer
 
 versions:
   6.2.0.1.02:

@@ -29,7 +29,7 @@ psArgs:
   installAnyWhereMaxHeap: "1G"
   installAnyWhereDebug: false
 service:
-  type: "LoadBalancer"
+  type: "{{ ssp_ps_service_type }}"
   loadBalancerIP: ""
   externalIP: ""
   annotations: {}
@@ -40,7 +40,7 @@ service:
     servicePort: 30800
     containerPort: 30800
 service2:
-  type: "LoadBalancer"
+  type: "{{ ssp_ps_service_two_type }}"
   loadBalancerIP: ""
   externalIP: ""
   annotations: {}
