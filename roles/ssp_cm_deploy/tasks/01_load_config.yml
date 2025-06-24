@@ -4,3 +4,9 @@
     name: load_config
   vars:
     config_file: ssp-cm.yml
+
+- name: Load configuration of SSP Engine
+  ansible.builtin.include_role:
+    name: load_config
+  vars:
+    config_file: ssp-engine.yml

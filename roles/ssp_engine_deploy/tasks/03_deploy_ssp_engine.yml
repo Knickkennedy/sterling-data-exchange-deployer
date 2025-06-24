@@ -46,7 +46,6 @@
     name: "{{ ssp_engine_release_name }}"
     chart_ref: ../output/{{ ssp_engine_namespace }}/ibm-ssp-engine-{{ versions[ssp_engine_version].helm_chart_version }}.tgz
     release_namespace: "{{ ssp_engine_namespace }}"
-    timeout: "1h"
     values_files:
       - ../output/{{ ssp_engine_namespace }}/ssp-engine-values.yml
     wait: true

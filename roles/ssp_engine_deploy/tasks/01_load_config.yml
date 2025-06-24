@@ -1,6 +1,12 @@
 ---
-- name: Load configuration of ITXA
+- name: Load configuration of SSP Engine
   ansible.builtin.include_role:
     name: load_config
   vars:
     config_file: ssp-engine.yml
+
+- name: Load configuration of SSP CM
+  ansible.builtin.include_role:
+    name: load_config
+  vars:
+    config_file: ssp-cm.yml

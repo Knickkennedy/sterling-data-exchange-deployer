@@ -21,9 +21,9 @@ data:
   global.yml: |
     ---
     deploy_ibm_catalog_source: true
-    deploy_b2bi: true
-    deploy_ssp_cm: false
-    deploy_ssp_engine: false
+    deploy_b2bi: false
+    deploy_ssp_cm: true
+    deploy_ssp_engine: true
     deploy_ssp_ps: false
     deploy_connect_direct: false
     deploy_connect_direct_web_services: false
@@ -151,10 +151,14 @@ data:
     ---
     ssp_cm_release_name: sspcm
     ssp_cm_version: 6.2.0.1.02
+    ssp_cm_namespace: ssp
+    ssp_engine_namespace: ssp
   ssp-engine.yml: |
     ---
     ssp_engine_release_name: ssp-eng
     ssp_engine_version: 6.2.0.1.02
+    ssp_engine_namespace: ssp
+    ssp_cm_namespace: ssp
   ssp-ps.yml: |
     ---
     ssp_ps_release_name: ssp-ps
@@ -176,9 +180,9 @@ roleRef:
   kind: ClusterRole
   name: system:openshift:scc:privileged
 subjects:
-- kind: ServiceAccount
-  name: sde-deployer-sa
-  namespace: sde-deployer
+  - kind: ServiceAccount
+    name: sde-deployer-sa
+    namespace: sde-deployer
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -189,9 +193,9 @@ roleRef:
   kind: ClusterRole
   name: cluster-admin
 subjects:
-- kind: ServiceAccount
-  name: sde-deployer-sa
-  namespace: sde-deployer
+  - kind: ServiceAccount
+    name: sde-deployer-sa
+    namespace: sde-deployer
 ---
 apiVersion: batch/v1
 kind: Job

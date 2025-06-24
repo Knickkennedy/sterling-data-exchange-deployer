@@ -6,7 +6,6 @@ ssp_engine_license_type: non-prod
 ssp_engine_namespace: ssp
 ssp_cm_namespace: ssp
 
-
 ssp_engine_generate_certificates: false
 ssp_engine_registry_secret: ibm-entitlement-key
 ssp_engine_secret: ibm-ssp-engine-secret
@@ -21,7 +20,7 @@ ssp_engine_keycert_store_passphrase: password
 ssp_engine_keycert_encrypt_passphrase: password
 ssp_engine_keycert_secret: "cm-keycert"
 ssp_engine_custom_keycert_passphrase: password
-ssp_engine_service_type: LoadBalancer
+ssp_engine_service_type: ClusterIP
 
 versions:
   6.2.0.1.02:

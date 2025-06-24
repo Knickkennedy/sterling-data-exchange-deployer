@@ -46,7 +46,6 @@
     name: "{{ ssp_cm_release_name }}"
     chart_ref: ../output/{{ ssp_cm_namespace }}/ibm-ssp-cm-{{ versions[ssp_cm_version].helm_chart_version }}.tgz
     release_namespace: "{{ ssp_cm_namespace }}"
-    timeout: "1h"
     values_files:
       - ../output/{{ ssp_cm_namespace }}/ssp-cm-values.yml
     wait: true
