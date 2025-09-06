@@ -1,4 +1,10 @@
 ---
+- name: Ensure config_dir and config_file are defined
+  ansible.builtin.assert:
+    that:
+      - config_dir is defined
+      - config_file is defined
+    fail_msg: "Both 'config_dir' and 'config_file' must be provided in order to run this installer."
 - name: Load config from yaml files in config directory
   ansible.builtin.include_vars:
     dir: "{{ config_dir }}"
