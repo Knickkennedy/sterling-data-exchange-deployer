@@ -261,7 +261,7 @@ asi:
     loadBalancerSourceRanges: []
     annotations: {}  
   backendService:
-    type: LoadBalancer
+    type: ClusterIP
     sessionAffinity: None
     sessionAffinityConfig:
       timeoutSeconds: 10800
@@ -382,7 +382,7 @@ ac:
     loadBalancerSourceRanges: []
     annotations: {}  
   backendService:
-    type: LoadBalancer
+    type: ClusterIP
     sessionAffinity: None
     sessionAffinityConfig:
       timeoutSeconds: 10800
