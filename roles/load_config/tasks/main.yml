@@ -1,7 +1,7 @@
 ---
 - name: Load default configuration
   ansible.builtin.set_fact:
-    config_dir: "{{ config_dir | default(playbook_dir + '/examples/configs') }}"
+    config_dir: "{{ config_dir | default(playbook_dir + '/../examples/configs') }}"
     config_file: "{{ config_file | default('global.yml') }}"
 - name: Load config from yaml files in config directory
   ansible.builtin.include_vars:
