@@ -1,15 +1,24 @@
 package main
 
 import (
-	"log"
 	"os"
 	"os/exec"
+
+	"go.uber.org/zap"
 )
 
 func main() {
+	log, err := zap.NewProduction()
+	if err != nil {
+		panic(err)
+	}
+	defer log.Sync()
+
 	configDir, exists := os.LookupEnv("CONFIG_DIR")
 	if !exists {
-		log.Fatal("CONFIG_DIR not set correctly.")
+		log.Info("CONFIG_DIR not set correctly. Defaulting to example configs.",
+			zap.String("CONFIG_DIR", "examples/configs"))
+		configDir = "examples/configs"
 	}
 
 	argsSlice := []string{"playbooks/deploy_sterling_data_exchange.yml"}
@@ -18,11 +27,12 @@ func main() {
 
 	entitlementKey, exists := os.LookupEnv("ENTITLEMENT_KEY")
 	if !exists {
-		log.Fatal("ENTITLEMENT_KEY not set correctly.")
+		log.Info("ENTITLEMENT_KEY not set correctly. Installation will continue but fail if you do not provide.",
+			zap.String("ENTITLEMENT_KEY", entitlementKey))
+	} else {
+		argsSlice = append(argsSlice, "-e")
+		argsSlice = append(argsSlice, "entitlement_key="+entitlementKey)
 	}
-
-	argsSlice = append(argsSlice, "-e")
-	argsSlice = append(argsSlice, "entitlement_key="+entitlementKey)
 
 	command := exec.Command("ansible-playbook", argsSlice...)
 

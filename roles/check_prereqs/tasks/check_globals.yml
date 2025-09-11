@@ -1,9 +1,8 @@
 ---
 - name: Check registry key exists
-  ansible.builtin.assert:
-    that:
-      - entitlement_key != ""
-    fail_msg: "Registry key or password is required in order to authenticate against the provided registry."
+  ansible.builtin.debug:
+    msg: "Installation will continue, but you did not provide an entitlement_key so it will fail."
+  when: entitlement_key is not defined or entitlement_key | length == 0
 
 - name: Lookup Storage classes
   kubernetes.core.k8s_info:
